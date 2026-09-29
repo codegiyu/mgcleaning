@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     template: "%s | M&G Cleaning Service",
   },
   description: "Upholstery cleaning for sofas, chairs, mattresses, and more. Because your comfort matters.",
+  icons: {
+    shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
+  },
   robots: process.env.NEXT_PUBLIC_CONTENT_MODE === "production" ? undefined : { index: false, follow: false },
   alternates: { canonical: absoluteUrl("/") },
   openGraph: {

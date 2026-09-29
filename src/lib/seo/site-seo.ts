@@ -4,9 +4,21 @@ import { businessContactFacts, seoBusinessFacts } from "@/content/public-content
 
 export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-default-v2.png";
 export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Service — professional cleaning for homes, offices, and upholstery.";
+export const DEPLOYED_SITE_URL_FALLBACK = "https://mgcleaning.vercel.app";
+
+function withHttpsProtocol(host: string | undefined) {
+  const value = host?.trim();
+  if (!value) return undefined;
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
 
 export function getSiteUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const vercelUrl = withHttpsProtocol(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL,
+  );
+  const developmentUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined;
+  const raw = configuredUrl || vercelUrl || developmentUrl || DEPLOYED_SITE_URL_FALLBACK;
   let url: URL;
   try {
     url = new URL(raw);
