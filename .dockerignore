@@ -1,0 +1,12 @@
+.git
+.next
+node_modules
+out
+coverage
+output
+.playwright-cli
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*

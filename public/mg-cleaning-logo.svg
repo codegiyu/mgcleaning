@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 305 136" style="background-color:transparent" role="img" aria-labelledby="title">
+  <title id="title">M&amp;G Cleaning Service</title>
+  <g fill="#0B2858">
+    <text x="4" y="91" font-family="Georgia, 'Times New Roman', serif" font-size="88" font-weight="600" letter-spacing="-8">M&amp;G</text>
+    <text x="7" y="139" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="3.4">CLEANING SERVICE</text>
+  </g>
+  <g fill="none" stroke="#F2C400" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 105h211l34-31 36 31h17" stroke-width="6"/>
+    <path d="M211 67 245 36l24 21" stroke-width="5"/>
+  </g>
+  <g fill="#F2C400">
+    <path d="M245 4 249 15l11 4-11 4-4 11-4-11-11-4 11-4 4-11Z"/>
+    <path d="M270 31 273 39l8 3-8 3-3 8-3-8-8-3 8-3 3-8Z"/>
+    <circle cx="223" cy="31" r="3"/>
+  </g>
+</svg>
