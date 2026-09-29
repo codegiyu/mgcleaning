@@ -9,7 +9,7 @@ import { getService } from "@/content/demo-content";
 import { getPublishedBlogPost, getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
-import { articleJsonLd, breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
+import { articleJsonLd, breadcrumbJsonLd, buildPageMetadata, DEFAULT_OG_IMAGE, graphJsonLd } from "@/lib/seo/site-seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = "/blog/" + post.slug;
   const title = post.seoTitle || post.title;
   const description = post.seoDescription || post.excerpt;
-  return buildPageMetadata({ title, description, path, image: post.coverImageUrl || "/images/og/mg-cleaning-default.svg", imageAlt: post.coverImageAlt || post.title, type: "article" });
+  return buildPageMetadata({ title, description, path, image: post.coverImageUrl || DEFAULT_OG_IMAGE, imageAlt: post.coverImageAlt || post.title, type: "article" });
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -29,7 +29,7 @@ export default async function ArticlePage({ params }: Props) {
   const publishedDate = post.publishedAt?.slice(0, 10) ?? post.updatedAt.slice(0, 10);
   const relatedService = getService(post.serviceSlug ?? "");
   const breadcrumbs = [{ name: "Home", path: "/" }, { name: "The M&G Journal", path: "/blog" }, { name: post.title, path: "/blog/" + post.slug }];
-  const articleSchema = articleJsonLd({ slug: post.slug, title: post.title, description: post.excerpt, author: post.authorName, publishedAt: post.publishedAt ?? post.updatedAt, updatedAt: post.updatedAt, image: post.coverImageUrl || "/images/og/mg-cleaning-default.svg" });
+  const articleSchema = articleJsonLd({ slug: post.slug, title: post.title, description: post.excerpt, author: post.authorName, publishedAt: post.publishedAt ?? post.updatedAt, updatedAt: post.updatedAt, image: post.coverImageUrl || DEFAULT_OG_IMAGE });
 
   return (
     <article className="section-shell article-page">

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { contentMode } from "@/content/trust-content";
 import { businessContactFacts, seoBusinessFacts } from "@/content/public-content";
 
-export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-default.svg";
-export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Service — Deep clean. Fresh feel.";
+export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-default-v2.png";
+export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Service — professional cleaning for homes, offices, and upholstery.";
 
 export function getSiteUrl() {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
