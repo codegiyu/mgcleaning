@@ -54,7 +54,6 @@ export function buildPageMetadata({
   type?: "website" | "article";
   noIndex?: boolean;
 }): Metadata {
-  const imageUrl = absoluteUrl(image);
   const pageUrl = absoluteUrl(path);
   return {
     title,
@@ -67,13 +66,13 @@ export function buildPageMetadata({
       title,
       description,
       url: pageUrl,
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: imageAlt }],
+      images: [{ url: image, width: 1200, height: 630, alt: imageAlt }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [imageUrl],
+      images: [image],
     },
   };
 }

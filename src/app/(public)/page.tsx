@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArticleCard, ArrowRight, ArrowUpRight, CTASection, ServiceCard } from "@/components/site-ui";
-import { DemoDisclosure, TestimonialPlaceholder, TrustProofCard } from "@/components/trust-ui";
+import { TrustProofCard } from "@/components/trust-ui";
 import { articles, services, whyMgReasons } from "@/content/demo-content";
-import { getPublicFaqs, getPublicTestimonials } from "@/content/trust-content";
+import { getPublicFaqs } from "@/content/trust-content";
 import { getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
@@ -46,16 +46,11 @@ export default async function HomePage() {
         <div className="why-mg-grid">{whyMgReasons.map((reason, index) => <article className="why-mg-card" key={reason.title}><span>0{index + 1}</span><h3>{reason.title}</h3><p>{reason.description}</p></article>)}</div>
       </section>
       <section className="section section-shell trust-evidence-section">
-        <div className="section-heading"><div><p className="eyebrow">TRUST, BUILT CAREFULLY</p><h2>Proof should be<br />earned and clear.</h2></div><div><p>This preview shows where authentic customer feedback, project media, and verified business details will live. Generated demo material is identified openly while M&amp;G Cleaning Services gathers launch-ready evidence.</p><Link className="text-link" href="/gallery">See the demo gallery <ArrowRight /></Link></div></div>
-        <DemoDisclosure>Generated images and sample testimonial cards are for design review only · They are not customer proof.</DemoDisclosure>
+        <div className="section-heading"><div><p className="eyebrow">CLEAR FROM THE START</p><h2>A thoughtful service,<br />from request to follow-up.</h2></div><div><p>We keep the process straightforward: understand your priorities, agree the scope, deliver with care, and check in after the service.</p><Link className="text-link" href="/about">See how we work <ArrowRight /></Link></div></div>
         <div className="trust-proof-grid">
-          <TrustProofCard eyebrow="GOOGLE PROFILE" title="A verified profile link belongs here." description="The live Google Business Profile URL and any review references will be added only after M&G Cleaning Services confirms them." />
-          <TrustProofCard eyebrow="SERVICE AREA" title="Abuja coverage should be confirmed." description="Abuja is the current coverage candidate. Tell us your area and the team will confirm availability rather than publishing an unapproved promise." href="/areas" linkLabel="Check service areas" />
-          <TrustProofCard eyebrow="FREQUENTLY ASKED" title="Clear answers before you request." description="The FAQ explains the current request flow without inventing hours, pricing, guarantees, or cancellation policies." href="/faq" linkLabel="Read the FAQs" />
-        </div>
-        <div className="testimonial-preview">
-          <div className="testimonial-preview-heading"><div><p className="eyebrow">CUSTOMER FEEDBACK</p><h3>Real words will go here.</h3></div><p>These cards are deliberately placeholders until customers give M&amp;G Cleaning Services permission to publish authentic feedback.</p></div>
-          <div className="testimonial-grid">{getPublicTestimonials().map((testimonial) => <TestimonialPlaceholder key={testimonial.id} testimonial={testimonial} />)}</div>
+          <TrustProofCard eyebrow="PERSONALIZED SERVICE" title="Tell us what matters most." description="We listen to your priorities and understand the space before recommending the right cleaning approach." />
+          <TrustProofCard eyebrow="CLEAR SCOPE" title="Know what to expect." description="The service scope, availability, and pricing are confirmed with you before the team gets to work." href="/services" linkLabel="Explore services" />
+          <TrustProofCard eyebrow="24-HOUR FOLLOW-UP" title="Care continues after the clean." description="We check in within 24 hours of your service to make sure you are satisfied with the result." href="/faq" linkLabel="Read the FAQs" />
         </div>
         <div className="faq-preview">
           <div className="faq-preview-heading"><div><p className="eyebrow">QUICK ANSWERS</p><h3>Before you send a request.</h3></div><Link className="text-link" href="/faq">All FAQs <ArrowRight /></Link></div>
@@ -70,7 +65,7 @@ export default async function HomePage() {
         <div className="approach-band"><div className="approach-visual"><Image src="/images/generated/about-consultation-v2.png" alt="M&G cleaning professional assessing a client&apos;s space" fill sizes="(max-width: 760px) 100vw, 50vw" /></div><div className="approach-copy"><p className="eyebrow">THE M&amp;G APPROACH</p><h2>Good work starts with listening.</h2><p>Tell us what you need. We&apos;ll assess the space, recommend the right solution, agree the scope, deliver, and follow up within 24 hours.</p><Link className="text-link" href="/about">See how we work <ArrowRight /></Link></div></div>
       </section>
       <section className="section journal-section"><div className="section-shell">
-        <div className="section-heading"><div><p className="eyebrow">THE M&amp;G JOURNAL · DEMO</p><h2>Small ideas for<br />a fresher space.</h2></div><p>Practical notes on home care, workspaces, hosting, specialist surfaces, and cleaning preparation.</p></div>
+        <div className="section-heading"><div><p className="eyebrow">THE M&amp;G JOURNAL</p><h2>Small ideas for<br />a fresher space.</h2></div><p>Practical notes on home care, workspaces, hosting, specialist surfaces, and cleaning preparation.</p></div>
         <div className="article-grid">{featuredArticles.map((article) => <ArticleCard key={article.slug} article={article} />)}</div>
         <div style={{ marginTop: 25 }}><Link className="text-link" href="/blog">Visit the journal <ArrowRight /></Link></div>
       </div></section>

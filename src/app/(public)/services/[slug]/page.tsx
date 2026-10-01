@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight, CheckMark, PageIntro, ServiceIcon } from "@/components/site-ui";
 import { services } from "@/content/demo-content";
 import { getServiceWithDetails } from "@/content/public-content";
-import { DemoDisclosure } from "@/components/trust-ui";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd, serviceJsonLd } from "@/lib/seo/site-seo";
@@ -29,8 +28,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     <div className="section-shell">
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs), serviceJsonLd({ name: service.title, description: service.description, path: "/services/" + service.slug, serviceSlug: service.slug }))} />
-      <PageIntro eyebrow={details?.status === "demo" ? "M&G CLEANING SERVICES · DEMO" : "M&G CLEANING SERVICES"} title={service.title + ", with the details thought through."} description={service.short} />
-      {details?.status === "demo" ? <DemoDisclosure>Sample service information for design review · Confirm the final scope, timing, materials, pricing, and outcomes with M&amp;G Cleaning Services before launch.</DemoDisclosure> : null}
+      <PageIntro eyebrow="M&G CLEANING SERVICES" title={service.title + ", with the details thought through."} description={service.short} />
       <div className="service-detail">
         <div className="service-detail-main">
           <span className="service-icon"><ServiceIcon kind={service.icon} className="size-7" /></span>

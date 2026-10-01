@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     title: "M&G Cleaning Services | Professional cleaning solutions",
     description: "Professional cleaning, thoughtfully planned around your space, needs, and standards.",
     url: absoluteUrl("/"),
-    images: [{ url: absoluteUrl(DEFAULT_OG_IMAGE), width: 1200, height: 630, alt: DEFAULT_OG_IMAGE_ALT }],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: DEFAULT_OG_IMAGE_ALT }],
   },
   twitter: {
     card: "summary_large_image",
     title: "M&G Cleaning Services | Professional cleaning solutions",
     description: "Professional cleaning, thoughtfully planned around your space, needs, and standards.",
-    images: [absoluteUrl(DEFAULT_OG_IMAGE)],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

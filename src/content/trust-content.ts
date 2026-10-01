@@ -28,7 +28,6 @@ export type TrustGalleryAsset = TrustRecord & {
   tags: string[];
   alt: string;
   caption: string;
-  disclosure: string;
   layout: "featured" | "tall" | "standard" | "wide";
 };
 
@@ -68,9 +67,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/hero-professional-cleaning-v2.png",
     serviceSlug: "home-cleaning",
     tags: ["Home", "Professional cleaning"],
-    alt: "Generated demo image of a cleaning professional caring for a bright modern space",
-    caption: "Example professional-cleaning scene for design review only.",
-    disclosure: "Generated demo image · Not an M&G project",
+    alt: "A cleaning professional caring for a bright modern space",
+    caption: "Professional care shaped around the needs of each space.",
     layout: "featured",
   },
   {
@@ -78,9 +76,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     type: "image",
     src: "/images/generated/about-consultation-v2.png",
     tags: ["Process", "Assessment"],
-    alt: "Generated demo image of a cleaning professional assessing a client's space",
-    caption: "Example consultation and assessment visual for design review only.",
-    disclosure: "Generated demo image · Not an M&G team photo",
+    alt: "A cleaning professional assessing a client's space",
+    caption: "Every service begins with understanding the space and desired result.",
     layout: "tall",
   },
   {
@@ -89,9 +86,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-upholstery.png",
     serviceSlug: "upholstery-cleaning",
     tags: ["Upholstery"],
-    alt: "Generated demo image of upholstery cleaning in a bright living room",
-    caption: "Example service visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "Upholstery cleaning in a bright living room",
+    caption: "Focused care for sofas, chairs, and upholstered surfaces.",
     layout: "standard",
   },
   {
@@ -100,9 +96,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-home.png",
     serviceSlug: "home-cleaning",
     tags: ["Home"],
-    alt: "Generated demo image of a cleaner resetting a bright home interior",
-    caption: "Example home-cleaning visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A cleaner refreshing a bright home interior",
+    caption: "Personalized cleaning support for comfortable, refreshed homes.",
     layout: "standard",
   },
   {
@@ -111,9 +106,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-office.png",
     serviceSlug: "office-cleaning",
     tags: ["Office"],
-    alt: "Generated demo image of a cleaner caring for a modern office space",
-    caption: "Example office-cleaning visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A cleaner caring for a modern office space",
+    caption: "Professional cleaning for focused, well-presented workspaces.",
     layout: "standard",
   },
   {
@@ -122,9 +116,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-short-let.png",
     serviceSlug: "short-let-turnover",
     tags: ["Short let"],
-    alt: "Generated demo image of a cleaner preparing a short-let room",
-    caption: "Example short-let visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A cleaner preparing a short-let room",
+    caption: "Detailed turnovers that help short-let spaces feel guest-ready.",
     layout: "standard",
   },
   {
@@ -133,9 +126,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-retainer-cleaning.png",
     serviceSlug: "retainer-cleaning",
     tags: ["Retainer", "Office"],
-    alt: "Generated demo image of a professional team providing scheduled office cleaning",
-    caption: "Example retainer-cleaning visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A professional team providing scheduled office cleaning",
+    caption: "Consistent cleaning support planned around an agreed schedule.",
     layout: "wide",
   },
   {
@@ -144,9 +136,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-fumigation.png",
     serviceSlug: "fumigation",
     tags: ["Fumigation", "Specialist"],
-    alt: "Generated demo image of a protected pest-control technician preparing treatment equipment",
-    caption: "Example fumigation visual; products, equipment, and methods remain to be confirmed.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A protected pest-control technician preparing treatment equipment",
+    caption: "Pest-control service planned around the space and treatment requirements.",
     layout: "standard",
   },
   {
@@ -155,9 +146,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-tile-polishing.png",
     serviceSlug: "tile-polishing",
     tags: ["Tile polishing", "Specialist"],
-    alt: "Generated demo image of a professional operating a floor-polishing machine",
-    caption: "Example tile-polishing visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A professional operating a floor-polishing machine",
+    caption: "Machine polishing for compatible tile and stone surfaces.",
     layout: "wide",
   },
   {
@@ -166,9 +156,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-deep-cleaning.png",
     serviceSlug: "deep-cleaning",
     tags: ["Deep cleaning"],
-    alt: "Generated demo image of detailed deep cleaning",
-    caption: "Example deep-cleaning visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "Detailed deep cleaning in progress",
+    caption: "Focused attention for spaces that need a more intensive clean.",
     layout: "wide",
   },
   {
@@ -177,9 +166,8 @@ export const trustGallery: TrustGalleryAsset[] = [
     src: "/images/generated/service-post-construction.png",
     serviceSlug: "post-construction-cleaning",
     tags: ["Post-construction"],
-    alt: "Generated demo image of a bright space after construction work",
-    caption: "Example post-construction visual; not a completed customer project.",
-    disclosure: "Generated demo image · Sample service visual",
+    alt: "A bright space being prepared after construction work",
+    caption: "Detailed cleaning to prepare newly completed spaces for use.",
     layout: "wide",
   },
 ];

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
@@ -17,7 +16,7 @@ export default function AboutPage() {
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
       <PageIntro eyebrow="THE M&G APPROACH" title="Clear steps. Thoughtful service." description="A professional clean starts before our team arrives. We listen, assess, confirm the scope, deliver, and follow up." />
       <div className="about-grid">
-        <div className="about-illustration"><Image className="about-illustration-image" src="/images/generated/about-consultation-v2.png" alt="Generated demo image of a cleaning professional assessing a client&apos;s space" width={1792} height={1024} priority /><span className="about-image-disclosure">Generated demo image · Not an M&amp;G team photo</span></div>
+        <div className="about-illustration"><Image className="about-illustration-image" src="/images/generated/about-consultation-v2.png" alt="A cleaning professional assessing a client&apos;s space" width={1792} height={1024} priority /></div>
         <div className="about-copy">
           <p className="eyebrow">PROFESSIONAL CLEANING · PERSONALLY PLANNED</p>
           <h2>Your space comes first.</h2>
@@ -26,7 +25,6 @@ export default function AboutPage() {
           <Link className="text-link" href="/services">See the service menu <ArrowRight /></Link>
         </div>
       </div>
-      <DemoDisclosure>The process copy reflects the client-supplied operating model. The image is generated for design review and is not an M&amp;G team photograph.</DemoDisclosure>
       <section className="process-section" aria-labelledby="process-heading">
         <div className="process-heading"><p className="eyebrow">HOW WE WORK</p><h2 id="process-heading">From first conversation to final follow-up.</h2><p>Five clear steps keep the service aligned with your needs and give the team a shared understanding of the work.</p></div>
         <ol className="process-list">

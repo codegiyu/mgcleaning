@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode } from "@/content/trust-content";
 import { businessContactFacts } from "@/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
@@ -17,7 +15,6 @@ export default function LinksPage() {
       <p className="eyebrow">M&amp;G CLEANING SERVICES</p>
       <h1>Professional cleaning.<br /><em>Thoughtfully done.</em></h1>
       <p className="link-hub-lede">Personalized cleaning solutions, service details, and a clear way to request help with your space.</p>
-      {contentMode === "demo" ? <DemoDisclosure>Demo link hub · Contact channels shown here are confirmed; remaining business details are awaiting approval.</DemoDisclosure> : null}
       <nav className="link-hub-actions" aria-label="M&G Cleaning Services quick links">
         <Link className="link-hub-primary" href="/book">Request a cleaning <ArrowUpRight /></Link>
         <a href={businessContactFacts.whatsapp.href} target="_blank" rel="noreferrer">Message on WhatsApp <ArrowUpRight /></a>

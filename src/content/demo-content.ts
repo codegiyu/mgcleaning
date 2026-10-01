@@ -54,7 +54,7 @@ export const demoSite = {
   closingLine: "Clean spaces. Strong impressions.",
   description:
     "Personalized professional cleaning solutions for homes, offices, short lets, upholstery, specialist surfaces, and post-construction spaces.",
-  demoNotice: "DEMO PREVIEW · Generated media and sample content · Details to confirm",
+  demoNotice: "M&G CLEANING SERVICES · PROFESSIONAL CLEANING SOLUTIONS",
   instagramUrl: "https://www.instagram.com/mgcleaningservices_1/",
   instagramHandle: "@mgcleaningservices_1",
   phoneNumber: "08167715346",
@@ -140,7 +140,7 @@ export const services: DemoService[] = [
     title: "Home cleaning",
     short: "A thoughtful reset for the rooms you use every day.",
     description:
-      "From lived-in family spaces to a quick refresh before guests arrive, this demo service is shaped around the priorities you share with the team.",
+      "From lived-in family spaces to a quick refresh before guests arrive, this service is shaped around the priorities you share with the team.",
     icon: "home",
     image: "/images/generated/service-home.png",
     bullets: ["Kitchen and bathroom refresh", "Dusting and surface care", "Floors and finishing touches"],
@@ -228,7 +228,7 @@ export const services: DemoService[] = [
     title: "Post-construction cleaning",
     short: "A final clean after renovation work is complete.",
     description:
-      "Once building work has finished, this demo service focuses on removing ordinary fine dust and residue from agreed surfaces so the space can be set up.",
+      "Once building work has finished, this service focuses on removing ordinary fine dust and residue from agreed surfaces so the space can be set up.",
     icon: "building",
     image: "/images/generated/service-post-construction.png",
     bullets: ["Walk-through and scope agreement", "Surface-appropriate cleaning", "Clear handoff for final inspection"],

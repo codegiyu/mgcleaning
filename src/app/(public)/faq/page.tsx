@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode, getPublicFaqs } from "@/content/trust-content";
+import { getPublicFaqs } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, faqJsonLd, graphJsonLd } from "@/lib/seo/site-seo";
@@ -21,7 +20,6 @@ export default function FaqPage() {
         title="Start with the details that matter."
         description="The request process is designed to make scope, availability, and pricing clear before a visit is confirmed."
       />
-      {contentMode === "demo" ? <DemoDisclosure>Sample FAQ answers for design review · M&amp;G Cleaning Services should approve final wording before launch.</DemoDisclosure> : null}
       <section className="faq-list" aria-label="Frequently asked questions">
         {faqs.length ? faqs.map((faq) => (
           <details className="faq-item" key={faq.id} open={faq.id === "faq-request"}>

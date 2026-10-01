@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode, getPublicGallery } from "@/content/trust-content";
+import { getPublicGallery } from "@/content/trust-content";
 import { GalleryLightbox, type GalleryItem } from "@/components/gallery-lightbox";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -17,8 +16,7 @@ export default function GalleryPage() {
     <div className="section-shell">
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
-      <PageIntro eyebrow="THE M&amp;G GALLERY" title="Clean spaces. Strong impressions." description="A visual look at the people, rooms, and details the M&amp;G Cleaning Services site is designed to present. Authentic project media will replace these demo visuals before launch." />
-      {contentMode === "demo" ? <DemoDisclosure>Every image below is generated demo media for layout review · It is not an M&amp;G Cleaning Services project or team photo.</DemoDisclosure> : null}
+      <PageIntro eyebrow="THE M&amp;G GALLERY" title="Clean spaces. Strong impressions." description="Explore the spaces, services, and details that shape the M&amp;G approach to professional cleaning." />
       {galleryItems.length ? <GalleryLightbox items={galleryItems} /> : <div className="empty-trust-state"><h2>Project media is being prepared.</h2><p>Authentic M&amp;G Cleaning Services work will appear here after the team confirms the images and publication permissions.</p></div>}
       <section className="gallery-booking"><div><p className="eyebrow">READY WHEN YOU ARE</p><h2>Tell us what your space needs.</h2></div><Link className="text-link" href="/book">Request a cleaning <ArrowRight /></Link></section>
       <section className="section" style={{ paddingTop: 0 }}><CTASection compact /></section>

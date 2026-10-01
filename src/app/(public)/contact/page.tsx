@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/site-ui";
 import { ContactForm } from "@/components/contact-form";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode } from "@/content/trust-content";
 import { businessContactFacts } from "@/content/public-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -17,7 +15,6 @@ export default function ContactPage() {
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
       <PageIntro eyebrow="YOUR SPACE · YOUR NEEDS · OUR EXPERTISE" title="Let’s talk about your space." description="Have a question, an existing booking to discuss, or a result you would like to achieve? Send a message and the M&G team will get back to you." />
-      {contentMode === "demo" ? <DemoDisclosure>Phone, WhatsApp, and Instagram are confirmed contact channels. Official email, operating hours, and service-area details are still awaiting publication approval.</DemoDisclosure> : null}
       <div className="contact-layout">
         <aside className="contact-aside">
           <h2>Prefer to talk directly?</h2>

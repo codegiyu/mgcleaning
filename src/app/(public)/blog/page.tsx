@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { ArticleCard, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
@@ -22,7 +20,6 @@ export default async function BlogPage({ searchParams }: Props) {
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
       <PageIntro eyebrow="M&G CLEANING SERVICES · JOURNAL" title="The M&G Journal" description="Practical notes on home care, workspaces, hosting, specialist surfaces, and preparing for a professional clean." align="center" />
-      {contentMode === "demo" ? <DemoDisclosure>Sample articles are shown for design review. Production articles will use MG-approved service topics, cover images, authors, and publication dates.</DemoDisclosure> : null}
       <div className="page-content">
         <nav className="category-tabs" aria-label="Filter journal by topic">
           {categories.map((category) => <Link key={category} className={category === selected ? "category-tab category-tab-active" : "category-tab"} href={category === "All" ? "/blog" : "/blog?category=" + encodeURIComponent(category)}>{category}</Link>)}

@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "@/components/site-ui";
-import type { TrustFact, TrustTestimonial } from "@/content/trust-content";
-
-export function DemoDisclosure({ children = "Demo content · Replace with verified M&G Cleaning Services material before launch." }: { children?: React.ReactNode }) {
-  return <p className="demo-disclosure"><span aria-hidden="true">◌</span>{children}</p>;
-}
+import type { TrustFact } from "@/content/trust-content";
 
 export function TrustProofCard({
   eyebrow,
@@ -25,19 +21,6 @@ export function TrustProofCard({
       <h3>{title}</h3>
       <p>{description}</p>
       {href && linkLabel ? <Link className="text-link" href={href}>{linkLabel} <ArrowRight /></Link> : null}
-    </article>
-  );
-}
-
-export function TestimonialPlaceholder({ testimonial }: { testimonial: TrustTestimonial }) {
-  return (
-    <article className="testimonial-card">
-      <span className="content-status-badge">{testimonial.status === "demo" ? "Sample content" : testimonial.status}</span>
-      <blockquote>“{testimonial.quote}”</blockquote>
-      <div className="testimonial-meta">
-        <strong>{testimonial.attribution}</strong>
-        {testimonial.service ? <span>{testimonial.service}</span> : null}
-      </div>
     </article>
   );
 }

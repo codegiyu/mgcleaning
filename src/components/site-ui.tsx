@@ -137,7 +137,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-note footer-contact"><span className="footer-label">Contact M&amp;G</span><p>Let&apos;s talk about your space.</p><div className="footer-contact-links"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer"><InstagramIcon /> {demoSite.instagramHandle}</a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> {demoSite.phoneNumber}</a><a href={demoSite.phoneUrl}><PhoneIcon /> Call {demoSite.phoneNumber}</a></div></div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} {demoSite.name}</span><span>Demo content and inquiry form · Details to confirm</span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} {demoSite.name}</span><span>Professional cleaning. Thoughtfully done.</span></div>
     </footer>
   );
 }

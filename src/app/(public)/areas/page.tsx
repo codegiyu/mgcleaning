@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure, TrustFactList } from "@/components/trust-ui";
+import { TrustFactList } from "@/components/trust-ui";
 import { contentMode, getPublicTrustFacts } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -20,15 +20,14 @@ export default function AreasPage() {
       <PageIntro
         eyebrow="SERVICE AVAILABILITY"
         title="Let’s confirm your area."
-        description="Abuja is the current coverage candidate, but the final service region still needs M&G Cleaning Services approval. Share your area and the team will confirm whether they can help."
+        description="Share your location and the service you need. Our team will confirm availability for your area before the visit is arranged."
       />
-      {contentMode === "demo" ? <DemoDisclosure>Sample service-area page · No location coverage is being claimed in this demo.</DemoDisclosure> : null}
       <section className="area-availability-card">
         <div className="area-availability-icon" aria-hidden="true">⌖</div>
         <div>
           <p className="eyebrow">{hasApprovedArea ? "CONFIRMED COVERAGE" : "COVERAGE TO BE CONFIRMED"}</p>
           <h2>{hasApprovedArea ? "Check the confirmed service region." : "Tell us where you are."}</h2>
-          <p>{hasApprovedArea ? "The current service-area details are shown below. Submit a request so M&G Cleaning Services can confirm the specific address and timing." : "There is no public list of locations yet. This keeps the site from promising coverage before M&G Cleaning Services has approved the service region."}</p>
+          <p>{hasApprovedArea ? "The current service-area details are shown below. Submit a request so M&G Cleaning Services can confirm the specific address and timing." : "Share your location with us and the team will confirm whether your address is within the current service area."}</p>
           {hasApprovedArea ? <TrustFactList facts={facts} /> : null}
           <Link className="button button-dark" href="/book">Request coverage confirmation <ArrowRight /></Link>
         </div>
