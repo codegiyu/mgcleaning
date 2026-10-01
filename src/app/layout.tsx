@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   title: {
-    default: "M&G Cleaning Service | Deep clean. Fresh feel.",
-    template: "%s | M&G Cleaning Service",
+    default: "M&G Cleaning Services | Professional cleaning solutions",
+    template: "%s | M&G Cleaning Services",
   },
-  description: "Upholstery cleaning for sofas, chairs, mattresses, and more. Because your comfort matters.",
+  description: "Personalized professional cleaning solutions for homes, offices, short lets, upholstery, specialist surfaces, and post-construction spaces.",
   icons: {
     shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
   },
@@ -29,16 +29,16 @@ export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
   openGraph: {
     type: "website",
-    siteName: "M&G Cleaning Service",
-    title: "M&G Cleaning Service | Deep clean. Fresh feel.",
-    description: "Upholstery cleaning for sofas, chairs, mattresses, and more.",
+    siteName: "M&G Cleaning Services",
+    title: "M&G Cleaning Services | Professional cleaning solutions",
+    description: "Professional cleaning, thoughtfully planned around your space, needs, and standards.",
     url: absoluteUrl("/"),
     images: [{ url: absoluteUrl(DEFAULT_OG_IMAGE), width: 1200, height: 630, alt: DEFAULT_OG_IMAGE_ALT }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "M&G Cleaning Service | Deep clean. Fresh feel.",
-    description: "Upholstery cleaning for sofas, chairs, mattresses, and more.",
+    title: "M&G Cleaning Services | Professional cleaning solutions",
+    description: "Professional cleaning, thoughtfully planned around your space, needs, and standards.",
     images: [absoluteUrl(DEFAULT_OG_IMAGE)],
   },
 };

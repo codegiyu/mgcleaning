@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">M&amp;G Cleaning Service</title>
-  <desc id="desc">Deep clean. Fresh feel.</desc>
+  <title id="title">M&amp;G Cleaning Services</title>
+  <desc id="desc">Professional cleaning. Thoughtfully done.</desc>
   <rect width="1200" height="630" fill="#081f49"/>
   <circle cx="1050" cy="100" r="250" fill="#0b2858"/>
   <circle cx="1110" cy="545" r="270" fill="#0b2858"/>
   <path d="M0 510c220-80 390-70 570-10 160 54 350 55 630-35v165H0Z" fill="#f2c400" opacity=".95"/>
-  <text x="88" y="160" fill="#f2d451" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" letter-spacing="7">M&amp;G CLEANING SERVICE</text>
-  <text x="82" y="310" fill="#fff" font-family="Georgia,serif" font-size="88">Deep clean.</text>
-  <text x="82" y="410" fill="#f2c400" font-family="Georgia,serif" font-size="88">Fresh feel.</text>
-  <text x="88" y="555" fill="#081f49" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" letter-spacing="3">BECAUSE YOUR COMFORT MATTERS.</text>
+  <text x="88" y="160" fill="#f2d451" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" letter-spacing="6">M&amp;G CLEANING SERVICES</text>
+  <text x="82" y="310" fill="#fff" font-family="Georgia,serif" font-size="78">Professional cleaning.</text>
+  <text x="82" y="410" fill="#f2c400" font-family="Georgia,serif" font-size="78">Thoughtfully done.</text>
+  <text x="88" y="555" fill="#081f49" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" letter-spacing="3">YOUR SPACE. YOUR NEEDS. OUR EXPERTISE.</text>
 </svg>

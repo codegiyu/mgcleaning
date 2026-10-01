@@ -24,11 +24,20 @@ export function ServiceIcon({ kind, className = "size-6" }: { kind: ServiceIconN
   if (kind === "key") {
     return <svg {...common}><circle cx="8" cy="15" r="5" /><path d="m11.5 11.5 8-8L22 6l-2 2 1.5 1.5-2 2L18 10l-3 3" /><path d="M8 15h.01" /></svg>;
   }
+  if (kind === "calendar") {
+    return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 10h18" /><path d="m8 15 2 2 5-5" /></svg>;
+  }
   if (kind === "sofa") {
     return <svg {...common}><path d="M5 12V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" /><path d="M4 12a2 2 0 0 0-2 2v4h20v-4a2 2 0 0 0-2-2H4Z" /><path d="M5 18v3m14-3v3M4 12v-2m16 2v-2M8 11h8" /></svg>;
   }
   if (kind === "building") {
     return <svg {...common}><path d="M4 21V5l8-3v19m0-13h8v13M2 21h20" /><path d="M7 7h2m-2 4h2m-2 4h2m7-1h2m-2 4h2" /></svg>;
+  }
+  if (kind === "shield") {
+    return <svg {...common}><path d="M12 3 20 6v5c0 5-3.2 8.4-8 10-4.8-1.6-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></svg>;
+  }
+  if (kind === "tile") {
+    return <svg {...common}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M12 3v18M3 12h18" /><path d="m17 5 .6 1.4L19 7l-1.4.6L17 9l-.6-1.4L15 7l1.4-.6L17 5Z" /></svg>;
   }
   return <svg {...common}><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z" /><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" /></svg>;
 }
@@ -91,11 +100,11 @@ export function RoomIllustration() {
 export function SiteHeader() {
   return (
     <>
-      <div className="demo-ribbon"><span className="demo-ribbon-message">{demoSite.demoNotice}</span><span className="ribbon-socials"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer" aria-label="M&G Cleaning Service on Instagram"><InstagramIcon /></a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message M&G Cleaning Service on WhatsApp"><WhatsAppIcon /></a><a href={demoSite.phoneUrl} aria-label={"Call M&G Cleaning Service at " + demoSite.phoneNumber}><PhoneIcon /></a></span></div>
+      <div className="demo-ribbon"><span className="demo-ribbon-message">{demoSite.demoNotice}</span><span className="ribbon-socials"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer" aria-label="M&G Cleaning Services on Instagram"><InstagramIcon /></a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message M&G Cleaning Services on WhatsApp"><WhatsAppIcon /></a><a href={demoSite.phoneUrl} aria-label={"Call M&G Cleaning Services at " + demoSite.phoneNumber}><PhoneIcon /></a></span></div>
       <header className="site-header">
         <div className="site-header-inner">
-          <Link className="brand-lockup" href="/" aria-label="M&G Cleaning Service home">
-            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Service" priority />
+          <Link className="brand-lockup" href="/" aria-label="M&G Cleaning Services home">
+            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Services" priority />
           </Link>
           <nav className="main-nav" aria-label="Main navigation">
             <Link href="/services">Services</Link>
@@ -117,10 +126,10 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-top">
         <div>
-          <Link className="brand-lockup brand-lockup-footer" href="/" aria-label="M&G Cleaning Service home">
-            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Service" />
+          <Link className="brand-lockup brand-lockup-footer" href="/" aria-label="M&G Cleaning Services home">
+            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Services" />
           </Link>
-          <p className="footer-description">Deep clean. Fresh feel.<br />Clean spaces. Strong impressions.</p>
+          <p className="footer-description">Professional cleaning. Thoughtfully done.<br />Clean spaces. Strong impressions.</p>
         </div>
         <div className="footer-links">
           <div><span className="footer-label">Explore</span><Link href="/services">Services</Link><Link href="/about">Our approach</Link><Link href="/blog">Journal</Link><Link href="/gallery">Gallery</Link></div>
@@ -182,9 +191,9 @@ export function CTASection({ compact = false }: { compact?: boolean }) {
   return (
     <section className={"cta-panel " + (compact ? "cta-panel-compact" : "")}>
       <div className="cta-copy">
-        <p className="eyebrow eyebrow-light">THAT&apos;S THE M&amp;G PROMISE</p>
-        <h2>Sit back and relax. We&apos;ll handle the rest.</h2>
-        <p>Professional team. Reliable service. Detailed cleaning. We care about your space.</p>
+        <p className="eyebrow eyebrow-light">YOUR SPACE · YOUR NEEDS · OUR EXPERTISE</p>
+        <h2>Tell us what your space needs.</h2>
+        <p>We&apos;ll assess it, agree the right scope, and deliver with professional care and attention to detail.</p>
       </div>
       <Link className="button button-lime" href="/book">Request a cleaning <ArrowUpRight /></Link>
       <span className="cta-orbit cta-orbit-one" aria-hidden="true" />

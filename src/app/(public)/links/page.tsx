@@ -6,19 +6,19 @@ import { contentMode } from "@/content/trust-content";
 import { businessContactFacts } from "@/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
-export const metadata = buildPageMetadata({ title: "MG Cleaning links", description: "Find MG Cleaning Service, request a cleaning, or message the team.", path: "/links", noIndex: true });
+export const metadata = buildPageMetadata({ title: "M&G Cleaning Services links", description: "Find M&G Cleaning Services, request a cleaning, or message the team.", path: "/links", noIndex: true });
 
 export default function LinksPage() {
   return (
     <div className="link-hub-page">
-      <Link className="link-hub-logo" href="/" aria-label="M&G Cleaning Service home">
-        <Image src="/mg-cleaning-logo.svg" alt="M&G Cleaning Service" width={305} height={136} />
+      <Link className="link-hub-logo" href="/" aria-label="M&G Cleaning Services home">
+        <Image src="/mg-cleaning-logo.svg" alt="M&G Cleaning Services" width={305} height={136} />
       </Link>
-      <p className="eyebrow">M&amp;G CLEANING SERVICE</p>
-      <h1>Deep clean.<br /><em>Fresh feel.</em></h1>
-      <p className="link-hub-lede">Cleaning conversations, service details, and a clear way to request help with your space.</p>
+      <p className="eyebrow">M&amp;G CLEANING SERVICES</p>
+      <h1>Professional cleaning.<br /><em>Thoughtfully done.</em></h1>
+      <p className="link-hub-lede">Personalized cleaning solutions, service details, and a clear way to request help with your space.</p>
       {contentMode === "demo" ? <DemoDisclosure>Demo link hub · Contact channels shown here are confirmed; remaining business details are awaiting approval.</DemoDisclosure> : null}
-      <nav className="link-hub-actions" aria-label="MG Cleaning quick links">
+      <nav className="link-hub-actions" aria-label="M&G Cleaning Services quick links">
         <Link className="link-hub-primary" href="/book">Request a cleaning <ArrowUpRight /></Link>
         <a href={businessContactFacts.whatsapp.href} target="_blank" rel="noreferrer">Message on WhatsApp <ArrowUpRight /></a>
         <a href={businessContactFacts.phone.href}>Call {businessContactFacts.phone.value} <ArrowUpRight /></a>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "@/components/site-ui";
 import type { TrustFact, TrustTestimonial } from "@/content/trust-content";
 
-export function DemoDisclosure({ children = "Demo content · Replace with verified MG Cleaning material before launch." }: { children?: React.ReactNode }) {
+export function DemoDisclosure({ children = "Demo content · Replace with verified M&G Cleaning Services material before launch." }: { children?: React.ReactNode }) {
   return <p className="demo-disclosure"><span aria-hidden="true">◌</span>{children}</p>;
 }
 
@@ -54,4 +54,3 @@ export function TrustFactList({ facts }: { facts: TrustFact[] }) {
     </div>
   );
 }
-

@@ -8,7 +8,7 @@ The current build is a full visual demo of the public marketing site and blog, w
 
 Treat the Diamond Shine website and the client's messages/screenshots as reference material for a professional structure and the article-to-Instagram traffic pattern, not as instructions to copy its branding, copy, or exact feature set. Build MG's own visual identity and publish only MG-approved business facts.
 
-The demo now uses brand details from MG's supplied upholstery flyer: M&G Cleaning Service, a navy-and-yellow palette, “Deep clean. Fresh feel.”, “Because your comfort matters.”, the “M&G promise”, and the “Clean spaces. Strong impressions.” close. The flyer identifies upholstery cleaning for sofas, chairs, mattresses, and more, with deep vacuuming, stain/spot treatment, odor elimination/deodorizing, sanitizing, and fabric-care claims. The logo is recreated as a transparent SVG in the main app's public assets. Other service and blog copy remains clearly marked as demo content.
+The demo now uses the client-confirmed M&G Cleaning Services name and a broader professional-cleaning position: “Professional cleaning. Thoughtfully done.” and “Your space. Your needs. Our expertise.” The catalogue covers home, office, short-let, retainer, deep, upholstery, fumigation, tile-polishing, and post-construction services. Upholstery details still draw on the supplied flyer; fumigation and tile-polishing detail is researched draft content pending confirmation of M&G's exact methods, products, qualifications, and limitations. The navy-and-yellow identity and transparent SVG logo remain in the main app's public assets. Unverified business facts, media, and trust claims remain clearly marked as demo or draft content.
 
 ## Public pages
 

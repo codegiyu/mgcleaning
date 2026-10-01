@@ -96,8 +96,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
 export function AdminLoginBrand() {
   return (
-    <Link className="admin-login-brand" href="/" aria-label="Back to M&G Cleaning Service website">
-      <Image src="/mg-cleaning-logo.svg" alt="M&G Cleaning Service" width={305} height={136} priority />
+    <Link className="admin-login-brand" href="/" aria-label="Back to M&G Cleaning Services website">
+      <Image src="/mg-cleaning-logo.svg" alt="M&G Cleaning Services" width={305} height={136} priority />
     </Link>
   );
 }

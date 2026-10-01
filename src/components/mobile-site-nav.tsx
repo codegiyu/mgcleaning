@@ -32,7 +32,7 @@ export function MobileSiteNav() {
             <Link href="/contact" onClick={close}>Contact <span aria-hidden="true">→</span></Link>
           </nav>
           <div className="mobile-menu-footer">
-            <span>Because your comfort matters.</span>
+            <span>Professional cleaning. Thoughtfully done.</span>
             <Link className="mobile-menu-cta" href="/book" onClick={close}>Request a cleaning <span aria-hidden="true">↗</span></Link>
           </div>
         </div>

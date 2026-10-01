@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { contentMode } from "@/content/trust-content";
 import { businessContactFacts, seoBusinessFacts } from "@/content/public-content";
 
-export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-default-v2.png";
-export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Service — professional cleaning for homes, offices, and upholstery.";
+export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-services-professional-v3.png";
+export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Services — professional cleaning, thoughtfully done.";
 export const DEPLOYED_SITE_URL_FALLBACK = "https://mgcleaning.vercel.app";
 
 function withHttpsProtocol(host: string | undefined) {
@@ -63,7 +63,7 @@ export function buildPageMetadata({
     robots: noIndex || contentMode !== "production" ? { index: false, follow: false } : undefined,
     openGraph: {
       type,
-      siteName: "M&G Cleaning Service",
+      siteName: "M&G Cleaning Services",
       title,
       description,
       url: pageUrl,
@@ -97,9 +97,9 @@ export function websiteJsonLd() {
   return {
     "@type": "WebSite",
     "@id": `${absoluteUrl("/")}#website`,
-    name: "M&G Cleaning Service",
+    name: "M&G Cleaning Services",
     url: absoluteUrl("/"),
-    description: "Upholstery and cleaning services shaped around your space.",
+    description: "Personalized professional cleaning solutions shaped around your space, needs, and standards.",
     publisher: { "@id": `${absoluteUrl("/")}#organization` },
   };
 }
@@ -110,7 +110,7 @@ export function localBusinessJsonLd() {
   const data: Record<string, unknown> = {
     "@type": "LocalBusiness",
     "@id": `${absoluteUrl("/")}#organization`,
-    name: "M&G Cleaning Service",
+    name: "M&G Cleaning Services",
     url: absoluteUrl("/"),
     logo: absoluteUrl("/mg-cleaning-logo.svg"),
     telephone: businessContactFacts.phone.value,

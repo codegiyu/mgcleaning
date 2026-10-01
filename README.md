@@ -1,6 +1,6 @@
-# M&G Cleaning Service web app
+# M&G Cleaning Services web app
 
-This repository contains the customer-facing M&G Cleaning Service website, built with Next.js 16, TypeScript, Tailwind CSS v4, and Zustand. The Hono API and background workers live in the sibling [`mgcleaning-backend`](../mgcleaning-backend) repository.
+This repository contains the customer-facing M&G Cleaning Services website, built with Next.js 16, TypeScript, Tailwind CSS v4, and Zustand. The Hono API and background workers live in the sibling [`mgcleaning-backend`](../mgcleaning-backend) repository.
 
 See the [website and architecture plan](docs/website-and-architecture-plan.md) for the public page map, blog and Instagram flow, authenticated admin scope, API/data design, security boundaries, and delivery phases.
 
@@ -54,7 +54,7 @@ The typed endpoint registry and centralized request/result shape follow the patt
 
 ## Demo content
 
-This preview uses the M&G Cleaning Service name, navy-and-yellow identity, logo, upholstery service details, and phrases extracted from the supplied flyer. Additional service descriptions and blog articles are sample content stored in `src/content/demo-content.ts`. The inquiry form now posts to the Hono API; local development stores test submissions in PostgreSQL and captures queued email in Mailpit. Use sample contact details only. Confirm actual business details, the notification recipient, privacy/retention terms, and replace sample content before a public launch.
+This preview uses the client-confirmed M&G Cleaning Services name, navy-and-yellow identity, broader professional-cleaning positioning, nine service categories, and a five-step service process. Fumigation and tile-polishing detail is researched draft content pending confirmation of M&G's exact methods, products, qualifications, and limitations. Additional service descriptions and blog articles remain review content in `src/content/demo-content.ts`. The inquiry form posts to the Hono API; local development stores test submissions in PostgreSQL and captures queued email in Mailpit. Use sample contact details only. Confirm actual business details, the notification recipient, privacy/retention terms, and replace or approve draft content before a public launch.
 
 Admin sign-in, inquiry management, and database-backed blog drafting/publishing are now implemented. Public blog listing and article pages render published API content server-side; local development falls back to the supplied sample articles if the API is offline.
 

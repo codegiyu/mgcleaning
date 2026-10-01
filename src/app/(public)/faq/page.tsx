@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, faqJsonLd, graphJsonLd } from "@/lib/seo/site-seo";
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "FAQs", path: "/faq" }];
-export const metadata = buildPageMetadata({ title: "Frequently asked questions", description: "Answers about the MG Cleaning request process, availability, and follow-up.", path: "/faq" });
+export const metadata = buildPageMetadata({ title: "Frequently asked questions", description: "Answers about the M&G Cleaning Services request process, availability, and follow-up.", path: "/faq" });
 
 export default function FaqPage() {
   const faqs = getPublicFaqs();
@@ -21,7 +21,7 @@ export default function FaqPage() {
         title="Start with the details that matter."
         description="The request process is designed to make scope, availability, and pricing clear before a visit is confirmed."
       />
-      {contentMode === "demo" ? <DemoDisclosure>Sample FAQ answers for design review · MG Cleaning should approve final wording before launch.</DemoDisclosure> : null}
+      {contentMode === "demo" ? <DemoDisclosure>Sample FAQ answers for design review · M&amp;G Cleaning Services should approve final wording before launch.</DemoDisclosure> : null}
       <section className="faq-list" aria-label="Frequently asked questions">
         {faqs.length ? faqs.map((faq) => (
           <details className="faq-item" key={faq.id} open={faq.id === "faq-request"}>
@@ -31,7 +31,7 @@ export default function FaqPage() {
         )) : (
           <div className="empty-trust-state">
             <h2>FAQs are being prepared.</h2>
-            <p>MG Cleaning will publish answers here after the service details have been confirmed.</p>
+            <p>M&amp;G Cleaning Services will publish answers here after the service details have been confirmed.</p>
           </div>
         )}
       </section>

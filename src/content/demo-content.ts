@@ -2,9 +2,14 @@ export type ServiceIconName =
   | "home"
   | "office"
   | "key"
+  | "calendar"
   | "sofa"
   | "sparkle"
+  | "shield"
+  | "tile"
   | "building";
+
+export type ServiceGroupId = "ongoing" | "specialist" | "project";
 
 export type DemoService = {
   slug: string;
@@ -14,6 +19,17 @@ export type DemoService = {
   icon: ServiceIconName;
   image: string;
   bullets: string[];
+  group: ServiceGroupId;
+};
+
+export type WhyMgReason = {
+  title: string;
+  description: string;
+};
+
+export type ServiceProcessStep = {
+  title: string;
+  description: string;
 };
 
 export type DemoArticle = {
@@ -31,13 +47,13 @@ export type DemoArticle = {
 };
 
 export const demoSite = {
-  name: "M&G Cleaning Service",
+  name: "M&G Cleaning Services",
   shortName: "M&G Cleaning",
-  tagline: "Deep clean. Fresh feel.",
-  promise: "Because your comfort matters.",
+  tagline: "Professional cleaning. Thoughtfully done.",
+  promise: "Your space. Your needs. Our expertise.",
   closingLine: "Clean spaces. Strong impressions.",
   description:
-    "Upholstery cleaning for sofas, chairs, mattresses, and more. Deep clean. Fresh feel. Because your comfort matters.",
+    "Personalized professional cleaning solutions for homes, offices, short lets, upholstery, specialist surfaces, and post-construction spaces.",
   demoNotice: "DEMO PREVIEW · Generated media and sample content · Details to confirm",
   instagramUrl: "https://www.instagram.com/mgcleaningservices_1/",
   instagramHandle: "@mgcleaningservices_1",
@@ -45,6 +61,78 @@ export const demoSite = {
   phoneUrl: "tel:+2348167715346",
   whatsappUrl: "https://wa.me/2348167715346",
 };
+
+export const whyMgReasons: WhyMgReason[] = [
+  {
+    title: "Personalized service",
+    description: "We take time to understand your space, priorities, and expected outcome before work begins.",
+  },
+  {
+    title: "Attention to detail",
+    description: "We focus on the finishing details that leave your space feeling thoroughly refreshed.",
+  },
+  {
+    title: "Professional team",
+    description: "Our operations team is prepared to deliver the agreed scope with the right approach, equipment, and care.",
+  },
+  {
+    title: "24-hour follow-up",
+    description: "Within 24 hours of completing your service—including weekends—we check in to make sure you are satisfied with the result.",
+  },
+  {
+    title: "Loyal client care",
+    description: "We value long-term relationships and aim to make every repeat service smoother and more rewarding.",
+  },
+];
+
+export const serviceProcess: ServiceProcessStep[] = [
+  {
+    title: "Tell us what you need",
+    description: "Tell our Client Service team what you would like to achieve.",
+  },
+  {
+    title: "We assess and advise",
+    description: "We assess your space and recommend the right solution. What you initially request may not always be what the space requires to achieve the result you want.",
+  },
+  {
+    title: "We confirm and communicate",
+    description: "We agree the scope with you and brief our Operations team so everyone understands the requirements before work begins.",
+  },
+  {
+    title: "We deliver",
+    description: "Our team carries out the agreed work with the right approach, equipment, and attention to detail.",
+  },
+  {
+    title: "We follow up",
+    description: "Within 24 hours of completing your service—including weekends—we check in to make sure you are satisfied with the result.",
+  },
+];
+
+export const serviceGroups: Array<{
+  id: ServiceGroupId;
+  eyebrow: string;
+  title: string;
+  description: string;
+}> = [
+  {
+    id: "ongoing",
+    eyebrow: "EVERYDAY & ONGOING",
+    title: "Care that fits your routine.",
+    description: "One-off and recurring cleaning support for homes, offices, and guest-ready spaces.",
+  },
+  {
+    id: "specialist",
+    eyebrow: "SPECIALIST CLEANING",
+    title: "Focused care for specific needs.",
+    description: "Targeted services for deeper cleaning, upholstery, pest-control treatment, and suitable tiled surfaces.",
+  },
+  {
+    id: "project",
+    eyebrow: "PROJECT CLEANING",
+    title: "A considered final clean.",
+    description: "Detailed cleaning support when building or renovation work is ready for handover.",
+  },
+];
 
 export const services: DemoService[] = [
   {
@@ -56,6 +144,7 @@ export const services: DemoService[] = [
     icon: "home",
     image: "/images/generated/service-home.png",
     bullets: ["Kitchen and bathroom refresh", "Dusting and surface care", "Floors and finishing touches"],
+    group: "ongoing",
   },
   {
     slug: "office-cleaning",
@@ -66,6 +155,7 @@ export const services: DemoService[] = [
     icon: "office",
     image: "/images/generated/service-office.png",
     bullets: ["Shared areas and touchpoints", "Kitchenette and washroom reset", "Desk areas cleaned as agreed"],
+    group: "ongoing",
   },
   {
     slug: "short-let-turnover",
@@ -76,16 +166,29 @@ export const services: DemoService[] = [
     icon: "key",
     image: "/images/generated/service-short-let.png",
     bullets: ["Guest areas and bathrooms", "Kitchen and visible surfaces", "Host checklist and handover notes"],
+    group: "ongoing",
+  },
+  {
+    slug: "retainer-cleaning",
+    title: "Retainer cleaning",
+    short: "Dependable scheduled cleaning for homes and offices.",
+    description:
+      "A recurring cleaning plan built around your space, preferred frequency, agreed priorities, and access arrangements.",
+    icon: "calendar",
+    image: "/images/generated/service-retainer-cleaning.png",
+    bullets: ["Agreed recurring schedule", "Consistent scope and priorities", "Service review and follow-up"],
+    group: "ongoing",
   },
   {
     slug: "upholstery-cleaning",
     title: "Upholstery cleaning",
-    short: "Deep clean. Fresh feel. Because your comfort matters.",
+    short: "Focused fabric care for sofas, chairs, mattresses, and more.",
     description:
-      "We remove dirt, stains, allergens, and odors from sofas, chairs, mattresses, and more, leaving fabrics refreshed, sanitized, and looking like new.",
+      "We assess the material and areas of concern, then agree suitable vacuuming, spot treatment, odor care, and fabric-refreshing work for sofas, chairs, mattresses, and other upholstery.",
     icon: "sofa",
     image: "/images/generated/service-upholstery.png",
-    bullets: ["Deep vacuuming to remove dust and loose dirt", "Stain removal and spot treatment", "Odor elimination and fabric deodorizing", "Sanitizing for a healthier living space", "Safe for all fabric types and materials"],
+    bullets: ["Vacuuming to remove loose dirt", "Agreed stain and spot treatment", "Odor and fabric-care discussion", "Material suitability confirmed before treatment"],
+    group: "specialist",
   },
   {
     slug: "deep-cleaning",
@@ -96,16 +199,40 @@ export const services: DemoService[] = [
     icon: "sparkle",
     image: "/images/generated/service-deep-cleaning.png",
     bullets: ["Room-by-room priorities", "Edges and high-touch details", "A clear scope before the visit"],
+    group: "specialist",
+  },
+  {
+    slug: "fumigation",
+    title: "Fumigation",
+    short: "Site-assessed pest-control treatment planned around your property and safe access.",
+    description:
+      "We assess the affected areas, identify the treatment requirements, agree preparation and access arrangements, and provide clear instructions for leaving and re-entering the space.",
+    icon: "shield",
+    image: "/images/generated/service-fumigation.png",
+    bullets: ["Site and pest-concern assessment", "Treatment of agreed areas", "Preparation, ventilation, and re-entry guidance"],
+    group: "specialist",
+  },
+  {
+    slug: "tile-polishing",
+    title: "Tile polishing",
+    short: "Material-aware polishing for suitable tiled and stone surfaces.",
+    description:
+      "We inspect the tile material and condition, test the proposed method where necessary, and use a surface-appropriate process to clean, polish, and refresh the finish.",
+    icon: "tile",
+    image: "/images/generated/service-tile-polishing.png",
+    bullets: ["Material and condition assessment", "Surface-appropriate preparation and polishing", "Final buffing and visual handover"],
+    group: "specialist",
   },
   {
     slug: "post-construction-cleaning",
-    title: "Post-construction clean",
+    title: "Post-construction cleaning",
     short: "A final clean after renovation work is complete.",
     description:
       "Once building work has finished, this demo service focuses on removing ordinary fine dust and residue from agreed surfaces so the space can be set up.",
     icon: "building",
     image: "/images/generated/service-post-construction.png",
     bullets: ["Walk-through and scope agreement", "Surface-appropriate cleaning", "Clear handoff for final inspection"],
+    group: "project",
   },
 ];
 

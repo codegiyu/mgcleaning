@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/seo/site-seo";
 
 type Props = { searchParams: Promise<{ reference?: string }> };
 
-export const metadata: Metadata = buildPageMetadata({ title: "Request received", description: "Your M&G Cleaning Service request has been received.", path: "/book/confirmation", noIndex: true });
+export const metadata: Metadata = buildPageMetadata({ title: "Request received", description: "Your M&G Cleaning Services request has been received.", path: "/book/confirmation", noIndex: true });
 
 export default async function BookingConfirmationPage({ searchParams }: Props) {
   const params = await searchParams;

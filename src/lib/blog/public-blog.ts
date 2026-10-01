@@ -39,7 +39,7 @@ function fromDemo(article: DemoArticle): PublicBlogPost {
       ...article.takeaways.map((item) => `- ${item}`),
     ].join("\n\n"),
     category: article.category,
-    authorName: "M&G Cleaning Service",
+    authorName: "M&G Cleaning Services",
     serviceSlug: article.serviceSlug,
     coverImageUrl: article.image,
     coverImageAlt: article.title,

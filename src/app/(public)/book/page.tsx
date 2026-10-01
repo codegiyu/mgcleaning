@@ -9,7 +9,7 @@ import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site
 type Props = { searchParams: Promise<{ service?: string }> };
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "Request a cleaning", path: "/book" }];
-export const metadata: Metadata = buildPageMetadata({ title: "Request a cleaning", description: "Submit a cleaning request and M&G Cleaning Service will contact you to confirm availability and pricing.", path: "/book" });
+export const metadata: Metadata = buildPageMetadata({ title: "Request a cleaning", description: "Submit a cleaning request and M&G Cleaning Services will contact you to confirm availability and pricing.", path: "/book" });
 
 export default async function BookingPage({ searchParams }: Props) {
   const params = await searchParams;

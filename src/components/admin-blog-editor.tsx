@@ -8,7 +8,7 @@ import type { BlogPost, BlogPostInput, PostStatus } from "@/lib/api/endpoints";
 import { services } from "@/content/demo-content";
 
 type Draft = BlogPostInput;
-const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Upholstery care", authorName: "M&G Cleaning Service", serviceSlug: "upholstery-cleaning", coverImageUrl: "", coverImageAlt: "", seoTitle: "", seoDescription: "" };
+const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverImageUrl: "", coverImageAlt: "", seoTitle: "", seoDescription: "" };
 
 function makeSlug(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 180);
@@ -43,7 +43,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         body: current.body,
         category: current.category,
         authorName: current.authorName,
-        serviceSlug: current.serviceSlug ?? "upholstery-cleaning",
+        serviceSlug: current.serviceSlug ?? "home-cleaning",
         coverImageUrl: current.coverImageUrl ?? "",
         coverImageAlt: current.coverImageAlt ?? "",
         seoTitle: current.seoTitle ?? "",
