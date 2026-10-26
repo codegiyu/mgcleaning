@@ -1,6 +1,7 @@
 import type { BlogPost } from "@/lib/api/endpoints";
 import { articles, getArticle, type DemoArticle } from "@/content/demo-content";
 import { contentMode } from "@/content/trust-content";
+import { BLOG_CACHE_SECONDS, BLOG_LIST_TAG, blogPostTag } from "@/lib/cache/blog-tags";
 import { isRenderableImageUrl } from "@/lib/media/media-url";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
@@ -63,8 +64,12 @@ function demoFallback(slug?: string): PublicBlogPost[] | PublicBlogPost | null {
   return articles.map(fromDemo);
 }
 
-async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, { cache: "no-store" });
+/**
+ * Cached for up to an hour and purged by tag when the backend publishes, edits, or
+ * unpublishes an article (see `src/app/api/revalidate/route.ts`).
+ */
+async function request<T>(path: string, tags: string[]): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, { next: { revalidate: BLOG_CACHE_SECONDS, tags } });
   const body = (await response.json()) as BlogEnvelope<T>;
   if (!response.ok || !body.success || body.data === undefined) {
     throw new Error("Published articles are not available.");
@@ -76,7 +81,7 @@ export async function getPublishedBlogPosts(category?: string) {
   const params = new URLSearchParams({ page: "1", pageSize: "50" });
   if (category && category !== "All") params.set("category", category);
   try {
-    const data = await request<{ items: PublicBlogPost[] }>(`/blog?${params.toString()}`);
+    const data = await request<{ items: PublicBlogPost[] }>(`/blog?${params.toString()}`, [BLOG_LIST_TAG]);
     return data.items;
   } catch {
     if (contentMode === "demo") {
@@ -91,7 +96,7 @@ export async function getPublishedBlogPosts(category?: string) {
 
 export async function getPublishedBlogPost(slug: string) {
   try {
-    return await request<PublicBlogPost>(`/blog/${encodeURIComponent(slug)}`);
+    return await request<PublicBlogPost>(`/blog/${encodeURIComponent(slug)}`, [blogPostTag(slug)]);
   } catch {
     if (contentMode === "demo") return demoFallback(slug);
     return null;
