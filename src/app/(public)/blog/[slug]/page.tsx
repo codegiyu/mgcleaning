@@ -10,6 +10,7 @@ import { getPublishedBlogPost, getPublishedBlogPosts, toDemoArticle } from "@/li
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { articleJsonLd, breadcrumbJsonLd, buildPageMetadata, DEFAULT_OG_IMAGE, graphJsonLd } from "@/lib/seo/site-seo";
+import { isRenderableImageUrl } from "@/lib/media/media-url";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -41,9 +42,10 @@ export default async function ArticlePage({ params }: Props) {
         <p>{post.excerpt}</p>
         <div className="article-byline"><span>{post.authorName}</span><span aria-hidden="true">·</span><time dateTime={publishedDate}>{formatArticleDate(publishedDate)}</time><span aria-hidden="true">·</span><span>{post.category}</span></div>
       </header>
-      {post.coverImageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img className="article-cover-image" src={post.coverImageUrl} alt={post.coverImageAlt || post.title} />
+      {isRenderableImageUrl(post.coverImageUrl) ? (
+        <div className="article-cover-frame">
+          <Image className="article-cover-image" src={post.coverImageUrl} alt={post.coverImageAlt || post.title} fill priority sizes="(max-width: 1100px) 100vw, 1100px" />
+        </div>
       ) : (
         <div className="article-hero-art article-art-mint" aria-hidden="true"><span className="article-art-decoration"><span /><span /><span /></span><Image className="article-art-logo" src="/mg-cleaning-logo.svg" alt="" width={220} height={98} /></div>
       )}

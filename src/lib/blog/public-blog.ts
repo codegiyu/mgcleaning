@@ -1,6 +1,7 @@
 import type { BlogPost } from "@/lib/api/endpoints";
 import { articles, getArticle, type DemoArticle } from "@/content/demo-content";
 import { contentMode } from "@/content/trust-content";
+import { isRenderableImageUrl } from "@/lib/media/media-url";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
 
@@ -111,7 +112,9 @@ export function toDemoArticle(post: PublicBlogPost): DemoArticle {
     publishedAt,
     readTime: `${Math.max(1, Math.ceil(words / 220))} min read`,
     tone: "mint",
-    image: post.coverImageUrl || (contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.png" : "/mg-cleaning-logo.svg"),
+    image: isRenderableImageUrl(post.coverImageUrl)
+      ? post.coverImageUrl
+      : contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.png" : "/mg-cleaning-logo.svg",
     paragraphs,
     takeaways: [],
   };
