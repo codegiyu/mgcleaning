@@ -38,11 +38,17 @@ docker build \
 docker run --rm -p 3000:3000 mgcleaning-web
 ```
 
+Set `REVALIDATE_SECRET` as a **runtime** variable (not a build argument) to the same 32+ character value as the backend's `REVALIDATE_SECRET`. Published-article reads are cached for up to an hour and tagged `blog` / `blog:<slug>`. The backend calls `POST /api/revalidate` with an HMAC signature after every change that affects the public site; removals (unpublish, archive, slug change) expire immediately, and other changes refresh in the background. Without the secret the route returns 503 and pages fall back to the hourly refresh.
+
 Next.js inlines `NEXT_PUBLIC_*` values into the built application, so changing these values in Coolify requires a new build and deploy. Production content mode intentionally fails the build while generated or unapproved trust records remain in `src/content/trust-content.ts`.
 
 On Vercel, social metadata resolves the site origin in this order: `NEXT_PUBLIC_SITE_URL`, Vercel's production/deployment URL, then `https://mgcleaning.vercel.app`. Set `NEXT_PUBLIC_SITE_URL` when the permanent domain is ready; the fallback prevents canonical and social-image tags from ever publishing localhost URLs in production builds.
 
 The SEO layer follows the same gate: demo builds use canonical URLs for local testing but emit `noindex, nofollow`, block crawlers in `robots.txt`, return an empty sitemap, and suppress structured data. After approved content is supplied, set `NEXT_PUBLIC_CONTENT_MODE=production` and an HTTPS `NEXT_PUBLIC_SITE_URL`; production then emits page-specific canonical, Open Graph, Twitter, breadcrumb, WebSite, LocalBusiness, Service, Article, and FAQ metadata where the corresponding facts are approved.
+
+## Checks
+
+Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. `npm test` uses Node's built-in test runner with type stripping (`node --experimental-strip-types --test`), so pure modules under `src/**/*.test.ts` need no extra test dependencies; such modules import siblings with explicit `.ts` extensions and avoid `@/` aliases.
 
 ## API and state conventions
 
