@@ -56,7 +56,7 @@ Out of scope: booking/calendar, customer accounts, payments, a CMS for services/
 - **Clock skew on scheduling:** compare with `now()` in Postgres, not Node's clock, and store `publish_at` as `timestamptz`. The admin UI shows the time in WAT and sends ISO with an offset.
 - **Deleting an object that is still referenced:** cleanup checks the FK references in the same query that marks the row deleted (`NOT EXISTS (select 1 from blog_posts where cover_media_id = m.id)`).
 - **Audit log as a PII sink:** metadata stores field *names* changed, not values, for inquiries. Notes and contact details are never copied into audit rows.
-- **R2 credentials blast radius:** create a bucket-scoped R2 API token (Object Read & Write on this bucket only), not an account-wide key. Use separate tokens for staging and production.
+- **R2 credentials blast radius:** create a bucket-scoped R2 API token (Object Read & Write on this bucket only), not an account-wide key. The bucket is shared across environments (see Resolved decisions), so the token is the boundary to protect.
 
 ## Phases
 
@@ -66,6 +66,7 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - Fix the blanket-409 error mapping and the publish read-modify-write race.
 - Add pino plus the request-ID middleware; replace `console.*`.
 - Add the `admin_audit_events` schema and migration, plus a `recordAudit(tx, …)` helper; wire it into the existing login/logout, inquiry patch, and post create/update.
+- Also found and fixed during Phase 0: the CORS preflight did not allow the `Idempotency-Key` header, so cross-origin form submissions would fail; and the client IP was taken from the client-controlled first `X-Forwarded-For` entry, so the inquiry rate limit could be bypassed.
 - **Gate:** existing 22 tests pass; new tests cover 23505 → 409 and other errors → 500; an audit row is written for each existing mutation, and a rolled-back mutation leaves no audit row; no PII in the log output of a test inquiry, checked with a redaction snapshot of a pino line.
 
 ### Phase 1: R2 media (backend, then web)
@@ -103,8 +104,11 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - No manageable services/FAQs/testimonials tables; they stay in governed manifests.
 - No analytics vendor; UTM data lives with inquiries only.
 
+## Resolved decisions (2026-10-26)
+
+- **Bucket topology:** one R2 bucket with `R2_FOLDER_PREFIX` per environment (`staging-files`, `production-files`), as in oj. Accepted trade-off: a staging credential can reach production objects, so keep the token scoped to this bucket and rotate it if the staging environment is compromised.
+- **Upload scope:** blog covers only for now. `intent` stays an enum so gallery media can be added later.
+
 ## Open questions
 
-1. Bucket topology: one bucket with `staging`/`production` prefixes (oj style) or separate buckets per environment? The recommendation is separate buckets with scoped tokens, so a staging credential leak cannot touch production media.
-2. Media domain: confirm `media.<domain>` once the production domain is final; is the domain's DNS on Cloudflare?
-3. Gallery uploads: should the admin also manage gallery/before-after media (feeding the trust ledger with provenance/rights fields), or stay blog-cover only for now? This plan assumes **blog covers only**, with `intent` leaving room for the gallery later.
+1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.
