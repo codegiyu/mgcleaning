@@ -15,6 +15,7 @@ export type PublicBlogPost = Pick<
   | "category"
   | "authorName"
   | "serviceSlug"
+  | "coverMediaId"
   | "coverImageUrl"
   | "coverImageAlt"
   | "seoTitle"
@@ -42,6 +43,7 @@ function fromDemo(article: DemoArticle): PublicBlogPost {
     category: article.category,
     authorName: "M&G Cleaning Services",
     serviceSlug: article.serviceSlug,
+    coverMediaId: null,
     coverImageUrl: article.image,
     coverImageAlt: article.title,
     seoTitle: null,

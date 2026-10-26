@@ -68,6 +68,7 @@ export type BlogPost = {
   category: string;
   authorName: string;
   serviceSlug: string | null;
+  coverMediaId: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
   seoTitle: string | null;
@@ -97,6 +98,40 @@ export type BlogPostInput = {
   coverImageAlt?: string;
   seoTitle?: string;
   seoDescription?: string;
+};
+
+export type MediaIntent = "blog-cover";
+
+export type MediaAsset = {
+  id: string;
+  url: string;
+  intent: MediaIntent;
+  contentType: string;
+  byteSize: number | null;
+  altText: string | null;
+  originalFilename: string | null;
+  status: "pending" | "verified" | "failed" | "expired" | "deleted";
+  createdAt: string;
+  verifiedAt: string | null;
+};
+
+export type MediaUploadRequest = {
+  intent: MediaIntent;
+  fileExtension: string;
+  byteSize: number;
+  filename?: string;
+  altText?: string;
+};
+
+export type MediaUploadTicket = {
+  asset: MediaAsset;
+  upload: {
+    url: string;
+    method: "PUT";
+    /** Must be sent unchanged: they are part of the presigned signature. */
+    headers: Record<string, string>;
+    expiresAt: string;
+  };
 };
 
 export type BlogPostPatch = Partial<BlogPostInput> & { status?: PostStatus };
@@ -144,6 +179,11 @@ export interface AllEndpoints {
   GET_ADMIN_BLOG_POST: EndpointDefinition<undefined, BlogPost>;
   POST_ADMIN_BLOG_POST: EndpointDefinition<BlogPostInput, BlogPost>;
   PATCH_ADMIN_BLOG_POST: EndpointDefinition<BlogPostPatch, BlogPost>;
+  POST_ADMIN_MEDIA_UPLOAD: EndpointDefinition<MediaUploadRequest, MediaUploadTicket>;
+  POST_ADMIN_MEDIA_VERIFY: EndpointDefinition<undefined, MediaAsset>;
+  GET_ADMIN_MEDIA: EndpointDefinition<undefined, Paginated<MediaAsset>>;
+  PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
+  DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;
 }
 
 export const ENDPOINTS = {
@@ -174,6 +214,23 @@ export const ENDPOINTS = {
   PATCH_ADMIN_BLOG_POST: {
     path: "/admin/blog/posts/:id",
     method: "PATCH",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_MEDIA_UPLOAD: { path: "/admin/media/uploads", method: "POST" },
+  POST_ADMIN_MEDIA_VERIFY: {
+    path: "/admin/media/:id/verify",
+    method: "POST",
+    pathParams: ["id"],
+  },
+  GET_ADMIN_MEDIA: { path: "/admin/media", method: "GET" },
+  PATCH_ADMIN_MEDIA: {
+    path: "/admin/media/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  DELETE_ADMIN_MEDIA: {
+    path: "/admin/media/:id",
+    method: "DELETE",
     pathParams: ["id"],
   },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;
