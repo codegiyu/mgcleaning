@@ -103,6 +103,35 @@ export type BlogPostInput = {
   seoDescription?: string;
 };
 
+export type AdminSession = {
+  id: string;
+  createdAt: string;
+  lastUsedAt: string;
+  expiresAt: string;
+  userAgent: string | null;
+  current: boolean;
+};
+
+export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "site_settings";
+
+export type AuditEvent = {
+  id: string;
+  action: string;
+  entityType: AuditEntityType;
+  entityId: string | null;
+  actorEmail: string | null;
+  metadata: Record<string, unknown>;
+  requestId: string | null;
+  createdAt: string;
+};
+
+export type SiteSettings = {
+  inquiryNotificationEmail: string | null;
+  effectiveNotificationEmail: string;
+  defaultAuthorName: string | null;
+  updatedAt: string | null;
+};
+
 export type MediaIntent = "blog-cover";
 
 export type MediaAsset = {
@@ -189,6 +218,13 @@ export interface AllEndpoints {
   GET_ADMIN_MEDIA: EndpointDefinition<undefined, Paginated<MediaAsset>>;
   PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
   DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;
+  POST_ADMIN_CHANGE_PASSWORD: EndpointDefinition<{ currentPassword: string; newPassword: string }, { revokedSessions: number }>;
+  GET_ADMIN_SESSIONS: EndpointDefinition<undefined, AdminSession[]>;
+  DELETE_ADMIN_SESSION: EndpointDefinition<undefined, { revoked: true }>;
+  POST_ADMIN_REVOKE_OTHER_SESSIONS: EndpointDefinition<undefined, { revokedSessions: number }>;
+  GET_ADMIN_AUDIT: EndpointDefinition<undefined, Paginated<AuditEvent>>;
+  GET_ADMIN_SETTINGS: EndpointDefinition<undefined, SiteSettings>;
+  PATCH_ADMIN_SETTINGS: EndpointDefinition<{ inquiryNotificationEmail?: string | null; defaultAuthorName?: string | null }, SiteSettings>;
 }
 
 export const ENDPOINTS = {
@@ -238,6 +274,17 @@ export const ENDPOINTS = {
     method: "DELETE",
     pathParams: ["id"],
   },
+  POST_ADMIN_CHANGE_PASSWORD: { path: "/admin/account/password", method: "POST" },
+  GET_ADMIN_SESSIONS: { path: "/admin/account/sessions", method: "GET" },
+  DELETE_ADMIN_SESSION: {
+    path: "/admin/account/sessions/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_REVOKE_OTHER_SESSIONS: { path: "/admin/account/sessions/revoke-others", method: "POST" },
+  GET_ADMIN_AUDIT: { path: "/admin/audit", method: "GET" },
+  GET_ADMIN_SETTINGS: { path: "/admin/settings", method: "GET" },
+  PATCH_ADMIN_SETTINGS: { path: "/admin/settings", method: "PATCH" },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;
 
 export type EndpointName = keyof AllEndpoints;
