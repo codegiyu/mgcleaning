@@ -122,6 +122,12 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - **D12 sweeper only:** scheduled posts are published by a 30-second conditional `UPDATE` with no delayed BullMQ jobs, so there are no job IDs to deduplicate or reschedule. Worst-case lateness is about 30 seconds.
 - **Web tests:** pure modules are tested with Node's built-in runner (`--experimental-strip-types`), so no test dependency was added.
 
+## Phase 3 amendments (2026-10-27)
+
+- **D16 narrowed:** settings hold the inquiry alert inbox and the default article author only. The public response-time wording stays in the governed trust-content manifest, because it is a customer-facing claim covered by the evidence ledger and production build guard.
+- **One alert inbox:** the setting is a single address (falling back to `INQUIRY_NOTIFICATION_TO`). The email outbox keeps one internal notification per inquiry; add a team mailbox or distribution list for several recipients.
+- **Activity page:** the audit trail also has its own admin page (`/admin/activity`) alongside the per-inquiry history.
+
 ## Open questions
 
 1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.
