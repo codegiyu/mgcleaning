@@ -475,6 +475,16 @@ main { flex:1; overflow-x:clip; }
 .admin-table-footer button { border:0; background:transparent; padding:5px 0; color:#23446e; font-size:var(--text-small); cursor:pointer; }
 .admin-table-footer button:disabled { color:#abb3c0; cursor:default; }
 .admin-inquiry-detail { min-width:0; border-left:1px solid #e3e6ed; padding:23px 0 20px 25px; }
+.admin-detail-link { display:inline-block; margin-top:12px; font-size:var(--text-small); }
+.admin-record-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr); gap:0; border-top:1px solid #e3e6ed; }
+.admin-record-grid .admin-inquiry-detail { border-left:0; padding-left:0; padding-right:28px; }
+.admin-record-history { border-left:1px solid #e3e6ed; padding:23px 0 20px 25px; }
+.admin-record-history h2,.admin-settings-card h2 { margin:0 0 14px; color:#0b2858; font-size:18px; font-weight:650; letter-spacing:-.025em; }
+.admin-activity { display:grid; gap:14px; justify-items:start; }
+.admin-activity-list { width:100%; display:grid; margin:0; padding:0; list-style:none; }
+.admin-activity-list li { display:grid; gap:4px; border-bottom:1px solid #eef0f4; padding:11px 0; }
+.admin-activity-list strong { color:#273958; font-size:var(--text-small); font-weight:650; line-height:1.5; }
+.admin-activity-list span { color:#7c889c; font-size:var(--text-micro); }
 .admin-detail-heading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid #e3e6ed; padding-bottom:17px; }
 .admin-detail-heading h2,.admin-editor-settings h2 { margin:0; color:#0b2858; font-size:18px; font-weight:650; letter-spacing:-.025em; }
 .admin-detail-heading span { color:#7c889c; font-size:var(--text-small); }
@@ -581,6 +591,9 @@ main { flex:1; overflow-x:clip; }
   .admin-inquiry-workspace { grid-template-columns:minmax(0,1fr); }
   .admin-inquiry-table-wrap { padding-right:0; }
   .admin-inquiry-detail { border-top:1px solid #e3e6ed; border-left:0; padding:23px 0; }
+  .admin-record-grid { grid-template-columns:minmax(0,1fr); }
+  .admin-record-grid .admin-inquiry-detail { padding-right:0; }
+  .admin-record-history { border-top:1px solid #e3e6ed; border-left:0; padding:23px 0; }
   .admin-editor-grid { grid-template-columns:minmax(0,1fr) 300px; }
 }
 @media(max-width:760px) {

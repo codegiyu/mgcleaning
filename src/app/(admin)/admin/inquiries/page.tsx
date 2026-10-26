@@ -99,7 +99,7 @@ export default function AdminInquiriesPage() {
         </section>
         <aside className="admin-inquiry-detail" aria-label="Inquiry details">
           {selected
-            ? <AdminInquiryDetail key={selected.id} inquiry={selected} onSaved={handleSaved} />
+            ? <AdminInquiryDetail key={selected.id} inquiry={selected} onSaved={handleSaved} fullPageHref={`/admin/inquiries/${selected.id}`} />
             : <p className="admin-inline-state">Select an inquiry to see its details.</p>}
         </aside>
       </div>
