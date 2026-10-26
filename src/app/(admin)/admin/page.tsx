@@ -30,6 +30,9 @@ export default function AdminOverviewPage() {
         <Link className="admin-summary" href="/admin/inquiries"><span>All enquiries</span><strong>{overview?.inquiryCounts.total ?? "—"}</strong><small>Review and follow up</small></Link>
         <Link className="admin-summary" href="/admin/blog?status=draft"><span>Draft articles</span><strong>{overview?.postCounts.draft ?? "—"}</strong><small>Continue writing</small></Link>
         <Link className="admin-summary" href="/admin/blog?status=published"><span>Published articles</span><strong>{overview?.postCounts.published ?? "—"}</strong><small>Manage the journal</small></Link>
+        {overview?.cacheRevalidationCounts && overview.cacheRevalidationCounts.deadLetter > 0 && (
+          <Link className="admin-summary" href="/admin/blog?status=published"><span>Website update failures</span><strong>{overview.cacheRevalidationCounts.deadLetter}</strong><small>Article changes may take up to an hour to appear</small></Link>
+        )}
         <Link className="admin-summary" href="/admin/inquiries"><span>Email failures</span><strong>{overview?.emailOutboxCounts ? overview.emailOutboxCounts.failed + overview.emailOutboxCounts.deadLetter : "—"}</strong><small>Check request notifications</small></Link>
       </div>
       <div className="admin-overview-links">

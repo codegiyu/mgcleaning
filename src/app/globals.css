@@ -465,7 +465,9 @@ main { flex:1; overflow-x:clip; }
 .admin-status { display:inline-flex; align-items:center; min-height:24px; border-radius:2px; background:#eef0f3; padding:3px 9px; color:#43516a; font-size:var(--text-micro); line-height:1; text-transform:capitalize; }
 .admin-status-new,.admin-status-draft { background:#fff2b0; color:#5b4a00; }
 .admin-status-contacted { background:#edf0f4; color:#45556e; }
-.admin-status-quoted { background:#e5efff; color:#17477f; }
+.admin-status-quoted,.admin-status-scheduled { background:#e5efff; color:#17477f; }
+.admin-status-note { display:block; margin-top:4px; color:#738098; font-size:var(--text-micro); }
+.admin-schedule label { color:#3c4c67; }
 .admin-status-booked,.admin-status-published { background:#e2f3e7; color:#22613a; }
 .admin-status-closed,.admin-status-archived { background:#eae9f7; color:#494272; }
 .admin-table-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 10px 0 12px; color:#738098; font-size:var(--text-small); }

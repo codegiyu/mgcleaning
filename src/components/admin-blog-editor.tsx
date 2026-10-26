@@ -7,6 +7,7 @@ import { callApi } from "@/lib/api/callApi";
 import type { BlogPost, BlogPostInput, PostStatus } from "@/lib/api/endpoints";
 import { services } from "@/content/demo-content";
 import { AdminCoverPicker, type SelectedCover } from "@/components/admin-cover-picker";
+import { formatWat, isoToWatInput, watInputToIso } from "@/lib/admin/wat-time";
 
 type Draft = BlogPostInput;
 const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverMediaId: null, coverImageAlt: "", seoTitle: "", seoDescription: "" };
@@ -22,6 +23,8 @@ export function AdminBlogEditor({ id }: { id?: string }) {
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [post, setPost] = useState<BlogPost | null>(null);
   const [cover, setCover] = useState<SelectedCover | null>(null);
+  const [scheduleAt, setScheduleAt] = useState("");
+  const [minScheduleAt] = useState(() => isoToWatInput(new Date().toISOString()));
   const [slugTouched, setSlugTouched] = useState(false);
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
@@ -52,6 +55,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         seoDescription: current.seoDescription ?? "",
       });
       setCover(current.coverMediaId && current.coverImageUrl ? { id: current.coverMediaId, url: current.coverImageUrl, altText: null } : null);
+      setScheduleAt(current.publishAt ? isoToWatInput(current.publishAt) : "");
     });
     return () => { active = false; };
   }, [id]);
@@ -106,10 +110,17 @@ export function AdminBlogEditor({ id }: { id?: string }) {
 
   async function save(targetStatus: PostStatus) {
     if (formRef.current && !formRef.current.reportValidity()) return;
-    if (targetStatus === "published" && (!draft.coverMediaId || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
+    const goingLive = targetStatus === "published" || targetStatus === "scheduled";
+    if (goingLive && (!draft.coverMediaId || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
       setError("Add an author, related service, cover image, and image alt text before publishing.");
       return;
     }
+    const publishAt = targetStatus === "scheduled" ? watInputToIso(scheduleAt) : null;
+    if (targetStatus === "scheduled" && !publishAt) {
+      setError("Choose the date and time (WAT) to publish this article.");
+      return;
+    }
+    const statusChange = { status: targetStatus, ...(publishAt ? { publishAt } : {}) };
     setSaving(true);
     setError("");
     setNotice("");
@@ -124,14 +135,14 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     if (post) {
       result = await callApi("PATCH_ADMIN_BLOG_POST", {
         pathParams: { id: post.id },
-        payload: { ...payload, status: targetStatus },
+        payload: { ...payload, ...statusChange },
       });
     } else {
       result = await callApi("POST_ADMIN_BLOG_POST", { payload });
       if (result.type === "success" && targetStatus !== "draft") {
         result = await callApi("PATCH_ADMIN_BLOG_POST", {
           pathParams: { id: result.data.id },
-          payload: { status: targetStatus },
+          payload: statusChange,
         });
       }
     }
@@ -139,7 +150,12 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     if (result.type === "error") { setError(result.message); return; }
     setPost(result.data);
     setCover(result.data.coverMediaId && result.data.coverImageUrl ? { id: result.data.coverMediaId, url: result.data.coverImageUrl, altText: cover?.altText ?? null } : null);
-    setNotice(targetStatus === "published" ? "Article published." : "Draft saved.");
+    setScheduleAt(result.data.publishAt ? isoToWatInput(result.data.publishAt) : "");
+    setNotice(
+      targetStatus === "published" ? "Article published."
+        : targetStatus === "scheduled" && result.data.publishAt ? `Scheduled for ${formatWat(result.data.publishAt)}.`
+          : "Draft saved.",
+    );
     if (!id) router.replace(`/admin/blog/${result.data.id}`);
   }
 
@@ -159,9 +175,9 @@ export function AdminBlogEditor({ id }: { id?: string }) {
       <header className="admin-editor-header">
         <div><h1>Blog</h1><p><Link href="/admin/blog">All posts</Link><span aria-hidden="true"> / </span>{post ? "Edit article" : "New article"}</p></div>
         <div className="admin-editor-actions">
-          <button className="admin-secondary-button" type="submit" disabled={saving}>{saving ? "Saving…" : post?.status === "published" ? "Save changes" : "Save draft"}</button>
+          <button className="admin-secondary-button" type="submit" disabled={saving}>{saving ? "Saving…" : post?.status === "published" || post?.status === "scheduled" ? "Save changes" : "Save draft"}</button>
           {post?.status === "published" && <button className="admin-secondary-button" type="button" disabled={saving} onClick={() => void save("draft")}>Unpublish</button>}
-          <button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save("published")}>{post?.status === "published" ? "Update article" : "Publish"}</button>
+          <button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save("published")}>{post?.status === "published" ? "Update article" : post?.status === "scheduled" ? "Publish now" : "Publish"}</button>
         </div>
       </header>
       <div className="admin-editor-grid">
@@ -180,7 +196,18 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         </section>
         <aside className="admin-editor-settings">
           <h2>Post settings</h2>
-          <label className="admin-field"><span>Status</span><select value={post?.status ?? "draft"} onChange={(event) => { if (post) setPost({ ...post, status: event.target.value as PostStatus }); }} disabled={!post}><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label>
+          <label className="admin-field"><span>Status</span><select value={post?.status ?? "draft"} onChange={(event) => { if (post) setPost({ ...post, status: event.target.value as PostStatus }); }} disabled={!post}><option value="draft">Draft</option>{post?.status === "scheduled" && <option value="scheduled">Scheduled</option>}<option value="published">Published</option><option value="archived">Archived</option></select></label>
+          {post?.status !== "published" && (
+            <div className="admin-field admin-schedule">
+              <label htmlFor="article-publish-at">Publish later (WAT)</label>
+              <input id="article-publish-at" type="datetime-local" value={scheduleAt} min={minScheduleAt} disabled={saving} onChange={(event) => setScheduleAt(event.target.value)} />
+              {post?.status === "scheduled" && post.publishAt && <small className="admin-field-help">Goes live {formatWat(post.publishAt)}.</small>}
+              <div className="admin-cover-actions">
+                <button className="admin-secondary-button" type="button" disabled={saving || !scheduleAt} onClick={() => void save("scheduled")}>{post?.status === "scheduled" ? "Reschedule" : "Schedule"}</button>
+                {post?.status === "scheduled" && <button className="admin-secondary-button" type="button" disabled={saving} onClick={() => void save("draft")}>Cancel schedule</button>}
+              </div>
+            </div>
+          )}
           <label className="admin-field"><span>Category</span><input required maxLength={80} value={draft.category} onChange={(event) => update("category", event.target.value)} /></label>
           <label className="admin-field"><span>Author</span><input required minLength={2} maxLength={120} value={draft.authorName} onChange={(event) => update("authorName", event.target.value)} /></label>
           <label className="admin-field"><span>Related service</span><select required value={draft.serviceSlug} onChange={(event) => update("serviceSlug", event.target.value)}><option value="">Choose a service</option>{services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}</select></label>
@@ -190,7 +217,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         </aside>
       </div>
       {(error || notice) && <p className={error ? "admin-error admin-editor-feedback" : "admin-success admin-editor-feedback"} role={error ? "alert" : "status"}>{error || notice}</p>}
-      <div className="admin-editor-bottom-actions"><Link className="admin-text-link" href="/admin/blog">Cancel and return to posts</Link><button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save(post?.status ?? "draft")}>{saving ? "Saving…" : post?.status === "published" ? "Save changes" : "Save draft"}</button></div>
+      <div className="admin-editor-bottom-actions"><Link className="admin-text-link" href="/admin/blog">Cancel and return to posts</Link><button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save(post?.status ?? "draft")}>{saving ? "Saving…" : post?.status === "published" || post?.status === "scheduled" ? "Save changes" : "Save draft"}</button></div>
     </form>
   );
 }

@@ -35,7 +35,7 @@ export type CreateInquiryPayload = {
 };
 
 export type InquiryStatus = "new" | "contacted" | "quoted" | "booked" | "closed";
-export type PostStatus = "draft" | "published" | "archived";
+export type PostStatus = "draft" | "scheduled" | "published" | "archived";
 
 export type AdminInquiry = {
   id: string;
@@ -75,6 +75,8 @@ export type BlogPost = {
   seoDescription: string | null;
   status: PostStatus;
   publishedAt: string | null;
+  /** Go-live time for scheduled posts (ISO); null otherwise. */
+  publishAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -135,7 +137,8 @@ export type MediaUploadTicket = {
   };
 };
 
-export type BlogPostPatch = Partial<BlogPostInput> & { status?: PostStatus };
+/** `publishAt` must carry a UTC offset; see `src/lib/admin/wat-time.ts`. */
+export type BlogPostPatch = Partial<BlogPostInput> & { status?: PostStatus; publishAt?: string };
 
 export interface AllEndpoints {
   GET_HEALTH: EndpointDefinition<
@@ -168,6 +171,7 @@ export interface AllEndpoints {
       inquiryCounts: { total: number; new: number };
       postCounts: { draft: number; published: number };
       emailOutboxCounts?: { pending: number; failed: number; deadLetter: number };
+      cacheRevalidationCounts?: { pending: number; deadLetter: number };
     }
   >;
   GET_ADMIN_INQUIRIES: EndpointDefinition<undefined, Paginated<AdminInquiry>>;
