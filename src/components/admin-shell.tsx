@@ -10,13 +10,17 @@ const navigation = [
   { href: "/admin", label: "Overview", icon: "overview" },
   { href: "/admin/inquiries", label: "Inquiries", icon: "inquiries" },
   { href: "/admin/blog", label: "Blog", icon: "blog" },
-];
+  { href: "/admin/activity", label: "Activity", icon: "activity" },
+  { href: "/admin/settings", label: "Settings", icon: "settings" },
+] as const;
 
-export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "logout" | "search" | "chevron" }) {
+export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "activity" | "settings" | "logout" | "search" | "chevron" }) {
   const common = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
   if (name === "overview") return <svg {...common}><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" /></svg>;
   if (name === "inquiries") return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="m4 7 8 6 8-6" /></svg>;
   if (name === "blog") return <svg {...common}><path d="M6 3h9l4 4v14H6z" /><path d="M14 3v5h5M9 12h7m-7 4h7" /></svg>;
+  if (name === "activity") return <svg {...common}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
+  if (name === "settings") return <svg {...common}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>;
   if (name === "logout") return <svg {...common}><path d="M10 4H5v16h5m4-4 4-4-4-4m4 4H9" /></svg>;
   if (name === "search") return <svg {...common}><circle cx="10.8" cy="10.8" r="6.5" /><path d="m16 16 4 4" /></svg>;
   return <svg {...common}><path d="m9 5 7 7-7 7" /></svg>;
@@ -77,7 +81,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             const active = item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
             return (
               <Link key={item.href} href={item.href} className={active ? "admin-nav-link admin-nav-active" : "admin-nav-link"} aria-current={active ? "page" : undefined}>
-                <span aria-hidden="true"><AdminIcon name={item.icon as "overview" | "inquiries" | "blog"} /></span>{item.label}
+                <span aria-hidden="true"><AdminIcon name={item.icon} /></span>{item.label}
               </Link>
             );
           })}

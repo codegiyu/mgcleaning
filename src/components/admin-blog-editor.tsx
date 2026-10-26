@@ -32,6 +32,18 @@ export function AdminBlogEditor({ id }: { id?: string }) {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
+    if (id) return;
+    // New articles start with the team's configured default author, if one is set.
+    let active = true;
+    void callApi("GET_ADMIN_SETTINGS").then((result) => {
+      if (!active || result.type === "error" || !result.data.defaultAuthorName) return;
+      const author = result.data.defaultAuthorName;
+      setDraft((current) => current.authorName === blankDraft.authorName ? { ...current, authorName: author } : current);
+    });
+    return () => { active = false; };
+  }, [id]);
+
+  useEffect(() => {
     if (!id) return;
     let active = true;
     void callApi("GET_ADMIN_BLOG_POST", { pathParams: { id } }).then((result) => {
