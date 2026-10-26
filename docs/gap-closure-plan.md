@@ -115,6 +115,13 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - **D2 trimmed:** `width`/`height` were dropped from `media_assets`; covers render in a fixed 16:9 frame, so client-reported dimensions would be unverified data with no consumer. Verification also checks each file's leading bytes against its declared image type.
 - **Legacy cover URLs** no longer satisfy the publish check; a post needs a verified upload. No real articles were published with URL-only covers.
 
+## Phase 2 amendments (2026-10-27)
+
+- **D11 delivery without BullMQ:** purges are rows in a `cache_revalidations` outbox written in the post's transaction. A dispatcher in the API process claims them with `FOR UPDATE SKIP LOCKED` every 5 seconds, and immediately after a commit. Redis is not involved, so losing Redis cannot drop an unpublish purge.
+- **D11 purge modes:** removals (unpublish, archive, live slug change) use `revalidateTag(tag, { expire: 0 })`. The recommended `"max"` profile would serve the removed article to the next visitor while it refreshes. Other changes use `"max"`.
+- **D12 sweeper only:** scheduled posts are published by a 30-second conditional `UPDATE` with no delayed BullMQ jobs, so there are no job IDs to deduplicate or reschedule. Worst-case lateness is about 30 seconds.
+- **Web tests:** pure modules are tested with Node's built-in runner (`--experimental-strip-types`), so no test dependency was added.
+
 ## Open questions
 
 1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.
