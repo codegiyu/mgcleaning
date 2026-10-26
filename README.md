@@ -22,6 +22,7 @@ For Coolify, create a Dockerfile application from this repository, expose port `
 - `NEXT_PUBLIC_SITE_URL=https://<your-domain>`
 - `NEXT_PUBLIC_CONTENT_MODE=demo` while reviewing the generated design content; switch to `production` only after the trust-content approval gate passes.
 - `NEXT_PUBLIC_TURNSTILE_MODE=off` initially; set to `on` with the matching public site key if the backend Turnstile feature is activated.
+- `NEXT_PUBLIC_MEDIA_BASE_URL=https://media.<your-domain>`: the R2 custom domain (the backend `R2_PUBLIC_URL`). It is added to `images.remotePatterns`, and blog covers from any other host fall back to the default artwork instead of breaking the page.
 
 Keep the website and API on the same registrable domain (for example, `mgcleaning.example` and `api.mgcleaning.example`) so the current `SameSite=Lax` admin session cookie can accompany credentialed browser requests. Set the backend `FRONTEND_ORIGIN` to the website origin exactly. The API must be publicly reachable over HTTPS because browser calls and public server-rendered blog reads use this URL.
 
@@ -56,7 +57,7 @@ The typed endpoint registry and centralized request/result shape follow the patt
 
 This preview uses the client-confirmed M&G Cleaning Services name, navy-and-yellow identity, broader professional-cleaning positioning, nine service categories, and a five-step service process. Fumigation and tile-polishing detail is researched draft content pending confirmation of M&G's exact methods, products, qualifications, and limitations. Additional service descriptions and blog articles remain review content in `src/content/demo-content.ts`. The inquiry form posts to the Hono API; local development stores test submissions in PostgreSQL and captures queued email in Mailpit. Use sample contact details only. Confirm actual business details, the notification recipient, privacy/retention terms, and replace or approve draft content before a public launch.
 
-Admin sign-in, inquiry management, and database-backed blog drafting/publishing are now implemented. Public blog listing and article pages render published API content server-side; local development falls back to the supplied sample articles if the API is offline.
+Admin sign-in, inquiry management, and database-backed blog drafting/publishing are now implemented. Blog covers are uploaded from the editor straight to Cloudflare R2 (presigned `PUT`, then server-side verification) or picked from previously uploaded images; see the backend README for the upload contract and bucket setup. Public blog listing and article pages render published API content server-side; local development falls back to the supplied sample articles if the API is offline.
 
 Trust content is governed separately in `src/content/trust-content.ts`. Demo gallery media and placeholder testimonial/FAQ/service-area content are visibly disclosed and are not launch evidence. Replace them with approved records, rights, and sources before setting `NEXT_PUBLIC_CONTENT_MODE=production`; the production build guard will reject unapproved trust records.
 
