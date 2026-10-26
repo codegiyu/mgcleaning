@@ -109,6 +109,12 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - **Bucket topology:** one R2 bucket with `R2_FOLDER_PREFIX` per environment (`staging-files`, `production-files`), as in oj. Accepted trade-off: a staging credential can reach production objects, so keep the token scoped to this bucket and rotate it if the staging environment is compromised.
 - **Upload scope:** blog covers only for now. `intent` stays an enum so gallery media can be added later.
 
+## Phase 1 amendments (2026-10-26)
+
+- **D9 narrowed:** cleanup expires abandoned uploads and removes objects for expired, failed, and deleted rows, but never deletes verified images automatically. They form the reusable media library, so removing them would break "choose from library".
+- **D2 trimmed:** `width`/`height` were dropped from `media_assets`; covers render in a fixed 16:9 frame, so client-reported dimensions would be unverified data with no consumer. Verification also checks each file's leading bytes against its declared image type.
+- **Legacy cover URLs** no longer satisfy the publish check; a post needs a verified upload. No real articles were published with URL-only covers.
+
 ## Open questions
 
 1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.
