@@ -6,9 +6,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { callApi } from "@/lib/api/callApi";
 import type { BlogPost, BlogPostInput, PostStatus } from "@/lib/api/endpoints";
 import { services } from "@/content/demo-content";
+import { AdminCoverPicker, type SelectedCover } from "@/components/admin-cover-picker";
 
 type Draft = BlogPostInput;
-const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverImageUrl: "", coverImageAlt: "", seoTitle: "", seoDescription: "" };
+const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverMediaId: null, coverImageAlt: "", seoTitle: "", seoDescription: "" };
 
 function makeSlug(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 180);
@@ -20,6 +21,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [cover, setCover] = useState<SelectedCover | null>(null);
   const [slugTouched, setSlugTouched] = useState(false);
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
@@ -44,17 +46,28 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         category: current.category,
         authorName: current.authorName,
         serviceSlug: current.serviceSlug ?? "home-cleaning",
-        coverImageUrl: current.coverImageUrl ?? "",
+        coverMediaId: current.coverMediaId,
         coverImageAlt: current.coverImageAlt ?? "",
         seoTitle: current.seoTitle ?? "",
         seoDescription: current.seoDescription ?? "",
       });
+      setCover(current.coverMediaId && current.coverImageUrl ? { id: current.coverMediaId, url: current.coverImageUrl, altText: null } : null);
     });
     return () => { active = false; };
   }, [id]);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
+  }
+
+  function chooseCover(next: SelectedCover | null) {
+    setCover(next);
+    setDraft((current) => ({
+      ...current,
+      coverMediaId: next?.id ?? null,
+      // Offer the library's alt text as a starting point without overwriting the editor's own.
+      coverImageAlt: current.coverImageAlt?.trim() ? current.coverImageAlt : next?.altText ?? "",
+    }));
   }
 
   function insertMarkup(kind: "heading" | "bold" | "bullet") {
@@ -93,7 +106,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
 
   async function save(targetStatus: PostStatus) {
     if (formRef.current && !formRef.current.reportValidity()) return;
-    if (targetStatus === "published" && (!draft.coverImageUrl?.trim() || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
+    if (targetStatus === "published" && (!draft.coverMediaId || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
       setError("Add an author, related service, cover image, and image alt text before publishing.");
       return;
     }
@@ -102,7 +115,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     setNotice("");
     const payload: BlogPostInput = {
       ...draft,
-      coverImageUrl: draft.coverImageUrl?.trim() || undefined,
+      coverMediaId: draft.coverMediaId ?? null,
       coverImageAlt: draft.coverImageAlt?.trim() || undefined,
       seoTitle: draft.seoTitle?.trim() || undefined,
       seoDescription: draft.seoDescription?.trim() || undefined,
@@ -125,6 +138,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     setSaving(false);
     if (result.type === "error") { setError(result.message); return; }
     setPost(result.data);
+    setCover(result.data.coverMediaId && result.data.coverImageUrl ? { id: result.data.coverMediaId, url: result.data.coverImageUrl, altText: cover?.altText ?? null } : null);
     setNotice(targetStatus === "published" ? "Article published." : "Draft saved.");
     if (!id) router.replace(`/admin/blog/${result.data.id}`);
   }
@@ -170,7 +184,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
           <label className="admin-field"><span>Category</span><input required maxLength={80} value={draft.category} onChange={(event) => update("category", event.target.value)} /></label>
           <label className="admin-field"><span>Author</span><input required minLength={2} maxLength={120} value={draft.authorName} onChange={(event) => update("authorName", event.target.value)} /></label>
           <label className="admin-field"><span>Related service</span><select required value={draft.serviceSlug} onChange={(event) => update("serviceSlug", event.target.value)}><option value="">Choose a service</option>{services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}</select></label>
-          <label className="admin-field"><span>Featured image URL</span><input type="url" maxLength={2048} value={draft.coverImageUrl} onChange={(event) => update("coverImageUrl", event.target.value)} placeholder="https://…" /></label>
+          <AdminCoverPicker cover={cover} altText={draft.coverImageAlt ?? ""} disabled={saving} onChange={chooseCover} />
           <label className="admin-field"><span>Image alt text</span><input maxLength={250} value={draft.coverImageAlt} onChange={(event) => update("coverImageAlt", event.target.value)} placeholder="Describe the image" /></label>
           <div className="admin-search-preview"><h2>Search preview</h2><span>/blog/{slug}</span><strong>{titlePreview}</strong><p>{excerptPreview}</p></div>
         </aside>

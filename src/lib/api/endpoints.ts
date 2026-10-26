@@ -94,7 +94,8 @@ export type BlogPostInput = {
   category: string;
   authorName: string;
   serviceSlug: string;
-  coverImageUrl?: string;
+  /** A verified upload; the server copies its public URL onto the post. */
+  coverMediaId?: string | null;
   coverImageAlt?: string;
   seoTitle?: string;
   seoDescription?: string;
