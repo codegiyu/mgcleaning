@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: Phases 1–4 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phases 1–5 implemented (default wording pending Q1/Q2; live email setup pending Q3) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -225,3 +225,23 @@ Each phase ships as small signed commits, with the backend contract and tests be
 - **Static `trustTestimonials` and `getPublicTestimonials()` were removed.** Their two placeholder slots no longer count towards the production content gate (`assertProductionTrustContent`), because reviews are now governed by the consent rule in the API and database. The `AGENTS.md` review rule and the evidence ledger say where reviews come from.
 - **Verified against the local stack.** Publishing three reviews refreshed the prerendered `/reviews` and `/` on demand, with featured first. Unpublishing one removed it on the next request (`remove` mode), and the layout was checked at desktop and 375px. No `Review` or `AggregateRating` data is emitted (D9).
 - **Follow-up to decide with the client:** once a few reviews are live, add "Reviews" to the header or footer navigation and the link hub.
+
+## Phase 5 amendments (as built)
+
+- **No new `ADMIN_BASE_URL`.** The dashboard lives on the website origin, so "Open in dashboard" uses the existing, validated `FRONTEND_ORIGIN`. That keeps one fewer variable to get wrong per environment.
+- **The buttons are stored on the outbox row** (migration `0012_alert_actions`: `email_outbox.actions jsonb`, `reply_to varchar`) when the inquiry is saved, rather than computed when the email is sent. A retried alert therefore always matches the inquiry as submitted. Older rows default to no buttons.
+- **Button order:** WhatsApp, then Call, then dashboard. WhatsApp also appears when the customer stated no preference (contact form). A "Phone call" preference puts Call first and drops WhatsApp.
+- **WhatsApp link details.** The prefill carries the request reference only, with no name or message in any link. Numbers are normalised from Nigerian mobile formats (`0…`, `+234…`, `234…`, with spaces, dashes, or brackets). Anything else gets no WhatsApp or Call button but keeps the dashboard link.
+- **Plain text and HTML.** The HTML shows the buttons only; the plain-text part repeats the links after the details (`plainTextBody`). The template drops any action that is not `https://`, `tel:+…`, or local `http://localhost`.
+- **Test config.** `vitest.config.ts` now runs `*.test.tsx`, for the template render test, and `tsconfig.build.json` excludes those tests from `dist`.
+- **Verified locally through Mailpit:**
+  - A WhatsApp-preference booking produced the three buttons with correct links and Reply-To set to the customer.
+  - The customer receipt has no buttons and no Reply-To.
+  - A phone-preference booking produced Call and dashboard only.
+  - "Open in dashboard" opened the right record, which shows both emails as Sent.
+- **Still to do with the client (Q3):**
+  - Verify the sender domain in Resend.
+  - Set the officer's inbox in Admin → Settings.
+  - Confirm the alert on their phone.
+
+  The steps are in the backend runbook under "Inquiry alerts".
