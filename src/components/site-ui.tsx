@@ -3,6 +3,9 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { demoSite, type DemoArticle, type DemoService, type ServiceIconName } from "@/content/demo-content";
 import { MobileSiteNav } from "@/components/mobile-site-nav";
+import { businessContactFacts } from "@/content/public-content";
+import { messageResponseExpectation } from "@/content/response-expectation";
+import { whatsappRequestHref } from "@/lib/contact/request-links";
 
 export function ServiceIcon({ kind, className = "size-6" }: { kind: ServiceIconName; className?: string }) {
   const common = {
@@ -189,6 +192,7 @@ export function ArticleCard({ article, featured = false }: { article: DemoArticl
 }
 
 export function CTASection({ compact = false }: { compact?: boolean }) {
+  const { whatsapp } = businessContactFacts;
   return (
     <section className={"cta-panel " + (compact ? "cta-panel-compact" : "")}>
       <SectionHeading
@@ -197,9 +201,12 @@ export function CTASection({ compact = false }: { compact?: boolean }) {
         tone="light"
         eyebrow="YOUR SPACE · YOUR NEEDS · OUR EXPERTISE"
         title="Tell us what your space needs."
-        description="We'll assess it, agree the right scope, and deliver with professional care and attention to detail."
+        description={["We'll assess it, agree the right scope, and deliver with professional care and attention to detail.", `Message us on WhatsApp or Instagram, or call. ${messageResponseExpectation}.`]}
       />
-      <Link className="button button-lime" href="/book">Request a cleaning <ArrowUpRight /></Link>
+      <div className="cta-actions">
+        {whatsapp.href && <a className="button button-lime" href={whatsappRequestHref(whatsapp.href)} target="_blank" rel="noreferrer"><WhatsAppIcon /> Message us on WhatsApp<span className="sr-only"> (opens WhatsApp)</span></a>}
+        <Link className="button button-ghost-light" href="/book">Other ways to request <ArrowUpRight /></Link>
+      </div>
       <span className="cta-orbit cta-orbit-one" aria-hidden="true" />
       <span className="cta-orbit cta-orbit-two" aria-hidden="true" />
     </section>
