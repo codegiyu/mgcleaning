@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
+import { ArrowRight, PageCTA, PageIntro } from "@/components/site-ui";
 import { getPublicFaqs } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -28,7 +28,7 @@ export default function FaqPage() {
           </details>
         )) : (
           <div className="empty-trust-state">
-            <h2>FAQs are being prepared.</h2>
+            <h2 className="subsection-title">FAQs are being prepared.</h2>
             <p>M&amp;G Cleaning Services will publish answers here after the service details have been confirmed.</p>
           </div>
         )}
@@ -37,7 +37,7 @@ export default function FaqPage() {
         <div><p className="eyebrow">STILL UNSURE?</p><h2>Tell us what your space needs.</h2></div>
         <Link className="text-link" href="/book">Start a cleaning request <ArrowRight /></Link>
       </section>
-      <section className="section" style={{ paddingTop: 0 }}><CTASection compact /></section>
+      <PageCTA />
     </div>
   );
 }

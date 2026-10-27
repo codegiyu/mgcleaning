@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArticleCard, ArrowRight, ArrowUpRight, CTASection, ServiceCard } from "@/components/site-ui";
-import { TrustProofCard } from "@/components/trust-ui";
+import { ArticleCard, ArrowRight, ArrowUpRight, CTASection, InfoCard, SectionHeading, sequenceLabel, ServiceCard } from "@/components/site-ui";
 import { articles, services, whyMgReasons } from "@/content/demo-content";
 import { getPublicFaqs } from "@/content/trust-content";
 import { getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
@@ -42,34 +41,58 @@ export default async function HomePage() {
       </section>
       <div className="trust-strip"><div className="section-shell trust-strip-inner"><span className="trust-label">The M&amp;G experience</span><div className="trust-items"><span className="trust-pill"><span>✦</span> Personalized service</span><span className="trust-pill"><span>✦</span> Professional team</span><span className="trust-pill"><span>✦</span> Attention to detail</span><span className="trust-pill"><span>♡</span> 24-hour follow-up</span></div></div></div>
       <section className="section section-shell why-mg-section">
-        <div className="section-heading"><div><p className="eyebrow">WHY M&amp;G</p><h2>A professional service,<br />built around you.</h2></div><p>We combine clear communication, thoughtful planning, and careful execution to deliver a cleaning experience tailored to each space.</p></div>
-        <div className="why-mg-grid">{whyMgReasons.map((reason, index) => <article className="why-mg-card" key={reason.title}><span>0{index + 1}</span><h3>{reason.title}</h3><p>{reason.description}</p></article>)}</div>
+        <SectionHeading eyebrow="WHY M&G" title={<>A professional service,<br />built around you.</>} description="We combine clear communication, thoughtful planning, and careful execution to deliver a cleaning experience tailored to each space." />
+        <div className="why-mg-grid">{whyMgReasons.map((reason, index) => <InfoCard key={reason.title} variant="panel" label={sequenceLabel(index)} title={reason.title}>{reason.description}</InfoCard>)}</div>
       </section>
       <section className="section section-shell trust-evidence-section">
-        <div className="section-heading"><div><p className="eyebrow">CLEAR FROM THE START</p><h2>A thoughtful service,<br />from request to follow-up.</h2></div><div><p>We keep the process straightforward: understand your priorities, agree the scope, deliver with care, and check in after the service.</p><Link className="text-link" href="/about">See how we work <ArrowRight /></Link></div></div>
+        <SectionHeading
+          eyebrow="CLEAR FROM THE START"
+          title={<>A thoughtful service,<br />from request to follow-up.</>}
+          description="We keep the process straightforward: understand your priorities, agree the scope, deliver with care, and check in after the service."
+          action={{ href: "/about", label: "See how we work" }}
+        />
         <div className="trust-proof-grid">
-          <TrustProofCard eyebrow="PERSONALIZED SERVICE" title="Tell us what matters most." description="We listen to your priorities and understand the space before recommending the right cleaning approach." />
-          <TrustProofCard eyebrow="CLEAR SCOPE" title="Know what to expect." description="The service scope, availability, and pricing are confirmed with you before the team gets to work." href="/services" linkLabel="Explore services" />
-          <TrustProofCard eyebrow="24-HOUR FOLLOW-UP" title="Care continues after the clean." description="We check in within 24 hours of your service to make sure you are satisfied with the result." href="/faq" linkLabel="Read the FAQs" />
+          <InfoCard label="PERSONALIZED SERVICE" title="Tell us what matters most.">We listen to your priorities and understand the space before recommending the right cleaning approach.</InfoCard>
+          <InfoCard label="CLEAR SCOPE" title="Know what to expect." href="/services" linkLabel="Explore services">The service scope, availability, and pricing are confirmed with you before the team gets to work.</InfoCard>
+          <InfoCard label="24-HOUR FOLLOW-UP" title="Care continues after the clean." href="/faq" linkLabel="Read the FAQs">We check in within 24 hours of your service to make sure you are satisfied with the result.</InfoCard>
         </div>
         <div className="faq-preview">
-          <div className="faq-preview-heading"><div><p className="eyebrow">QUICK ANSWERS</p><h3>Before you send a request.</h3></div><Link className="text-link" href="/faq">All FAQs <ArrowRight /></Link></div>
-          <div className="faq-preview-grid">{getPublicFaqs().slice(0, 3).map((faq) => <div className="faq-preview-item" key={faq.id}><strong>{faq.question}</strong><p>{faq.answer}</p></div>)}</div>
+          <SectionHeading as="h3" size="subsection" eyebrow="QUICK ANSWERS" title="Before you send a request." action={{ href: "/faq", label: "All FAQs" }} />
+          <div className="faq-preview-grid">{getPublicFaqs().slice(0, 3).map((faq) => <InfoCard key={faq.id} element="div" titleAs="h4" title={faq.question}>{faq.answer}</InfoCard>)}</div>
         </div>
       </section>
       <section className="section section-shell">
-        <div className="section-heading"><div><p className="eyebrow">PROFESSIONAL CLEANING SOLUTIONS</p><h2>A service for<br />every space.</h2></div><div><p>Choose from ongoing cleaning plans and focused specialist care, all shaped around the result your space needs.</p><Link className="text-link" href="/services">Explore all services <ArrowRight /></Link></div></div>
+        <SectionHeading
+          eyebrow="PROFESSIONAL CLEANING SOLUTIONS"
+          title={<>A service for<br />every space.</>}
+          description="Choose from ongoing cleaning plans and focused specialist care, all shaped around the result your space needs."
+          action={{ href: "/services", label: "Explore all services" }}
+        />
         <div className="service-grid">{featuredServices.map((service, index) => <ServiceCard key={service.slug} service={service} index={index} />)}</div>
       </section>
-      <section className="section section-shell" style={{ paddingTop: 0 }}>
-        <div className="approach-band"><div className="approach-visual"><Image src="/images/generated/about-consultation-v2.png" alt="M&G cleaning professional assessing a client&apos;s space" fill sizes="(max-width: 760px) 100vw, 50vw" /></div><div className="approach-copy"><p className="eyebrow">THE M&amp;G APPROACH</p><h2>Good work starts with listening.</h2><p>Tell us what you need. We&apos;ll assess the space, recommend the right solution, agree the scope, deliver, and follow up within 24 hours.</p><Link className="text-link" href="/about">See how we work <ArrowRight /></Link></div></div>
+      <section className="section section-shell section-flush">
+        <div className="approach-band">
+          <div className="approach-visual"><Image src="/images/generated/about-consultation-v2.png" alt="M&G cleaning professional assessing a client&apos;s space" fill sizes="(max-width: 760px) 100vw, 50vw" /></div>
+          <SectionHeading
+            className="approach-copy"
+            layout="stacked"
+            eyebrow="THE M&G APPROACH"
+            title="Good work starts with listening."
+            description="Tell us what you need. We'll assess the space, recommend the right solution, agree the scope, deliver, and follow up within 24 hours."
+            action={{ href: "/about", label: "See how we work" }}
+          />
+        </div>
       </section>
       <section className="section journal-section"><div className="section-shell">
-        <div className="section-heading"><div><p className="eyebrow">THE M&amp;G JOURNAL</p><h2>Small ideas for<br />a fresher space.</h2></div><p>Practical notes on home care, workspaces, hosting, specialist surfaces, and cleaning preparation.</p></div>
+        <SectionHeading
+          eyebrow="THE M&G JOURNAL"
+          title={<>Small ideas for<br />a fresher space.</>}
+          description="Practical notes on home care, workspaces, hosting, specialist surfaces, and cleaning preparation."
+          action={{ href: "/blog", label: "Visit the journal" }}
+        />
         <div className="article-grid">{featuredArticles.map((article) => <ArticleCard key={article.slug} article={article} />)}</div>
-        <div style={{ marginTop: 25 }}><Link className="text-link" href="/blog">Visit the journal <ArrowRight /></Link></div>
       </div></section>
-      <section className="section section-shell" style={{ paddingTop: 70 }}><CTASection /></section>
+      <section className="section section-shell home-cta"><CTASection /></section>
     </>
   );
 }

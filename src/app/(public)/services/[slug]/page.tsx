@@ -38,12 +38,12 @@ export default async function ServiceDetailPage({ params }: Props) {
           <ServiceDetailSection title="Suitable spaces and surfaces" items={[...(details?.suitableFor ?? []), ...(details?.surfacesOrSpaces ?? [])]} />
           <ServiceDetailSection title="How to prepare" items={details?.preparation ?? ["Share your priorities and access details before the visit."]} />
           <ServiceDetailSection title="What affects pricing" items={details?.pricingFactors ?? ["Space, scope, condition, materials, access, and timing."]} />
-          <div className="service-detail-result"><h2>Expected result</h2><p>{details?.expectedResult ?? "M&G Cleaning Services will confirm the expected result with you before the service is agreed."}</p></div>
-          <div className="service-detail-result"><h2>Important to know</h2><ul className="detail-list">{(details?.limitations ?? ["Final availability and inclusions are confirmed before a visit."]).map((item) => <li key={item}><CheckMark />{item}</li>)}</ul></div>
+          <section className="service-detail-section"><h2>Expected result</h2><p>{details?.expectedResult ?? "M&G Cleaning Services will confirm the expected result with you before the service is agreed."}</p></section>
+          <ServiceDetailSection title="Important to know" items={details?.limitations ?? ["Final availability and inclusions are confirmed before a visit."]} />
         </div>
         <aside className="service-detail-aside">
           <p className="eyebrow">LET&apos;S TALK ABOUT YOUR SPACE</p>
-          <h2>Start with a few details.</h2>
+          <h2 className="panel-title">Start with a few details.</h2>
           <p>Share the service or result you have in mind. We can shape the scope around your space and priorities.</p>
           <Link className="button button-dark" href={"/book?service=" + encodeURIComponent(service.title)}>Request this service <ArrowUpRight /></Link>
           <p><Link className="text-link" href="/services">Back to all services <ArrowRight /></Link></p>

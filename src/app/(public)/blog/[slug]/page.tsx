@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArticleCard, ArrowRight } from "@/components/site-ui";
+import { ArticleCard, ArrowRight, SectionHeading } from "@/components/site-ui";
 import { PlainArticleBody } from "@/components/plain-article-body";
 import { formatArticleDate } from "@/content/demo-content";
 import { getService } from "@/content/demo-content";
@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: Props) {
       )}
       <PlainArticleBody body={post.body} />
       <div className="article-footer-cta"><p>{relatedService ? `Ready to talk about ${relatedService.title.toLowerCase()}?` : "Want to talk through your cleaning needs?"}</p><div className="article-cta-links"><Link className="text-link" href={relatedService ? "/services/" + relatedService.slug : "/services"}>Explore the service <ArrowRight /></Link><Link className="text-link" href={relatedService ? "/book?service=" + encodeURIComponent(relatedService.title) : "/book"}>Book this service <ArrowRight /></Link></div></div>
-      {related.length > 0 && <section className="section"><div className="section-heading"><div><p className="eyebrow">KEEP EXPLORING</p><h2>More from the journal.</h2></div><Link className="text-link" href="/blog">All articles <ArrowRight /></Link></div><div className="article-grid">{related.map((item) => <ArticleCard key={item.id} article={toDemoArticle(item)} />)}</div></section>}
+      {related.length > 0 && <section className="section"><SectionHeading eyebrow="KEEP EXPLORING" title="More from the journal." action={{ href: "/blog", label: "All articles" }} /><div className="article-grid">{related.map((item) => <ArticleCard key={item.id} article={toDemoArticle(item)} />)}</div></section>}
     </article>
   );
 }

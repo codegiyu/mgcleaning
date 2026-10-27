@@ -1,4 +1,4 @@
-import { CTASection, PageIntro, ServiceCard } from "@/components/site-ui";
+import { PageCTA, PageIntro, SectionHeading, ServiceCard } from "@/components/site-ui";
 import { serviceGroups, services } from "@/content/demo-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -19,16 +19,13 @@ export default function ServicesPage() {
           const groupServices = services.filter((service) => service.group === group.id);
           return (
             <section className="service-group" key={group.id} aria-labelledby={`service-group-${group.id}`}>
-              <div className="service-group-heading">
-                <div><p className="eyebrow">{group.eyebrow}</p><h2 id={`service-group-${group.id}`}>{group.title}</h2></div>
-                <p>{group.description}</p>
-              </div>
+              <SectionHeading divider size="subsection" id={`service-group-${group.id}`} eyebrow={group.eyebrow} title={group.title} description={group.description} />
               <div className={"service-grid " + (groupServices.length === 4 ? "service-grid-balanced" : "")}>{groupServices.map((service) => <ServiceCard key={service.slug} service={service} index={services.indexOf(service)} />)}</div>
             </section>
           );
         })}
       </div>
-      <section className="section" style={{ paddingTop: 0 }}><CTASection compact /></section>
+      <PageCTA />
     </div>
   );
 }
