@@ -4,6 +4,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { demoSite, services } from "@/content/demo-content";
 import { callApi } from "@/lib/api/callApi";
+import { attributionPayload } from "@/lib/attribution/session";
 import { FormSelect } from "@/components/form-select";
 import { TurnstileField } from "@/components/turnstile-field";
 
@@ -48,6 +49,7 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
       message: getValue("message"),
       ...(getValue("turnstileToken") ? { turnstileToken: getValue("turnstileToken") } : {}),
       email,
+      ...attributionPayload(),
     };
 
     pendingRef.current = true;

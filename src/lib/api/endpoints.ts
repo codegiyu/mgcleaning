@@ -32,6 +32,12 @@ export type CreateInquiryPayload = {
   location?: string;
   spaceType?: string;
   message: string;
+  /** First-touch attribution; the API normalises it and never rejects an enquiry over it. */
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  landingPath?: string;
 };
 
 export type InquiryStatus = "new" | "contacted" | "quoted" | "booked" | "closed";
@@ -55,6 +61,11 @@ export type AdminInquiry = {
   internalNote: string | null;
   publicReference: string;
   preferredContactMethod: "phone" | "whatsapp" | "either" | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmContent: string | null;
+  landingPath: string | null;
   createdAt: string;
   updatedAt: string;
 };

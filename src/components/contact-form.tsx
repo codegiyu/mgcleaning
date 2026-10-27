@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { demoSite } from "@/content/demo-content";
 import { callApi } from "@/lib/api/callApi";
+import { attributionPayload } from "@/lib/attribution/session";
 import { FormSelect } from "@/components/form-select";
 import { TurnstileField } from "@/components/turnstile-field";
 
@@ -41,6 +42,7 @@ export function ContactForm() {
       message: getValue("message"),
       ...(getValue("turnstileToken") ? { turnstileToken: getValue("turnstileToken") } : {}),
       ...(email ? { email } : {}),
+      ...attributionPayload(),
     };
 
     pendingRef.current = true;
