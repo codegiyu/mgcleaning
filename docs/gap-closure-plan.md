@@ -128,6 +128,13 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - **One alert inbox:** the setting is a single address (falling back to `INQUIRY_NOTIFICATION_TO`). The email outbox keeps one internal notification per inquiry; add a team mailbox or distribution list for several recipients.
 - **Activity page:** the audit trail also has its own admin page (`/admin/activity`) alongside the per-inquiry history.
 
+## Phase 4 amendments (2026-10-27)
+
+- **D15 fields:** attribution is stored as flat `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, and `landing_path` columns (no `ref`). The landing path identifies which article an Instagram post sent the visitor to.
+- **Never reject a lead over attribution:** malformed values are normalised or dropped server-side rather than failing validation.
+- **Link hub:** rather than tagging every internal link, untagged landings on `/links` are attributed to the Instagram bio. Editors get a copyable, slug-tagged Instagram link for live articles.
+- **Privacy copy:** the site now records campaign source and landing page with enquiries. The reviewed privacy page should mention this before launch; it was not edited here because legal copy is governed content.
+
 ## Open questions
 
 1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.
