@@ -99,6 +99,39 @@ main { flex:1; overflow-x:clip; }
 .why-mg-card h3 { margin:34px 0 8px; color:var(--deep); font-size:25px; font-weight:600; letter-spacing:-.04em; }
 .why-mg-card p { margin:0; color:#68766c; font-size:var(--text-small); line-height:1.7; }
 .section { padding:98px 0; }
+/* Shared section and card components (SectionHeading, InfoCard in src/components/site-ui.tsx). Roles and sizes: docs/typography.md. */
+.section-title { max-width:630px; margin:0; color:var(--deep); font-family:var(--font-display); font-size:clamp(32px,4vw,46px); font-weight:400; letter-spacing:-.03em; line-height:1.07; }
+.subsection-title { max-width:600px; margin:0; color:var(--deep); font-family:var(--font-display); font-size:clamp(26px,3vw,36px); font-weight:400; letter-spacing:-.03em; line-height:1.08; }
+.section-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:26px; margin-bottom:32px; }
+.section-heading-title { min-width:0; }
+.section-heading-aside { display:grid; justify-items:start; gap:14px; max-width:410px; }
+.section-lead { margin:0; color:var(--muted); font-size:13px; line-height:1.75; }
+.section-heading-stacked { display:block; align-items:flex-start; margin-bottom:0; }
+.section-heading-stacked .section-heading-aside { max-width:440px; margin-top:17px; }
+.section-heading-divider { margin-bottom:24px; border-top:1px solid var(--line); padding-top:24px; }
+.section-heading-light .section-title,.section-heading-light .subsection-title { color:white; }
+.section-heading-light .section-lead { color:#cad7cc; }
+.info-card { min-width:0; }
+.info-card-label { display:block; margin-bottom:14px; color:#9a7800; font-size:var(--text-small); font-weight:800; letter-spacing:.18em; line-height:1.5; }
+.card-title { margin:0; color:var(--deep); font-size:22px; font-weight:600; letter-spacing:-.03em; line-height:1.15; }
+.card-text { max-width:590px; margin:9px 0 0; color:var(--muted); font-size:var(--text-small); line-height:1.7; }
+.info-card .text-link { margin-top:16px; }
+.info-card-rule { border-top:1px solid var(--line); padding:18px 16px 0 0; }
+.info-card-panel { border:1px solid var(--line); border-radius:18px; background:#f8f8f4; padding:22px; }
+.info-card-panel .info-card-label { margin-bottom:34px; }
+.info-card-row { display:grid; grid-template-columns:62px minmax(0,1fr); gap:20px; border-top:1px solid var(--line); padding:25px 0 27px; }
+.info-card-row .info-card-label { margin:3px 0 0; }
+.panel-title,.form-title { margin:0; color:var(--deep); font-size:26px; font-weight:600; letter-spacing:-.03em; line-height:1.12; }
+.form-title { margin-bottom:2px; }
+.contact-aside .panel-title { color:white; }
+.page-cta,.section-flush { padding-top:0; }
+.home-cta { padding-top:70px; }
+.next-step { padding:11px 0 80px; }
+.next-step .section-heading { margin-bottom:0; }
+.why-mg-grid>* { grid-column:span 2; min-height:220px; }
+.why-mg-grid>:nth-child(4),.why-mg-grid>:nth-child(5) { grid-column:span 3; }
+.trust-proof-grid>* { min-height:210px; padding-bottom:20px; }
+.service-detail-section>p { margin:11px 0 0; color:var(--muted); font-size:var(--text-small); line-height:1.75; }
 .section-heading { display:flex; align-items:end; justify-content:space-between; gap:26px; margin-bottom:32px; }
 .section-heading h2,.cta-copy h2 { max-width:630px; margin:0; color:var(--deep); font-family:var(--font-display); font-size:clamp(32px,4vw,48px); font-weight:400; letter-spacing:-.03em; line-height:1.08; }
 .section-heading p { max-width:395px; margin:0; color:var(--muted); font-size:13px; line-height:1.7; }

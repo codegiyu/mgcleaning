@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { demoSite, type DemoArticle, type DemoService, type ServiceIconName } from "@/content/demo-content";
 import { MobileSiteNav } from "@/components/mobile-site-nav";
 
@@ -158,7 +159,7 @@ export function ServiceCard({ service, index }: { service: DemoService; index: n
       <Image className="service-card-image" src={service.image} alt="" fill sizes="(max-width: 720px) 100vw, (max-width: 1060px) 50vw, 33vw" />
       <span className="service-card-overlay" aria-hidden="true" />
       <div className="service-card-content">
-        <span className="card-index">0{index + 1}</span>
+        <span className="card-index">{sequenceLabel(index)}</span>
         <h3>{service.title}</h3>
         <p>{service.short}</p>
         <span className="text-link">Explore service <ArrowRight /></span>
@@ -190,14 +191,120 @@ export function ArticleCard({ article, featured = false }: { article: DemoArticl
 export function CTASection({ compact = false }: { compact?: boolean }) {
   return (
     <section className={"cta-panel " + (compact ? "cta-panel-compact" : "")}>
-      <div className="cta-copy">
-        <p className="eyebrow eyebrow-light">YOUR SPACE · YOUR NEEDS · OUR EXPERTISE</p>
-        <h2>Tell us what your space needs.</h2>
-        <p>We&apos;ll assess it, agree the right scope, and deliver with professional care and attention to detail.</p>
-      </div>
+      <SectionHeading
+        className="cta-copy"
+        layout="stacked"
+        tone="light"
+        eyebrow="YOUR SPACE · YOUR NEEDS · OUR EXPERTISE"
+        title="Tell us what your space needs."
+        description="We'll assess it, agree the right scope, and deliver with professional care and attention to detail."
+      />
       <Link className="button button-lime" href="/book">Request a cleaning <ArrowUpRight /></Link>
       <span className="cta-orbit cta-orbit-one" aria-hidden="true" />
       <span className="cta-orbit cta-orbit-two" aria-hidden="true" />
     </section>
   );
+}
+
+/** Closing call to action on inner pages; the home page uses the full-size panel. */
+export function PageCTA() {
+  return <div className="section page-cta"><CTASection compact /></div>;
+}
+
+type HeadingAction = { href: string; label: string };
+
+/**
+ * The one section heading: eyebrow, display title, optional supporting text and link.
+ * Split puts the text and link beside the title (wide sections); stacked puts them
+ * below (inside bands, panels, and sticky columns). See docs/typography.md.
+ */
+export function SectionHeading({
+  eyebrow,
+  title,
+  id,
+  as: Title = "h2",
+  size = "section",
+  layout = "split",
+  description,
+  action,
+  divider = false,
+  tone = "dark",
+  className,
+}: {
+  eyebrow: string;
+  title: ReactNode;
+  id?: string;
+  as?: "h2" | "h3";
+  size?: "section" | "subsection";
+  layout?: "split" | "stacked";
+  /** One paragraph, or several for longer stacked introductions. */
+  description?: ReactNode | ReactNode[];
+  action?: HeadingAction;
+  /** Top rule, for headings that divide a long page into groups. */
+  divider?: boolean;
+  tone?: "dark" | "light";
+  className?: string;
+}) {
+  const paragraphs = (Array.isArray(description) ? description : description ? [description] : []).map((text, index) => (
+    <p className="section-lead" key={index}>{text}</p>
+  ));
+  const link = action ? <Link className="text-link" href={action.href}>{action.label} <ArrowRight /></Link> : null;
+  const classes = [
+    "section-heading",
+    `section-heading-${layout}`,
+    divider ? "section-heading-divider" : "",
+    tone === "light" ? "section-heading-light" : "",
+    className ?? "",
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div className={classes}>
+      <div className="section-heading-title">
+        <p className={tone === "light" ? "eyebrow eyebrow-light" : "eyebrow"}>{eyebrow}</p>
+        <Title id={id} className={size === "section" ? "section-title" : "subsection-title"}>{title}</Title>
+      </div>
+      {(paragraphs.length > 0 || link) && <div className="section-heading-aside">{paragraphs}{link}</div>}
+    </div>
+  );
+}
+
+/**
+ * The one text card: optional label (an index or short category), title, text, and link.
+ * `rule` sits on a top rule, `panel` is a filled card, and `row` puts the label in a
+ * side column for ordered steps.
+ */
+export function InfoCard({
+  label,
+  title,
+  children,
+  href,
+  linkLabel,
+  variant = "rule",
+  element: Element = "article",
+  titleAs: Title = "h3",
+}: {
+  label?: string;
+  title: ReactNode;
+  children: ReactNode;
+  href?: string;
+  linkLabel?: string;
+  variant?: "rule" | "panel" | "row";
+  element?: "article" | "li" | "div";
+  titleAs?: "h3" | "h4";
+}) {
+  return (
+    <Element className={`info-card info-card-${variant}`}>
+      {label && <span className="info-card-label">{label}</span>}
+      <div className="info-card-body">
+        <Title className="card-title">{title}</Title>
+        <p className="card-text">{children}</p>
+        {href && linkLabel ? <Link className="text-link" href={href}>{linkLabel} <ArrowRight /></Link> : null}
+      </div>
+    </Element>
+  );
+}
+
+/** Two-digit step or card number: 01, 02, … 10. */
+export function sequenceLabel(index: number) {
+  return String(index + 1).padStart(2, "0");
 }
