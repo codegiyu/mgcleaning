@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: Phases 1–2 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phases 1–3 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -203,3 +203,16 @@ Each phase ships as small signed commits, with the backend contract and tests be
 - **`escapeLike`** moved into `admin-shared.ts`, so the inquiry and review searches share it.
 - **The web registry** gains the five admin review endpoints and their types. The public `GET /v1/reviews` is read server-side in Phase 4, like the blog, so it is not in the browser registry.
 - **The activity page** has plain-language labels for the five review actions.
+
+## Phase 3 amendments (as built)
+
+- **`ReviewCard` (`src/components/review-card.tsx`) was built now** rather than in Phase 4, so the editor preview is the exact public card. Phase 4 only places it on pages.
+- **The editor locks the consent box while a review is live.** To withdraw consent, an editor unpublishes first, which matches the API rule. Once confirmed, the box shows who confirmed it and when (WAT).
+- **Unpublish and Delete are separate actions.** Delete opens an inline confirmation, not a browser dialog, that points to Unpublish as the way to keep the review. A 409 from save or delete shows "Load the latest version", which replaces the unsaved changes in the form.
+- **The list** shows "N of 10 published in YYYY" with a progress bar, drafts and published counts on the tabs, and a search by name or words. `/admin/reviews?status=draft` opens on that tab.
+- **The overview** has a "Reviews published this year" card (N/10, with drafts waiting) and an "Add a review" shortcut.
+- **Form helpers** in `src/lib/admin/review-form.ts`, covered by `review-form.test.ts`, handle the draft ↔ API mapping (blanks sent as null), client-side publish blockers, progress, WAT today, and star text.
+- **End-to-end check (2026-10-27).** Run against the production web build and the local API, on fresh Postgres 17 with migrations `0000`–`0011` applied: the first real run of `0006`–`0011`. The full flow worked: publishing blocked without consent, draft saved, published (visible on `GET /v1/reviews` with public fields only), consent locked while live, a concurrent edit refused with 409 and "Load the latest version", unpublish (gone from the public list at once), and delete after confirmation. Each step appears in the activity log without customer names. The check found two bugs, both fixed:
+  - The website's purge route only accepted `blog` tags, so every `reviews` purge was rejected with 400 until it was added to `ALLOWED_TAG`. Unit tests on each side passed; only the end-to-end run caught it.
+  - Older bug: on phones every admin page laid out about 563px wide, because the mobile admin grid used `1fr` and the scrolling nav set its minimum width. This also hid "Sign out" off-screen. It is now `minmax(0,1fr)`.
+- **Older bug, fixed in the backend:** after every API restart, the first admin sign-in failed with 503 ("Sign-in is temporarily unavailable"), and so did the first enquiry ("Requests are temporarily unavailable"). The login rate limiter and the enquiry abuse checks open their Redis connection inside the request and, with `enableOfflineQueue: false`, used it before it had connected. Both now go through `lazyProducerConnection()` in `src/queue/redis.ts`, which waits up to 2 s for the connection to be ready and fails fast if it errors or closes. The login connection is also closed on shutdown now. Checked against the local stack: the first sign-in after a restart returns 200 and the first enquiry 201. With Redis stopped, both fail with 503 within about 2 s, and sign-in recovers as soon as Redis returns.
