@@ -132,7 +132,51 @@ export type AdminSession = {
   current: boolean;
 };
 
-export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "site_settings";
+export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "review" | "site_settings";
+
+export type ReviewStatus = "draft" | "published";
+export type ReviewSource = "whatsapp" | "instagram" | "google" | "email" | "in_person" | "other";
+
+/** A customer review as the dashboard sees it. Only published rows with consent reach the site. */
+export type AdminReview = {
+  id: string;
+  displayName: string;
+  context: string | null;
+  quote: string;
+  rating: number | null;
+  serviceSlug: string | null;
+  source: ReviewSource;
+  /** Calendar date (YYYY-MM-DD) the customer gave the review. */
+  receivedOn: string | null;
+  featured: boolean;
+  status: ReviewStatus;
+  consentConfirmedAt: string | null;
+  consentConfirmedBy: string | null;
+  publishedAt: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ReviewInput = {
+  displayName: string;
+  context?: string | null;
+  quote: string;
+  rating?: number | null;
+  serviceSlug?: string | null;
+  source: ReviewSource;
+  receivedOn?: string | null;
+  featured?: boolean;
+  status?: ReviewStatus;
+  /** The editor confirms the customer agreed to the review and name appearing on the site; required to publish. */
+  consentConfirmed?: boolean;
+};
+
+/** `expectedUpdatedAt` is the `updatedAt` the edit started from; a newer row returns 409. */
+export type ReviewPatch = Partial<ReviewInput> & { expectedUpdatedAt: string };
+
+export type ReviewCounts = { published: number; publishedThisYear: number; draft: number };
 
 export type AuditEvent = {
   id: string;
@@ -221,6 +265,7 @@ export interface AllEndpoints {
       postCounts: { draft: number; published: number };
       emailOutboxCounts?: { pending: number; failed: number; deadLetter: number };
       cacheRevalidationCounts?: { pending: number; deadLetter: number };
+      reviewCounts?: ReviewCounts;
     }
   >;
   GET_ADMIN_INQUIRIES: EndpointDefinition<undefined, Paginated<AdminInquiry>>;
@@ -245,6 +290,12 @@ export interface AllEndpoints {
   GET_ADMIN_AUDIT: EndpointDefinition<undefined, Paginated<AuditEvent>>;
   GET_ADMIN_SETTINGS: EndpointDefinition<undefined, SiteSettings>;
   PATCH_ADMIN_SETTINGS: EndpointDefinition<{ inquiryNotificationEmail?: string | null; defaultAuthorName?: string | null }, SiteSettings>;
+  GET_ADMIN_REVIEWS: EndpointDefinition<undefined, Paginated<AdminReview> & { counts: ReviewCounts }>;
+  GET_ADMIN_REVIEW: EndpointDefinition<undefined, AdminReview>;
+  POST_ADMIN_REVIEW: EndpointDefinition<ReviewInput, AdminReview>;
+  PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
+  /** Pass `expectedUpdatedAt` as a query parameter. */
+  DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
 }
 
 export const ENDPOINTS = {
@@ -305,6 +356,23 @@ export const ENDPOINTS = {
   GET_ADMIN_AUDIT: { path: "/admin/audit", method: "GET" },
   GET_ADMIN_SETTINGS: { path: "/admin/settings", method: "GET" },
   PATCH_ADMIN_SETTINGS: { path: "/admin/settings", method: "PATCH" },
+  GET_ADMIN_REVIEWS: { path: "/admin/reviews", method: "GET" },
+  GET_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "GET",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_REVIEW: { path: "/admin/reviews", method: "POST" },
+  PATCH_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  DELETE_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;
 
 export type EndpointName = keyof AllEndpoints;
