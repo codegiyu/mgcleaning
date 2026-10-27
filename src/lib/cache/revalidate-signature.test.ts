@@ -18,6 +18,11 @@ describe("revalidation signature", () => {
     });
   });
 
+  test("accepts a signed purge of the reviews list", () => {
+    const body = JSON.stringify({ tags: ["reviews"], mode: "remove" });
+    assert.deepEqual(verifyRevalidationRequest(signed(body)), { ok: true, request: { tags: ["reviews"], mode: "remove" } });
+  });
+
   test("rejects a body changed after signing", () => {
     const body = JSON.stringify({ tags: ["blog"], mode: "refresh" });
     const input = signed(body);
@@ -43,9 +48,11 @@ describe("revalidation signature", () => {
     assert.equal(verifyRevalidationRequest(signed(body, String(nowSeconds - 299))).ok, true);
   });
 
-  test("only allows well-formed blog tags, even when signed", () => {
+  test("only allows well-formed blog tags and the reviews tag, even when signed", () => {
     for (const payload of [
       { tags: ["products"], mode: "refresh" },
+      { tags: ["reviews:amaka"], mode: "refresh" },
+      { tags: ["reviewsx"], mode: "refresh" },
       { tags: ["blog:../admin"], mode: "refresh" },
       { tags: [], mode: "refresh" },
       { tags: ["blog"], mode: "purge-everything" },

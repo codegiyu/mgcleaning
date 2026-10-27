@@ -6,8 +6,11 @@ export type VerificationResult =
   | { ok: true; request: RevalidationRequest }
   | { ok: false; status: 400 | 401; reason: string };
 
-/** Only blog tags can be purged, so a leaked secret cannot flush unrelated caches. */
-const ALLOWED_TAG = /^blog(?::[a-z0-9]+(?:-[a-z0-9]+)*)?$/;
+/**
+ * Only the blog tags and the reviews list can be purged, so a leaked secret cannot flush
+ * unrelated caches. Keep in sync with the backend's tags in `src/cache/revalidation.ts`.
+ */
+const ALLOWED_TAG = /^(?:blog(?::[a-z0-9]+(?:-[a-z0-9]+)*)?|reviews)$/;
 const MAX_TAGS = 10;
 const MAX_TAG_LENGTH = 200;
 /** Requests older (or newer) than this are rejected to limit replay. */
