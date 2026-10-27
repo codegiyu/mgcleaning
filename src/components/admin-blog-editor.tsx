@@ -7,6 +7,7 @@ import { callApi } from "@/lib/api/callApi";
 import type { BlogPost, BlogPostInput, PostStatus } from "@/lib/api/endpoints";
 import { services } from "@/content/demo-content";
 import { AdminCoverPicker, type SelectedCover } from "@/components/admin-cover-picker";
+import { AdminShareLink } from "@/components/admin-share-link";
 import { formatWat, isoToWatInput, watInputToIso } from "@/lib/admin/wat-time";
 
 type Draft = BlogPostInput;
@@ -225,6 +226,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
           <label className="admin-field"><span>Related service</span><select required value={draft.serviceSlug} onChange={(event) => update("serviceSlug", event.target.value)}><option value="">Choose a service</option>{services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}</select></label>
           <AdminCoverPicker cover={cover} altText={draft.coverImageAlt ?? ""} disabled={saving} onChange={chooseCover} />
           <label className="admin-field"><span>Image alt text</span><input maxLength={250} value={draft.coverImageAlt} onChange={(event) => update("coverImageAlt", event.target.value)} placeholder="Describe the image" /></label>
+          {post?.status === "published" && <AdminShareLink slug={post.slug} />}
           <div className="admin-search-preview"><h2>Search preview</h2><span>/blog/{slug}</span><strong>{titlePreview}</strong><p>{excerptPreview}</p></div>
         </aside>
       </div>

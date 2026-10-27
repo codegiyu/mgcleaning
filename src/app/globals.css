@@ -497,6 +497,7 @@ main { flex:1; overflow-x:clip; }
 .admin-inquiry-filters { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px; }
 .admin-source-filter { display:flex; align-items:center; gap:8px; margin-bottom:10px; color:#3c4c67; font-size:var(--text-small); font-weight:650; }
 .admin-source-filter select { border:1px solid #d3dbe7; border-radius:3px; background:#fff; padding:7px 9px; color:#223552; font-size:var(--text-small); }
+.admin-share-link input { color:#4b5b75; font-size:var(--text-micro); }
 .admin-detail-heading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid #e3e6ed; padding-bottom:17px; }
 .admin-detail-heading h2,.admin-editor-settings h2 { margin:0; color:#0b2858; font-size:18px; font-weight:650; letter-spacing:-.025em; }
 .admin-detail-heading span { color:#7c889c; font-size:var(--text-small); }
