@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Newsreader } from "next/font/google";
 import { JsonLd } from "@/components/seo/json-ld";
 import { contentMode } from "@/content/trust-content";
 import { absoluteUrl, DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, getSiteUrl, graphJsonLd, localBusinessJsonLd, websiteJsonLd } from "@/lib/seo/site-seo";
 import "./globals.css";
 
+/** UI, body, page titles, and card titles. See docs/typography.md for the role map. */
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+/** Display serif for section titles and accent italics; self-hosted so every device renders the same face. */
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -51,7 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col"><JsonLd data={globalStructuredData} />{children}</body>
     </html>

@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-:root { color-scheme: light; --paper:#ffffff; --ink:#1b2b49; --navy:#0b2858; --deep:#081f49; --muted:#68748a; --line:#e3e6ed; --yellow:#f2c400; --soft:#edf0f6; --text-micro:10px; --text-small:12px; }
+:root { color-scheme: light; --paper:#ffffff; --ink:#1b2b49; --navy:#0b2858; --deep:#081f49; --muted:#68748a; --line:#e3e6ed; --yellow:#f2c400; --soft:#edf0f6; --text-micro:10px; --text-small:12px; --font-sans:var(--font-geist-sans),Arial,Helvetica,sans-serif; --font-display:var(--font-newsreader),Georgia,serif; }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { min-height:100vh; margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif; -webkit-font-smoothing:antialiased; }
+body { min-height:100vh; margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; }
 a { color:inherit; text-decoration:none; }
 button,input,select,textarea { font:inherit; }
 :focus-visible { outline:3px solid #d4ad00; outline-offset:3px; }
@@ -271,7 +271,7 @@ main { flex:1; overflow-x:clip; }
 .faq-item:last-child { border-bottom:1px solid var(--line); }
 .faq-item summary { display:flex; align-items:center; justify-content:space-between; gap:18px; cursor:pointer; list-style:none; color:var(--deep); font-family:Georgia,serif; font-size:23px; font-weight:400; letter-spacing:-.03em; }
 .faq-item summary::-webkit-details-marker { display:none; }
-.faq-item summary span { color:#b18a00; font-family:var(--font-geist-sans),Arial,sans-serif; font-size:25px; font-weight:300; }
+.faq-item summary span { color:#b18a00; font-family:var(--font-sans); font-size:25px; font-weight:300; }
 .faq-item[open] summary span { transform:rotate(45deg); }
 .faq-item p { max-width:680px; margin:14px 35px 0 0; color:#68766c; font-size:var(--text-small); line-height:1.75; }
 .empty-trust-state { margin-bottom:70px; border-radius:20px; background:#f6f7f2; padding:30px; }
