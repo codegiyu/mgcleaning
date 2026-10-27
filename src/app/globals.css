@@ -204,11 +204,6 @@ main { flex:1; overflow-x:clip; }
 .article-hero-art { min-height:330px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:25px; }
 .article-body { max-width:700px; margin:44px auto 0; }
 .article-body>p { margin:0 0 22px; color:#45584c; font-size:16px; line-height:1.9; }
-.article-takeaways { margin:34px 0; border-radius:17px; background:#edf1e7; padding:23px 26px; }
-.article-takeaways h2 { margin:0 0 14px; color:var(--deep); font-size:16px; }
-.article-takeaways ul { display:grid; gap:11px; margin:0; padding:0; list-style:none; }
-.article-takeaways li { display:flex; gap:9px; color:#53645a; font-size:var(--text-small); line-height:1.5; }
-.article-takeaways li svg { flex-shrink:0; color:#ad8700; }
 .article-footer-cta { max-width:700px; margin:45px auto 0; border-top:1px solid var(--line); padding-top:25px; }
 .article-footer-cta p { color:var(--muted); font-size:var(--text-small); line-height:1.7; }
 .article-cta-links { display:flex; flex-wrap:wrap; gap:22px; }
@@ -217,14 +212,6 @@ main { flex:1; overflow-x:clip; }
 .about-illustration-image { display:block; width:100%; height:100%; min-height:430px; object-fit:cover; }
 .about-copy p:not(.eyebrow) { color:#627168; font-size:14px; line-height:1.85; }
 .about-copy h2 { max-width:500px; margin:0; color:var(--deep); font-family:var(--font-display); font-size:clamp(32px,4vw,45px); font-weight:400; letter-spacing:-.03em; line-height:1.07; }
-.value-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; padding-bottom:80px; }
-.value-card { border-top:1px solid #dce2d5; padding:19px 16px 0 0; }
-.value-card strong { color:var(--deep); font-family:var(--font-display); font-size:23px; font-weight:400; letter-spacing:-.03em; }
-.value-card p { margin:8px 0 0; color:#68766c; font-size:var(--text-small); line-height:1.65; }
-.about-readiness-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; padding:0 0 80px; }
-.about-readiness-grid>div { border-top:1px solid #dce2d5; padding:19px 16px 0 0; }
-.about-readiness-grid h2 { margin:0; color:var(--deep); font-family:var(--font-display); font-size:25px; font-weight:400; letter-spacing:-.03em; line-height:1.1; }
-.about-readiness-grid p:not(.eyebrow) { margin:10px 0 0; color:#68766c; font-size:var(--text-small); line-height:1.7; }
 .process-section { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:70px; padding:70px 0 90px; }
 .process-heading { position:sticky; top:120px; align-self:start; }
 .process-heading h2 { max-width:470px; margin:0; color:var(--deep); font-family:var(--font-display); font-size:clamp(32px,4vw,47px); font-weight:400; letter-spacing:-.03em; line-height:1.06; }
@@ -406,7 +393,7 @@ main { flex:1; overflow-x:clip; }
   .article-hero-art{min-height:220px}.article-hero-art .article-art-logo{width:150px}
   .article-body{margin-top:27px}.article-body>p{font-size:14px}
   .about-grid{grid-template-columns:1fr;gap:22px;padding:0 0 54px}.about-illustration{min-height:300px}.about-illustration-image{min-height:300px}
-  .about-copy p:not(.eyebrow){font-size:var(--text-small)}.value-grid{grid-template-columns:1fr;gap:18px;padding-bottom:55px}.about-readiness-grid{grid-template-columns:1fr;gap:18px;padding-bottom:55px}.about-readiness-grid>div{padding-top:17px}
+  .about-copy p:not(.eyebrow){font-size:var(--text-small)}
   .process-section{gap:25px;padding:50px 0 60px}.process-heading h2{font-size:35px}.process-heading>p:last-child{font-size:var(--text-small)}.process-step{grid-template-columns:45px minmax(0,1fr);gap:11px;padding:20px 0}.process-step h3{font-size:23px}.process-step p{font-size:var(--text-small)}
   .faq-item summary{font-size:20px}.faq-item p{font-size:var(--text-small)}.trust-next-step{align-items:flex-start;flex-direction:column;gap:18px;padding:28px 0 55px}.area-availability-card{grid-template-columns:1fr;gap:18px;padding:22px}.area-availability-icon{width:58px;height:58px;font-size:26px}.area-notes{grid-template-columns:1fr;gap:0;padding-bottom:50px}.area-notes>div{padding:17px 0}.trust-fact-row{align-items:flex-start;flex-direction:column;gap:3px}.trust-fact-row strong{text-align:left}
   .contact-layout{gap:12px;padding-bottom:55px}.contact-aside,.contact-form{padding:22px}.contact-aside h2{font-size:29px}
