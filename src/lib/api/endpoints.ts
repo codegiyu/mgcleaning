@@ -70,6 +70,15 @@ export type AdminInquiry = {
   updatedAt: string;
 };
 
+export type InquiryNotification = {
+  kind: "internal" | "customer";
+  status: "pending" | "processing" | "sent" | "failed" | "dead_letter";
+  attempts: number;
+  sentAt: string | null;
+};
+
+export type AdminInquiryRecord = AdminInquiry & { notifications: InquiryNotification[] };
+
 export type BlogPost = {
   id: string;
   slug: string;
@@ -215,7 +224,7 @@ export interface AllEndpoints {
     }
   >;
   GET_ADMIN_INQUIRIES: EndpointDefinition<undefined, Paginated<AdminInquiry>>;
-  GET_ADMIN_INQUIRY: EndpointDefinition<undefined, AdminInquiry>;
+  GET_ADMIN_INQUIRY: EndpointDefinition<undefined, AdminInquiryRecord>;
   PATCH_ADMIN_INQUIRY: EndpointDefinition<
     { status?: InquiryStatus; internalNote?: string | null },
     AdminInquiry

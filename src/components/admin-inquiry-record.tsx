@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import { AdminActivityList } from "@/components/admin-activity-list";
 import { AdminInquiryDetail } from "@/components/admin-inquiry-detail";
 import { callApi } from "@/lib/api/callApi";
-import type { AdminInquiry } from "@/lib/api/endpoints";
+import type { AdminInquiry, InquiryNotification } from "@/lib/api/endpoints";
 
-type RecordState = { kind: "loading" } | { kind: "error"; message: string } | { kind: "ready"; inquiry: AdminInquiry };
+type RecordState =
+  | { kind: "loading" }
+  | { kind: "error"; message: string }
+  | { kind: "ready"; inquiry: AdminInquiry; notifications: InquiryNotification[] };
 
 /** A shareable page for one inquiry: full details, editing, and its change history. */
 export function AdminInquiryRecord({ id }: { id: string }) {
@@ -18,7 +21,12 @@ export function AdminInquiryRecord({ id }: { id: string }) {
     let active = true;
     void callApi("GET_ADMIN_INQUIRY", { pathParams: { id } }).then((result) => {
       if (!active) return;
-      setState(result.type === "error" ? { kind: "error", message: result.message } : { kind: "ready", inquiry: result.data });
+      if (result.type === "error") {
+        setState({ kind: "error", message: result.message });
+        return;
+      }
+      const { notifications, ...inquiry } = result.data;
+      setState({ kind: "ready", inquiry, notifications });
     });
     return () => { active = false; };
   }, [id]);
@@ -44,8 +52,9 @@ export function AdminInquiryRecord({ id }: { id: string }) {
             <AdminInquiryDetail
               key={state.inquiry.id}
               inquiry={state.inquiry}
+              notifications={state.notifications}
               onSaved={(updated) => {
-                setState({ kind: "ready", inquiry: updated });
+                setState({ kind: "ready", inquiry: updated, notifications: state.notifications });
                 setHistoryVersion((version) => version + 1);
               }}
             />

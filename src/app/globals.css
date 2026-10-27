@@ -466,6 +466,8 @@ main { flex:1; overflow-x:clip; }
 .admin-status-new,.admin-status-draft { background:#fff2b0; color:#5b4a00; }
 .admin-status-contacted { background:#edf0f4; color:#45556e; }
 .admin-status-quoted,.admin-status-scheduled { background:#e5efff; color:#17477f; }
+.admin-status-email-sent { background:#e2f3e7; color:#22613a; }
+.admin-status-email-dead_letter { background:#fff4f4; color:#8e2731; }
 .admin-status-note { display:block; margin-top:4px; color:#738098; font-size:var(--text-micro); }
 .admin-schedule label { color:#3c4c67; }
 .admin-status-booked,.admin-status-published { background:#e2f3e7; color:#22613a; }

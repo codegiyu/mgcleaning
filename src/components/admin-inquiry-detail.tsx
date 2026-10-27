@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { callApi } from "@/lib/api/callApi";
-import type { AdminInquiry, InquiryStatus } from "@/lib/api/endpoints";
+import type { AdminInquiry, InquiryNotification, InquiryStatus } from "@/lib/api/endpoints";
 
 export const inquiryStatusOptions: { id: InquiryStatus; label: string }[] = [
   { id: "new", label: "New" },
@@ -16,6 +16,15 @@ export const inquiryStatusOptions: { id: InquiryStatus; label: string }[] = [
 export function inquiryDateLabel(value: string) {
   return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
 }
+
+const notificationKindLabels: Record<InquiryNotification["kind"], string> = { internal: "Team alert", customer: "Customer confirmation" };
+const notificationStatusLabels: Record<InquiryNotification["status"], string> = {
+  pending: "queued",
+  processing: "sending",
+  sent: "sent",
+  failed: "retrying",
+  dead_letter: "failed",
+};
 
 function contactMethodLabel(value: AdminInquiry["preferredContactMethod"]) {
   if (value === "phone") return "Phone call";
@@ -32,10 +41,13 @@ export function AdminInquiryDetail({
   inquiry,
   onSaved,
   fullPageHref,
+  notifications,
 }: {
   inquiry: AdminInquiry;
   onSaved: (updated: AdminInquiry) => void;
   fullPageHref?: string;
+  /** Email delivery state; only the full record loads it. */
+  notifications?: InquiryNotification[];
 }) {
   const [status, setStatus] = useState<InquiryStatus>(inquiry.status);
   const [note, setNote] = useState(inquiry.internalNote ?? "");
@@ -84,6 +96,17 @@ export function AdminInquiryDetail({
         <p>{[inquiry.utmSource, inquiry.utmMedium, inquiry.utmCampaign, inquiry.utmContent].filter(Boolean).join(" / ") || "Direct or unknown"}</p>
         {inquiry.landingPath && <small>First page: {inquiry.landingPath}</small>}
       </div>
+      {notifications && (
+        <div className="admin-detail-section">
+          <span>Emails</span>
+          {notifications.length ? notifications.map((item) => (
+            <p key={item.kind}>
+              {notificationKindLabels[item.kind]}: <span className={`admin-status admin-status-email-${item.status}`}>{notificationStatusLabels[item.status]}</span>
+              {item.status === "dead_letter" && " — check the email provider, then re-queue (see the operations runbook)"}
+            </p>
+          )) : <p>No emails were queued for this inquiry.</p>}
+        </div>
+      )}
       <div className="admin-detail-section"><span>Customer message</span><p className="admin-customer-message">{inquiry.message}</p></div>
       <label className="admin-field"><span>Status</span><select value={status} onChange={(event) => setStatus(event.target.value as InquiryStatus)}>{inquiryStatusOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
       <label className="admin-field"><span>Internal notes</span><textarea rows={4} maxLength={4_000} value={note} onChange={(event) => setNote(event.target.value)} placeholder="Add notes for the team. These are not visible to the customer." /></label>
