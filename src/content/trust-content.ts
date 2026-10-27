@@ -33,12 +33,6 @@ export type TrustGalleryAsset = TrustRecord & {
   layout: "featured" | "tall" | "standard" | "wide";
 };
 
-export type TrustTestimonial = TrustRecord & {
-  quote: string;
-  attribution: string;
-  service?: string;
-};
-
 export type TrustFaq = TrustRecord & {
   question: string;
   answer: string;
@@ -174,20 +168,9 @@ export const trustGallery: TrustGalleryAsset[] = [
   },
 ];
 
-export const trustTestimonials: TrustTestimonial[] = [
-  {
-    ...demoRecord("testimonial-slot-one", "Placeholder card for a customer-approved testimonial."),
-    quote: "Approved customer feedback will appear here after M&G Cleaning Services receives permission to publish it.",
-    attribution: "Sample testimonial slot",
-    service: "Service and attribution to be confirmed",
-  },
-  {
-    ...demoRecord("testimonial-slot-two", "Placeholder card for a customer-approved testimonial."),
-    quote: "This space is reserved for an authentic customer experience, not generated review copy.",
-    attribution: "Sample testimonial slot",
-    service: "Service and attribution to be confirmed",
-  },
-];
+// Customer reviews are not part of this manifest: the team enters them in the admin
+// dashboard, and the API publishes only reviews with recorded customer consent
+// (see src/lib/reviews/public-reviews.ts).
 
 export const trustFacts: TrustFact[] = [
   {
@@ -256,12 +239,6 @@ export function getPublicGallery() {
     : trustGallery.filter((item) => item.status === "approved" && item.provenance !== "generated-demo" && item.rightsStatus === "approved");
 }
 
-export function getPublicTestimonials() {
-  return isDemoContent
-    ? trustTestimonials
-    : trustTestimonials.filter((item) => item.status === "approved" && item.provenance !== "generated-demo" && item.rightsStatus === "approved");
-}
-
 export function getPublicFaqs() {
   return isDemoContent ? trustFaqs : trustFaqs.filter((item) => item.status === "approved");
 }
@@ -273,7 +250,7 @@ export function getPublicTrustFacts() {
 export function assertProductionTrustContent() {
   if (contentMode !== "production") return;
 
-  const records = [...trustGallery, ...trustTestimonials, ...trustFacts, ...trustFaqs];
+  const records = [...trustGallery, ...trustFacts, ...trustFaqs];
   const unapproved = records.filter((record) => record.requiredForProduction && record.status !== "approved");
   if (unapproved.length > 0) {
     throw new Error(

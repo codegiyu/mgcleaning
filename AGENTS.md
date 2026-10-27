@@ -14,4 +14,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Use the bundled Next.js 16 documentation under `node_modules/next/dist/docs/` before framework changes.
 - Keep frontend-to-backend requests in the browser through `src/lib/api/callApi.ts`; add typed routes and response shapes to `src/lib/api/endpoints.ts`.
 - Use Zustand for shared state or feature-level client caches and local component state for short-lived UI state. Do not add React Query.
-- Do not publish service, location, review, or certification claims until MG confirms them.
+- Do not publish service, location, review, or certification claims until MG confirms them. Customer reviews come only from the admin dashboard (`/admin/reviews`), where MG confirms each customer's consent before publishing; never hard-code or generate review copy.

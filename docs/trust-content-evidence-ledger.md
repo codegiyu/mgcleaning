@@ -4,7 +4,7 @@ This ledger is the launch checklist for replacing demo trust content with verifi
 
 | Content | Evidence required before publishing | Current status | Owner | Review/expiry |
 |---|---|---|---|---|
-| Customer testimonials | Customer permission, approved quote, approved attribution, source record | Missing | MG Cleaning | To be set |
+| Customer testimonials | Customer permission, approved quote, approved attribution, source record. Entered in `/admin/reviews`: the editor records consent (who and when), the source, and the received date; only published reviews with consent are served | Managed in the dashboard | MG Cleaning | Per review; target 10 published in 2026 |
 | Google Business Profile | Exact verified profile URL and approval to link it | Missing | MG Cleaning | Review when profile changes |
 | Project gallery | Authentic original media, confirmation MG performed the work, publication rights, privacy review | Missing | MG Cleaning | Per asset |
 | Before-and-after pair | Authentic paired images, same project, approved caption, customer permission | Missing | MG Cleaning | Per asset |
