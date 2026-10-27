@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArticleCard, ArrowRight, ArrowUpRight, CTASection, InfoCard, SectionHeading, sequenceLabel, ServiceCard } from "@/components/site-ui";
+import { RequestChannels } from "@/components/contact-channels";
 import { articles, services, whyMgReasons } from "@/content/demo-content";
+import { messageResponseExpectation } from "@/content/response-expectation";
 import { getPublicFaqs } from "@/content/trust-content";
 import { getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
@@ -31,7 +33,7 @@ export default async function HomePage() {
             <Link className="button button-outline" href="/services">Explore services <ArrowRight /></Link>
           </div>
           <div className="hero-meta"><span className="status-dot" aria-hidden="true" />Personalized service · Professional team · Attention to detail</div>
-          <p className="hero-response">We respond within one business day.</p>
+          <p className="hero-response">{messageResponseExpectation}.</p>
         </div>
         <div className="hero-visual">
           <div className="hero-art-wrap"><Image src="/images/generated/hero-professional-cleaning-v2.png" alt="M&G cleaning professional caring for a bright modern space" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
@@ -59,6 +61,7 @@ export default async function HomePage() {
         <div className="faq-preview">
           <SectionHeading as="h3" size="subsection" eyebrow="QUICK ANSWERS" title="Before you send a request." action={{ href: "/faq", label: "All FAQs" }} />
           <div className="faq-preview-grid">{getPublicFaqs().slice(0, 3).map((faq) => <InfoCard key={faq.id} element="div" titleAs="h4" title={faq.question}>{faq.answer}</InfoCard>)}</div>
+          <RequestChannels variant="inline" />
         </div>
       </section>
       <section className="section section-shell">

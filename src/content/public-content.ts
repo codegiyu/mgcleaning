@@ -1,4 +1,5 @@
 import { demoSite, services, type DemoService } from "@/content/demo-content";
+import { messageResponseExpectation } from "@/content/response-expectation";
 import { contentMode, type ContentProvenance, type ContentStatus, type RightsStatus } from "@/content/trust-content";
 
 type GovernedRecord = {
@@ -98,9 +99,10 @@ export const businessContactFacts: BusinessContactFacts = {
     label: "Operating hours",
   },
   responseExpectation: {
-    ...confirmedContactRecord("business-response-expectation", "Response expectation", "Approved request-flow wording used throughout the current site."),
+    ...confirmedContactRecord("business-response-expectation", "Response expectation", "15-minute maximum for messages confirmed by the client on 2026-10-26; whether it applies outside working hours is pending."),
+    lastReviewedAt: "2026-10-27",
     label: "Response expectation",
-    value: "We respond within one business day",
+    value: messageResponseExpectation,
   },
 };
 

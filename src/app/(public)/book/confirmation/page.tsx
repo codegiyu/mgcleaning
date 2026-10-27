@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/site-ui";
 import { businessContactFacts } from "@/content/public-content";
+import { formResponseExpectation } from "@/content/response-expectation";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
 type Props = { searchParams: Promise<{ reference?: string }> };
@@ -17,7 +18,7 @@ export default async function BookingConfirmationPage({ searchParams }: Props) {
       <PageIntro
         eyebrow="REQUEST RECEIVED"
         title="We&apos;ve got your cleaning request."
-        description="Our team will contact you to confirm availability and pricing. We respond within one business day."
+        description={`Our team will confirm availability and pricing with you. ${formResponseExpectation}`}
       />
       <section className="legal-page" aria-labelledby="confirmation-title">
         <h2 id="confirmation-title">What happens next?</h2>

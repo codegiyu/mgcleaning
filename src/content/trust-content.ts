@@ -1,3 +1,5 @@
+import { formResponseExpectation, messageResponseExpectation } from "@/content/response-expectation";
+
 export type ContentStatus = "demo" | "draft" | "approved" | "archived";
 
 export type ContentProvenance =
@@ -222,19 +224,19 @@ export const trustFacts: TrustFact[] = [
 
 export const trustFaqs: TrustFaq[] = [
   {
-    ...demoRecord("faq-request", "Placeholder answer uses only the approved request-flow wording."),
+    ...demoRecord("faq-request", "Messaging-first request flow agreed with the client on 2026-10-26; the form is the second option."),
     question: "How do I request a cleaning?",
-    answer: "Submit the cleaning request form with your contact details, preferred timing, location, and what you would like cleaned. M&G Cleaning Services will contact you to confirm availability and pricing.",
+    answer: "Send us a message on WhatsApp or Instagram, or give us a call, and tell us what needs cleaning, where, and when suits you. Our customer experience team will take it from there and confirm availability and pricing. Prefer to write it down? You can also use the cleaning request form.",
   },
   {
-    ...demoRecord("faq-response", "Placeholder answer uses only the approved response expectation."),
+    ...demoRecord("faq-response", "Uses the shared response promises in src/content/response-expectation.ts."),
     question: "How quickly will M&G Cleaning Services respond?",
-    answer: "The current request flow is designed around a response within one business day. The team will follow up through the contact method you choose.",
+    answer: `${messageResponseExpectation} on WhatsApp and Instagram. If you use the request form, ${formResponseExpectation.charAt(0).toLowerCase()}${formResponseExpectation.slice(1)}`,
   },
   {
     ...demoRecord("faq-coverage", "Coverage is intentionally not claimed before MG confirms its service area."),
     question: "Do you cover my area?",
-    answer: "Tell us your area in the request form and M&G Cleaning Services will confirm whether the requested service is available there.",
+    answer: "Tell us your area when you message us or in the request form, and M&G Cleaning Services will confirm whether the requested service is available there.",
   },
   {
     ...demoRecord("faq-pricing", "Pricing is intentionally not invented in demo content."),
@@ -243,8 +245,8 @@ export const trustFaqs: TrustFaq[] = [
   },
   {
     ...demoRecord("faq-appointment", "Placeholder answer avoids inventing rescheduling or cancellation policy."),
-    question: "Is submitting the form an appointment confirmation?",
-    answer: "No. The form sends a cleaning request. A visit is only confirmed after M&G Cleaning Services and the customer agree the availability, timing, and pricing by phone or WhatsApp.",
+    question: "Is sending a request an appointment confirmation?",
+    answer: "No. A message or the form starts a cleaning request. A visit is only confirmed after M&G Cleaning Services and the customer agree the availability, timing, and pricing by phone or WhatsApp.",
   },
 ];
 
