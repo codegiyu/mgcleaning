@@ -7,11 +7,18 @@ import { callApi } from "@/lib/api/callApi";
 import type { AdminInquiry, InquiryStatus } from "@/lib/api/endpoints";
 
 const filters: { id: InquiryStatus | "all"; label: string }[] = [{ id: "all", label: "All" }, ...inquiryStatusOptions];
+const sourceFilters = [
+  { id: "", label: "All sources" },
+  { id: "instagram", label: "Instagram" },
+  { id: "direct", label: "Direct or unknown" },
+] as const;
+type SourceFilter = (typeof sourceFilters)[number]["id"];
 
 export default function AdminInquiriesPage() {
   const [items, setItems] = useState<AdminInquiry[]>([]);
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState<InquiryStatus | "all">("all");
+  const [source, setSource] = useState<SourceFilter>("");
   const [queryInput, setQueryInput] = useState("");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -32,7 +39,7 @@ export default function AdminInquiriesPage() {
   useEffect(() => {
     let active = true;
     void callApi("GET_ADMIN_INQUIRIES", {
-      params: { status, query, page, pageSize: 20 },
+      params: { status, query, page, pageSize: 20, source: source || undefined },
     }).then((result) => {
       if (!active) return;
       setLoading(false);
@@ -50,7 +57,7 @@ export default function AdminInquiriesPage() {
       }
     });
     return () => { active = false; };
-  }, [page, query, status]);
+  }, [page, query, source, status]);
 
   function selectInquiry(inquiry: AdminInquiry) {
     selectedIdRef.current = inquiry.id;
@@ -76,8 +83,10 @@ export default function AdminInquiriesPage() {
         <div><h1>Inquiries</h1><p>Review and manage website enquiries.</p></div>
         <label className="admin-search"><span className="admin-visually-hidden">Search inquiries</span><span aria-hidden="true"><AdminIcon name="search" /></span><input type="search" placeholder="Search inquiries…" value={queryInput} onChange={(event) => { setLoading(true); setQueryInput(event.target.value); }} /></label>
       </header>
-      <div className="admin-inquiry-tabs" role="tablist" aria-label="Filter inquiries by status">
+      <div className="admin-inquiry-filters"><div className="admin-inquiry-tabs" role="tablist" aria-label="Filter inquiries by status">
         {filters.map((filter) => <button type="button" role="tab" aria-selected={status === filter.id} className={status === filter.id ? "admin-tab admin-tab-active" : "admin-tab"} key={filter.id} onClick={() => { setLoading(true); setStatus(filter.id); setPage(1); }}>{filter.label}</button>)}
+      </div>
+        <label className="admin-source-filter"><span>Source</span><select value={source} onChange={(event) => { setLoading(true); setSource(event.target.value as SourceFilter); setPage(1); }}>{sourceFilters.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
       </div>
       {error && <p className="admin-error admin-page-error" role="alert">{error}</p>}
       <div className="admin-inquiry-workspace">

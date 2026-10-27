@@ -79,6 +79,11 @@ export function AdminInquiryDetail({
           <small>Follow up by: {contactMethodLabel(inquiry.preferredContactMethod)}</small>
         </div>
       )}
+      <div className="admin-detail-section">
+        <span>Came from</span>
+        <p>{[inquiry.utmSource, inquiry.utmMedium, inquiry.utmCampaign, inquiry.utmContent].filter(Boolean).join(" / ") || "Direct or unknown"}</p>
+        {inquiry.landingPath && <small>First page: {inquiry.landingPath}</small>}
+      </div>
       <div className="admin-detail-section"><span>Customer message</span><p className="admin-customer-message">{inquiry.message}</p></div>
       <label className="admin-field"><span>Status</span><select value={status} onChange={(event) => setStatus(event.target.value as InquiryStatus)}>{inquiryStatusOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
       <label className="admin-field"><span>Internal notes</span><textarea rows={4} maxLength={4_000} value={note} onChange={(event) => setNote(event.target.value)} placeholder="Add notes for the team. These are not visible to the customer." /></label>
