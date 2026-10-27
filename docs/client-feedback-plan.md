@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: Phase 1 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phases 1–2 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -191,3 +191,15 @@ Each phase ships as small signed commits, with the backend contract and tests be
 - **`/book?service=`** now passes only a title that matches the services manifest, both to the WhatsApp message and to the form's preselected service. Unknown values are ignored.
 - **WhatsApp text is encoded with `encodeURIComponent`.** `URLSearchParams` writes spaces as `+`, which WhatsApp can show literally.
 - **Not covered by an automated test:** the booking page rendering channels before the form. The web test runner has no DOM renderer, so this was checked in the browser at 375px and on desktop instead.
+
+## Phase 2 amendments (as built)
+
+- **Migration `0011_reviews`** adds the table with two database checks: a rating from 1 to 5, and no `published` row without `consent_confirmed_at`. The database enforces the consent rule as well as the API. It must run after `0006`–`0010`, none of which have run against Postgres yet.
+- **`received_on` is optional**, because the team may not know when an older review was given. A date after today (WAT) is refused.
+- **Audit metadata for every review action holds field names and statuses only.** A delete records the id and previous status, without the display name the plan allowed. The activity page names no customer ("Deleted a published review").
+- **No archive status.** Unpublish (back to draft) is the take-down; delete is a hard delete.
+- **API timestamps.** `created_at` and `updated_at` are written by the API, not the database default, so `expectedUpdatedAt` round-trips exactly at millisecond precision.
+- **Review counts** appear in the admin list response (`counts`) and the overview (`reviewCounts`). "This year" means `published_at` on or after midnight WAT on 1 January.
+- **`escapeLike`** moved into `admin-shared.ts`, so the inquiry and review searches share it.
+- **The web registry** gains the five admin review endpoints and their types. The public `GET /v1/reviews` is read server-side in Phase 4, like the blog, so it is not in the browser registry.
+- **The activity page** has plain-language labels for the five review actions.
