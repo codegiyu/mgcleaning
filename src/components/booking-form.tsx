@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { demoSite, services } from "@/content/demo-content";
+import { formResponseExpectation } from "@/content/response-expectation";
 import { callApi } from "@/lib/api/callApi";
 import { attributionPayload } from "@/lib/attribution/session";
 import { FormSelect } from "@/components/form-select";
@@ -77,8 +78,8 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
   return (
     <form className="contact-form" onSubmit={handleSubmit} aria-busy={status === "submitting"}>
       <div>
-        <h2 className="form-title">Plan your cleaning visit.</h2>
-        <p className="form-demo-note">Submit a cleaning request and our team will contact you to confirm availability and pricing. We respond within one business day.</p>
+        <h2 className="form-title">Prefer to write it down?</h2>
+        <p className="form-demo-note">Send the details here and our team will confirm availability and pricing. {formResponseExpectation}</p>
       </div>
       <div className="form-row">
         <div className="form-field"><label htmlFor="booking-name">Your name</label><input id="booking-name" name="name" autoComplete="name" maxLength={120} required placeholder="e.g. Chinedu Adeyemi Musa" /></div>

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/site-ui";
 import { ContactForm } from "@/components/contact-form";
-import { ContactBlock, ContactChannels } from "@/components/contact-channels";
+import { ContactBlock, ContactChannels, RequestChannels } from "@/components/contact-channels";
+import { messageResponseExpectation } from "@/content/response-expectation";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
@@ -18,8 +19,9 @@ export default function ContactPage() {
       <div className="contact-layout">
         <aside className="contact-aside">
           <h2 className="panel-title">Prefer to talk directly?</h2>
-          <p>Use this page for questions and conversations. When you are ready to request a cleaning visit, use the dedicated booking form.</p>
-          <ContactChannels channels={["instagram", "phone", "email", "hours"]}>
+          <p>{`The quickest way to reach us is a message or a call. ${messageResponseExpectation}.`}</p>
+          <RequestChannels />
+          <ContactChannels channels={["email", "hours"]}>
             <ContactBlock label="Brand promise" note="Your space. Your needs. Our expertise.">Professional cleaning. Thoughtfully done.</ContactBlock>
           </ContactChannels>
         </aside>
