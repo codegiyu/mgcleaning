@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowRight, PageCTA, PageIntro } from "@/components/site-ui";
+import { PageCTA, PageIntro } from "@/components/site-ui";
 import { getPublicFaqs } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -32,10 +31,6 @@ export default function FaqPage() {
             <p>M&amp;G Cleaning Services will publish answers here after the service details have been confirmed.</p>
           </div>
         )}
-      </section>
-      <section className="trust-next-step">
-        <div><p className="eyebrow">STILL UNSURE?</p><h2>Tell us what your space needs.</h2></div>
-        <Link className="text-link" href="/book">Start a cleaning request <ArrowRight /></Link>
       </section>
       <PageCTA />
     </div>
