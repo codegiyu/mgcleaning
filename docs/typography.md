@@ -43,7 +43,9 @@ Both fonts are self-hosted by `next/font`, with size-matched fallbacks, so every
 - **`ContactChannels`** (`src/components/contact-channels.tsx`): contact blocks read from the governed `businessContactFacts`.
 - **`RequestChannels`** (same file): the primary way to request a cleaning, in the agreed order WhatsApp → Instagram DM → call. `buttons` (default) is the bold stack used before the booking form, on Contact, and in the service aside (`tone="light"` on pale panels); `inline` is the row under the home Quick Answers. Pass `service` (a title from the services manifest) to name it in the prefilled WhatsApp message. The closing call to action leads with WhatsApp too.
 
-Grids own layout only (`.why-mg-grid`, `.trust-proof-grid`, `.faq-preview-grid`, `.area-notes`, `.process-list`). Card spacing and typography come from the components, never from per-page selectors.
+- **`ReviewCard`** (`src/components/review-card.tsx`): one customer review as plain text. It shows an optional star rating with a spoken label, the quote in body Geist at 15px (blank lines start a new paragraph), and a `figcaption` with the name in Geist 700 and context and service in card-text grey. The admin editor preview renders this same card.
+
+Grids own layout only (`.why-mg-grid`, `.trust-proof-grid`, `.faq-preview-grid`, `.review-grid`, `.area-notes`, `.process-list`). Card spacing and typography come from the components, never from per-page selectors.
 
 ## Rules of thumb
 

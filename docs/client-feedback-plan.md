@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: Phases 1–3 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phases 1–4 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -216,3 +216,12 @@ Each phase ships as small signed commits, with the backend contract and tests be
   - The website's purge route only accepted `blog` tags, so every `reviews` purge was rejected with 400 until it was added to `ALLOWED_TAG`. Unit tests on each side passed; only the end-to-end run caught it.
   - Older bug: on phones every admin page laid out about 563px wide, because the mobile admin grid used `1fr` and the scrolling nav set its minimum width. This also hid "Sign out" off-screen. It is now `minmax(0,1fr)`.
 - **Older bug, fixed in the backend:** after every API restart, the first admin sign-in failed with 503 ("Sign-in is temporarily unavailable"), and so did the first enquiry ("Requests are temporarily unavailable"). The login rate limiter and the enquiry abuse checks open their Redis connection inside the request and, with `enableOfflineQueue: false`, used it before it had connected. Both now go through `lazyProducerConnection()` in `src/queue/redis.ts`, which waits up to 2 s for the connection to be ready and fails fast if it errors or closes. The login connection is also closed on shutdown now. Checked against the local stack: the first sign-in after a restart returns 200 and the first enquiry 201. With Redis stopped, both fail with 503 within about 2 s, and sign-in recovers as soon as Redis returns.
+
+## Phase 4 amendments (as built)
+
+- **`getPublishedReviews()`** (`src/lib/reviews/public-reviews.ts`) reads `GET /v1/reviews` server-side, tagged `reviews` (`src/lib/cache/review-tags.ts`) with a 1-hour backstop. It never throws, and it has **no demo fallback**, so sample reviews can never appear. `parsePublicReviews()` (`review-data.ts`, with tests) drops malformed items and any fields beyond the public ones.
+- **Home page:** a "WHAT CLIENTS SAY · In their own words." section after the trust and FAQ section, showing up to 6 reviews with featured ones first. It links to `/reviews` and is not rendered at all when there are no published reviews.
+- **`/reviews`:** all published reviews in the same `.review-grid` (3, 2, then 1 column). When empty it shows "Reviews are on their way" and is `noindex`. It joins the sitemap only once it has reviews. There is no site navigation link yet; the home section is the way in (see the follow-up below).
+- **Static `trustTestimonials` and `getPublicTestimonials()` were removed.** Their two placeholder slots no longer count towards the production content gate (`assertProductionTrustContent`), because reviews are now governed by the consent rule in the API and database. The `AGENTS.md` review rule and the evidence ledger say where reviews come from.
+- **Verified against the local stack.** Publishing three reviews refreshed the prerendered `/reviews` and `/` on demand, with featured first. Unpublishing one removed it on the next request (`remove` mode), and the layout was checked at desktop and 375px. No `Review` or `AggregateRating` data is emitted (D9).
+- **Follow-up to decide with the client:** once a few reviews are live, add "Reviews" to the header or footer navigation and the link hub.
