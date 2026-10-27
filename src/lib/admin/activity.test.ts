@@ -28,3 +28,10 @@ test("tolerates unexpected metadata and unknown actions", () => {
   assert.equal(describeActivity({ action: "future.action", metadata: {} }), "future.action");
   assert.equal(describeActor(null), "System");
 });
+
+test("describes review changes without naming the customer", () => {
+  assert.equal(describeActivity({ action: "review.create", metadata: { status: "draft", fields: ["displayName", "quote"] } }), "Added a draft review");
+  assert.equal(describeActivity({ action: "review.create", metadata: { status: "published" } }), "Added and published a review");
+  assert.equal(describeActivity({ action: "review.unpublish", metadata: { statusFrom: "published", statusTo: "draft" } }), "Unpublished a review");
+  assert.equal(describeActivity({ action: "review.delete", metadata: { statusFrom: "published" } }), "Deleted a published review");
+});

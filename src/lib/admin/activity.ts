@@ -58,6 +58,11 @@ export function describeActivity({ action, metadata }: ActivityEvent): string {
     case "media.upload": return "Uploaded an image";
     case "media.update": return "Updated image alt text";
     case "media.delete": return "Deleted an image";
+    case "review.create": return metadata.status === "published" ? "Added and published a review" : "Added a draft review";
+    case "review.update": return "Edited a review";
+    case "review.publish": return "Published a review";
+    case "review.unpublish": return "Unpublished a review";
+    case "review.delete": return metadata.statusFrom === "published" ? "Deleted a published review" : "Deleted a draft review";
     case "settings.update": {
       const names = fields(metadata.fields).map((name) => fieldLabels[name] ?? name);
       return names.length ? `Updated settings: ${names.join(", ")}` : "Updated settings";
