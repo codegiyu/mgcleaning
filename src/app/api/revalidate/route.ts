@@ -2,9 +2,9 @@ import { revalidateTag } from "next/cache";
 import { MAX_REVALIDATION_BODY_BYTES, verifyRevalidationRequest } from "@/lib/cache/revalidate-signature";
 
 /**
- * Signed cache purge called by the backend after a post change commits. Removals expire
- * immediately so an unpublished article is never served again; other changes are served
- * stale while the next visit refreshes them.
+ * Signed cache purge called by the backend after an article or review change commits.
+ * Removals expire immediately so an unpublished article or review is never served again;
+ * other changes are served stale while the next visit refreshes them.
  */
 export async function POST(request: Request) {
   const secret = process.env.REVALIDATE_SECRET;
