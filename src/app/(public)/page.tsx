@@ -6,6 +6,9 @@ import { articles, services, whyMgReasons } from "@/content/demo-content";
 import { messageResponseExpectation } from "@/content/response-expectation";
 import { getPublicFaqs } from "@/content/trust-content";
 import { getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
+import { ReviewCard } from "@/components/review-card";
+import { getPublishedReviews } from "@/lib/reviews/public-reviews";
+import { homeReviews } from "@/lib/reviews/review-data";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
 export const metadata = buildPageMetadata({
@@ -15,7 +18,8 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function HomePage() {
-  const publishedPosts = await getPublishedBlogPosts();
+  const [publishedPosts, reviews] = await Promise.all([getPublishedBlogPosts(), getPublishedReviews()]);
+  const shownReviews = homeReviews(reviews);
   const featuredArticles = publishedPosts.length ? publishedPosts.slice(0, 3).map(toDemoArticle) : articles;
   const featuredServices = ["retainer-cleaning", "fumigation", "tile-polishing"].flatMap((slug) => {
     const service = services.find((item) => item.slug === slug);
@@ -64,6 +68,17 @@ export default async function HomePage() {
           <RequestChannels variant="inline" />
         </div>
       </section>
+      {shownReviews.length > 0 && (
+        <section className="section section-shell section-flush">
+          <SectionHeading
+            eyebrow="WHAT CLIENTS SAY"
+            title="In their own words."
+            description="Reviews shared by M&G Cleaning Services customers, published with their permission."
+            action={reviews.length > shownReviews.length ? { href: "/reviews", label: `Read all ${reviews.length} reviews` } : { href: "/reviews", label: "See all reviews" }}
+          />
+          <ul className="review-grid">{shownReviews.map((review) => <ReviewCard key={review.id} review={review} element="li" />)}</ul>
+        </section>
+      )}
       <section className="section section-shell">
         <SectionHeading
           eyebrow="PROFESSIONAL CLEANING SOLUTIONS"

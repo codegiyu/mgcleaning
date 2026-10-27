@@ -314,6 +314,10 @@ main { flex:1; overflow-x:clip; }
 .review-attribution { display:grid; gap:3px; margin-top:auto; border-top:1px solid var(--line); padding-top:14px; }
 .review-attribution strong { color:var(--deep); font-size:13px; font-weight:700; }
 .review-attribution span { color:var(--muted); font-size:var(--text-small); }
+.review-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; margin:0; padding:0; list-style:none; }
+.reviews-page { padding-bottom:70px; }
+@media(max-width:900px) { .review-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:650px) { .review-grid { grid-template-columns:1fr; } .review-card { padding:20px; } }
 .contact-info-block { margin-top:25px; border-top:1px solid #ffffff33; padding-top:17px; }
 .contact-info-block span { display:block; color:#bbcf9a; font-size:var(--text-small); font-weight:800; letter-spacing:.14em; }
 .contact-info-block strong { display:block; margin-top:7px; color:white; font-size:13px; font-weight:600; }
