@@ -305,6 +305,15 @@ main { flex:1; overflow-x:clip; }
 .request-channels-inline { display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; margin:22px 0 0; color:var(--muted); font-size:var(--text-small); }
 .request-channels-inline>span:first-child { color:var(--deep); font-weight:800; }
 .request-note { margin:18px 0 0; color:#cad7cc; font-size:var(--text-small); line-height:1.7; }
+/* Customer reviews (ReviewCard in src/components/review-card.tsx): plain text, Geist throughout. */
+.review-card { display:flex; flex-direction:column; gap:14px; min-width:0; margin:0; border:1px solid var(--line); border-radius:18px; background:#f8f8f4; padding:24px; }
+.review-card>figure { display:contents; }
+.review-rating { margin:0; color:#9a7800; font-size:15px; letter-spacing:.12em; line-height:1; }
+.review-quote { display:grid; gap:10px; margin:0; color:var(--ink); font-size:15px; line-height:1.7; }
+.review-quote p { margin:0; }
+.review-attribution { display:grid; gap:3px; margin-top:auto; border-top:1px solid var(--line); padding-top:14px; }
+.review-attribution strong { color:var(--deep); font-size:13px; font-weight:700; }
+.review-attribution span { color:var(--muted); font-size:var(--text-small); }
 .contact-info-block { margin-top:25px; border-top:1px solid #ffffff33; padding-top:17px; }
 .contact-info-block span { display:block; color:#bbcf9a; font-size:var(--text-small); font-weight:800; letter-spacing:.14em; }
 .contact-info-block strong { display:block; margin-top:7px; color:white; font-size:13px; font-weight:600; }
