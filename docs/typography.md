@@ -41,6 +41,7 @@ Both fonts are self-hosted by `next/font`, with size-matched fallbacks, so every
   - `row` puts the label in a side column for ordered steps (`element="li"`).
 - **`PageCTA`**: the closing call to action on inner pages. The home page uses `CTASection` at full size.
 - **`ContactChannels`** (`src/components/contact-channels.tsx`): contact blocks read from the governed `businessContactFacts`.
+- **`RequestChannels`** (same file): the primary way to request a cleaning, in the agreed order WhatsApp → Instagram DM → call. `buttons` (default) is the bold stack used before the booking form, on Contact, and in the service aside (`tone="light"` on pale panels); `inline` is the row under the home Quick Answers. Pass `service` (a title from the services manifest) to name it in the prefilled WhatsApp message. The closing call to action leads with WhatsApp too.
 
 Grids own layout only (`.why-mg-grid`, `.trust-proof-grid`, `.faq-preview-grid`, `.area-notes`, `.process-list`). Card spacing and typography come from the components, never from per-page selectors.
 
@@ -51,3 +52,4 @@ Grids own layout only (`.why-mg-grid`, `.trust-proof-grid`, `.faq-preview-grid`,
 - Secondary text uses `var(--muted)`; do not introduce new greys.
 - Do not repeat the closing call to action's heading in a band above it. A next-step band should point somewhere else (for example, Areas → FAQs).
 - No inline `style` attributes on public pages; add a class.
+- Response promises come from `src/content/response-expectation.ts`; never write a response time into page copy. A test fails if the retired "business day" promise returns.

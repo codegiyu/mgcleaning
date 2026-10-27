@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: proposed · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phase 1 implemented (default wording pending Q1/Q2) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -181,3 +181,13 @@ Each phase ships as small signed commits, with the backend contract and tests be
 2. **Q2:** What should the site promise for form submissions? The default is "we'll contact you shortly; for the fastest reply, message us on WhatsApp".
 3. **Q3:** Which inbox, or inboxes, should get the submission alerts? Can we add DNS records on their domain for the sender? If they have no domain yet, alerts come from a verified Resend domain we control.
 4. **Q4:** For reviews, will customers be shown by first name and initial? Should we show star ratings? Do they have customers' permission for the reviews they plan to upload?
+
+## Phase 1 amendments (as built)
+
+- **Default wording in use until the client answers Q1 and Q2:** messages: "We reply to messages within 15 minutes"; form: "We'll contact you shortly through your preferred contact method. For the fastest reply, message us on WhatsApp." Both live in `src/content/response-expectation.ts` (web) and `src/emails/response-expectation.ts` (backend); changing them is a two-file edit.
+- **The FAQ reads the same constants**, so `trust-content.ts` imports them directly (importing `public-content.ts` would create a cycle).
+- **The closing call to action leads with WhatsApp** ("Message us on WhatsApp"), with "Other ways to request" linking to `/book`. The home hero keeps "Request a cleaning" as its primary button, since `/book` now opens on the channels.
+- **The service detail aside** shows `RequestChannels` with the service prefilled, and links to the form as "Or use the request form".
+- **`/book?service=`** now passes only a title that matches the services manifest, both to the WhatsApp message and to the form's preselected service. Unknown values are ignored.
+- **WhatsApp text is encoded with `encodeURIComponent`.** `URLSearchParams` writes spaces as `+`, which WhatsApp can show literally.
+- **Not covered by an automated test:** the booking page rendering channels before the form. The web test runner has no DOM renderer, so this was checked in the browser at 375px and on desktop instead.

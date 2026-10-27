@@ -27,7 +27,7 @@ This ledger is the launch checklist for replacing demo trust content with verifi
 | Phone | Confirmed public phone number | Approved | MG Cleaning | Review when number changes |
 | WhatsApp | Confirmed WhatsApp destination | Approved | MG Cleaning | Review when number changes |
 | Instagram | Confirmed Instagram profile URL | Approved | MG Cleaning | Review when profile changes |
-| Response expectation | Approved wording for response timing | Approved | MG Cleaning | Review when process changes |
+| Response expectation | 15-minute message reply confirmed by MG on 2026-10-26; hours it applies to and the form promise are pending (client-feedback plan Q1, Q2) | Partially approved | MG Cleaning | Review when hours are confirmed |
 
 ## Research basis for draft specialist-service content
 
