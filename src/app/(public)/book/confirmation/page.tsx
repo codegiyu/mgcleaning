@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/site-ui";
-import { demoSite } from "@/content/demo-content";
+import { businessContactFacts } from "@/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
 type Props = { searchParams: Promise<{ reference?: string }> };
@@ -35,7 +35,7 @@ export default async function BookingConfirmationPage({ searchParams }: Props) {
         )}
         <h2>Need to reach us first?</h2>
         <p>
-          Call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a> or message us on <a href={demoSite.whatsappUrl}>WhatsApp</a>.
+          Call <a href={businessContactFacts.phone.href}>{businessContactFacts.phone.value}</a> or message us on <a href={businessContactFacts.whatsapp.href}>WhatsApp</a>.
         </p>
         <p><Link className="text-link" href="/">Return to the home page</Link></p>
       </section>
