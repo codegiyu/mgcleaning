@@ -135,6 +135,12 @@ Each phase lands as small, signed commits per repo. The backend contract and tes
 - **Link hub:** rather than tagging every internal link, untagged landings on `/links` are attributed to the Instagram bio. Editors get a copyable, slug-tagged Instagram link for live articles.
 - **Privacy copy:** the site now records campaign source and landing page with enquiries. The reviewed privacy page should mention this before launch; it was not edited here because legal copy is governed content.
 
+## Phase 5 status (2026-10-27)
+
+- **Built:** `src/scripts/smoke.ts` (run with `npm run smoke` or `node dist/scripts/smoke.js`), `scripts/restore-drill.sh`, and `docs/operations-runbook.md` in the backend. Inquiry detail now reports each email's delivery state, so the smoke test can confirm Resend delivered the alert and admins can see it.
+- **Smoke test scope:** it also verifies that sign-out revokes the session server-side, and it refuses non-staging hosts unless explicitly overridden. Inquiries and articles have no delete endpoint, so smoke records are closed/archived and marked `smoke`.
+- **Gate still open:** the done gate needs a real staging deployment. That means two consecutive passing smoke runs, plus one restore drill into a scratch database recorded in the runbook log. An off-site backup destination is also still to be chosen.
+
 ## Open questions
 
 1. Media domain: confirm `media.<domain>` once the production domain is final, and whether the domain's DNS is on Cloudflare.

@@ -48,6 +48,9 @@ The SEO layer follows the same gate: demo builds use canonical URLs for local te
 
 ## Checks
 
+Release, staging smoke-test, backup, restore, and rollback procedures for both apps live in the backend's [operations runbook](../mgcleaning-backend/docs/operations-runbook.md).
+
+
 Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. `npm test` uses Node's built-in test runner with type stripping (`node --experimental-strip-types --test`), so pure modules under `src/**/*.test.ts` need no extra test dependencies; such modules import siblings with explicit `.ts` extensions and avoid `@/` aliases.
 
 ## API and state conventions
