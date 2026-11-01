@@ -87,7 +87,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     }));
   }
 
-  function insertMarkup(kind: "heading" | "bold" | "bullet") {
+  function insertMarkup(kind: "heading" | "bold" | "bullet" | "link") {
     const textarea = editorRef.current;
     if (!textarea) return;
     const start = textarea.selectionStart;
@@ -109,6 +109,12 @@ export function AdminBlogEditor({ id }: { id?: string }) {
       nextBody = before.slice(0, lineStart) + "- " + before.slice(lineStart) + selected + after;
       selectionStart = start + 2;
       selectionEnd = Math.max(selectionStart, end + 2);
+    } else if (kind === "link") {
+      // [text](url) with the URL selected, ready to paste over.
+      const label = selected || "link text";
+      nextBody = before + `[${label}](https://)` + after;
+      selectionStart = start + label.length + 3;
+      selectionEnd = selectionStart + "https://".length;
     } else {
       nextBody = before + `**${selected || "text"}**` + after;
       selectionStart = selected ? start : start + 2;
@@ -200,12 +206,12 @@ export function AdminBlogEditor({ id }: { id?: string }) {
           <label className="admin-field"><span>Short summary</span><textarea required minLength={8} maxLength={320} rows={3} value={draft.excerpt} onChange={(event) => update("excerpt", event.target.value)} /><small className="admin-character-count">{draft.excerpt.length}/320</small></label>
           <div className="admin-field"><span>Article content</span>
             <div className="admin-editor-toolbar" role="toolbar" aria-label="Article formatting">
-              <span>Plain text</span><button type="button" onClick={() => insertMarkup("heading")} aria-label="Insert heading">H2</button><button type="button" onClick={() => insertMarkup("bold")} aria-label="Bold selected text"><strong>B</strong></button><button type="button" onClick={() => insertMarkup("bullet")} aria-label="Insert bullet item">• List</button>
+              <span>Plain text</span><button type="button" onClick={() => insertMarkup("heading")} aria-label="Insert heading">H2</button><button type="button" onClick={() => insertMarkup("bold")} aria-label="Bold selected text"><strong>B</strong></button><button type="button" onClick={() => insertMarkup("bullet")} aria-label="Insert bullet item">• List</button><button type="button" onClick={() => insertMarkup("link")} aria-label="Insert a link">Link</button>
             </div>
             <textarea ref={editorRef} required minLength={20} maxLength={20_000} rows={18} value={draft.body} onChange={(event) => update("body", event.target.value)} placeholder="Write the article. Use a blank line between paragraphs." />
             <small className="admin-character-count">{draft.body.length}/20,000</small>
           </div>
-          <p className="admin-editor-help">Formatting is limited to headings, bold and bullet lists. HTML is not rendered.</p>
+          <p className="admin-editor-help">Formatting is limited to headings, bold, bullet lists, and links to this site or https:// pages, written as [text](/book). HTML is not rendered.</p>
         </section>
         <aside className="admin-editor-settings">
           <h2>Post settings</h2>
