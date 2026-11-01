@@ -6,25 +6,48 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { callApi } from "@/lib/api/callApi";
 import type { BlogPost, BlogPostInput, PostStatus } from "@/lib/api/endpoints";
 import { services } from "@/content/demo-content";
+import { AdminCoverPicker, type SelectedCover } from "@/components/admin-cover-picker";
+import { AdminShareLink } from "@/components/admin-share-link";
+import { formatWat, isoToWatInput, watInputToIso } from "@/lib/admin/wat-time";
+import { clearSavedParam, savedNoticeFor } from "@/lib/admin/saved-notice";
 
 type Draft = BlogPostInput;
-const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Upholstery care", authorName: "M&G Cleaning Service", serviceSlug: "upholstery-cleaning", coverImageUrl: "", coverImageAlt: "", seoTitle: "", seoDescription: "" };
+const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverMediaId: null, coverImageAlt: "", seoTitle: "", seoDescription: "" };
 
 function makeSlug(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 180);
 }
 
-export function AdminBlogEditor({ id }: { id?: string }) {
+export function AdminBlogEditor({ id, savedStatus }: { id?: string; savedStatus?: string }) {
   const router = useRouter();
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [cover, setCover] = useState<SelectedCover | null>(null);
+  const [scheduleAt, setScheduleAt] = useState("");
+  const [minScheduleAt] = useState(() => isoToWatInput(new Date().toISOString()));
   const [slugTouched, setSlugTouched] = useState(false);
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState(() => savedNoticeFor("article", savedStatus));
+
+  useEffect(() => {
+    if (savedStatus) clearSavedParam();
+  }, [savedStatus]);
+
+  useEffect(() => {
+    if (id) return;
+    // New articles start with the team's configured default author, if one is set.
+    let active = true;
+    void callApi("GET_ADMIN_SETTINGS").then((result) => {
+      if (!active || result.type === "error" || !result.data.defaultAuthorName) return;
+      const author = result.data.defaultAuthorName;
+      setDraft((current) => current.authorName === blankDraft.authorName ? { ...current, authorName: author } : current);
+    });
+    return () => { active = false; };
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -43,12 +66,14 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         body: current.body,
         category: current.category,
         authorName: current.authorName,
-        serviceSlug: current.serviceSlug ?? "upholstery-cleaning",
-        coverImageUrl: current.coverImageUrl ?? "",
+        serviceSlug: current.serviceSlug ?? "home-cleaning",
+        coverMediaId: current.coverMediaId,
         coverImageAlt: current.coverImageAlt ?? "",
         seoTitle: current.seoTitle ?? "",
         seoDescription: current.seoDescription ?? "",
       });
+      setCover(current.coverMediaId && current.coverImageUrl ? { id: current.coverMediaId, url: current.coverImageUrl, altText: null } : null);
+      setScheduleAt(current.publishAt ? isoToWatInput(current.publishAt) : "");
     });
     return () => { active = false; };
   }, [id]);
@@ -57,7 +82,17 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  function insertMarkup(kind: "heading" | "bold" | "bullet") {
+  function chooseCover(next: SelectedCover | null) {
+    setCover(next);
+    setDraft((current) => ({
+      ...current,
+      coverMediaId: next?.id ?? null,
+      // Offer the library's alt text as a starting point without overwriting the editor's own.
+      coverImageAlt: current.coverImageAlt?.trim() ? current.coverImageAlt : next?.altText ?? "",
+    }));
+  }
+
+  function insertMarkup(kind: "heading" | "bold" | "bullet" | "link") {
     const textarea = editorRef.current;
     if (!textarea) return;
     const start = textarea.selectionStart;
@@ -79,6 +114,12 @@ export function AdminBlogEditor({ id }: { id?: string }) {
       nextBody = before.slice(0, lineStart) + "- " + before.slice(lineStart) + selected + after;
       selectionStart = start + 2;
       selectionEnd = Math.max(selectionStart, end + 2);
+    } else if (kind === "link") {
+      // [text](url) with the URL selected, ready to paste over.
+      const label = selected || "link text";
+      nextBody = before + `[${label}](https://)` + after;
+      selectionStart = start + label.length + 3;
+      selectionEnd = selectionStart + "https://".length;
     } else {
       nextBody = before + `**${selected || "text"}**` + after;
       selectionStart = selected ? start : start + 2;
@@ -93,16 +134,23 @@ export function AdminBlogEditor({ id }: { id?: string }) {
 
   async function save(targetStatus: PostStatus) {
     if (formRef.current && !formRef.current.reportValidity()) return;
-    if (targetStatus === "published" && (!draft.coverImageUrl?.trim() || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
+    const goingLive = targetStatus === "published" || targetStatus === "scheduled";
+    if (goingLive && (!draft.coverMediaId || !draft.coverImageAlt?.trim() || !draft.authorName.trim() || !draft.serviceSlug.trim())) {
       setError("Add an author, related service, cover image, and image alt text before publishing.");
       return;
     }
+    const publishAt = targetStatus === "scheduled" ? watInputToIso(scheduleAt) : null;
+    if (targetStatus === "scheduled" && !publishAt) {
+      setError("Choose the date and time (WAT) to publish this article.");
+      return;
+    }
+    const statusChange = { status: targetStatus, ...(publishAt ? { publishAt } : {}) };
     setSaving(true);
     setError("");
     setNotice("");
     const payload: BlogPostInput = {
       ...draft,
-      coverImageUrl: draft.coverImageUrl?.trim() || undefined,
+      coverMediaId: draft.coverMediaId ?? null,
       coverImageAlt: draft.coverImageAlt?.trim() || undefined,
       seoTitle: draft.seoTitle?.trim() || undefined,
       seoDescription: draft.seoDescription?.trim() || undefined,
@@ -111,22 +159,28 @@ export function AdminBlogEditor({ id }: { id?: string }) {
     if (post) {
       result = await callApi("PATCH_ADMIN_BLOG_POST", {
         pathParams: { id: post.id },
-        payload: { ...payload, status: targetStatus },
+        payload: { ...payload, ...statusChange },
       });
     } else {
       result = await callApi("POST_ADMIN_BLOG_POST", { payload });
       if (result.type === "success" && targetStatus !== "draft") {
         result = await callApi("PATCH_ADMIN_BLOG_POST", {
           pathParams: { id: result.data.id },
-          payload: { status: targetStatus },
+          payload: statusChange,
         });
       }
     }
     setSaving(false);
     if (result.type === "error") { setError(result.message); return; }
     setPost(result.data);
-    setNotice(targetStatus === "published" ? "Article published." : "Draft saved.");
-    if (!id) router.replace(`/admin/blog/${result.data.id}`);
+    setCover(result.data.coverMediaId && result.data.coverImageUrl ? { id: result.data.coverMediaId, url: result.data.coverImageUrl, altText: cover?.altText ?? null } : null);
+    setScheduleAt(result.data.publishAt ? isoToWatInput(result.data.publishAt) : "");
+    setNotice(
+      targetStatus === "published" ? "Article published."
+        : targetStatus === "scheduled" && result.data.publishAt ? `Scheduled for ${formatWat(result.data.publishAt)}.`
+          : "Draft saved.",
+    );
+    if (!id) router.replace(`/admin/blog/${result.data.id}?saved=${targetStatus}`);
   }
 
   function submitDraft(event: FormEvent<HTMLFormElement>) {
@@ -145,9 +199,9 @@ export function AdminBlogEditor({ id }: { id?: string }) {
       <header className="admin-editor-header">
         <div><h1>Blog</h1><p><Link href="/admin/blog">All posts</Link><span aria-hidden="true"> / </span>{post ? "Edit article" : "New article"}</p></div>
         <div className="admin-editor-actions">
-          <button className="admin-secondary-button" type="submit" disabled={saving}>{saving ? "Saving…" : post?.status === "published" ? "Save changes" : "Save draft"}</button>
+          <button className="admin-secondary-button" type="submit" disabled={saving}>{saving ? "Saving…" : post?.status === "published" || post?.status === "scheduled" ? "Save changes" : "Save draft"}</button>
           {post?.status === "published" && <button className="admin-secondary-button" type="button" disabled={saving} onClick={() => void save("draft")}>Unpublish</button>}
-          <button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save("published")}>{post?.status === "published" ? "Update article" : "Publish"}</button>
+          <button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save("published")}>{post?.status === "published" ? "Update article" : post?.status === "scheduled" ? "Publish now" : "Publish"}</button>
         </div>
       </header>
       <div className="admin-editor-grid">
@@ -157,26 +211,38 @@ export function AdminBlogEditor({ id }: { id?: string }) {
           <label className="admin-field"><span>Short summary</span><textarea required minLength={8} maxLength={320} rows={3} value={draft.excerpt} onChange={(event) => update("excerpt", event.target.value)} /><small className="admin-character-count">{draft.excerpt.length}/320</small></label>
           <div className="admin-field"><span>Article content</span>
             <div className="admin-editor-toolbar" role="toolbar" aria-label="Article formatting">
-              <span>Plain text</span><button type="button" onClick={() => insertMarkup("heading")} aria-label="Insert heading">H2</button><button type="button" onClick={() => insertMarkup("bold")} aria-label="Bold selected text"><strong>B</strong></button><button type="button" onClick={() => insertMarkup("bullet")} aria-label="Insert bullet item">• List</button>
+              <span>Plain text</span><button type="button" onClick={() => insertMarkup("heading")} aria-label="Insert heading">H2</button><button type="button" onClick={() => insertMarkup("bold")} aria-label="Bold selected text"><strong>B</strong></button><button type="button" onClick={() => insertMarkup("bullet")} aria-label="Insert bullet item">• List</button><button type="button" onClick={() => insertMarkup("link")} aria-label="Insert a link">Link</button>
             </div>
             <textarea ref={editorRef} required minLength={20} maxLength={20_000} rows={18} value={draft.body} onChange={(event) => update("body", event.target.value)} placeholder="Write the article. Use a blank line between paragraphs." />
             <small className="admin-character-count">{draft.body.length}/20,000</small>
           </div>
-          <p className="admin-editor-help">Formatting is limited to headings, bold and bullet lists. HTML is not rendered.</p>
+          <p className="admin-editor-help">Formatting is limited to headings, bold, bullet lists, and links to this site or https:// pages, written as [text](/book). HTML is not rendered.</p>
         </section>
         <aside className="admin-editor-settings">
           <h2>Post settings</h2>
-          <label className="admin-field"><span>Status</span><select value={post?.status ?? "draft"} onChange={(event) => { if (post) setPost({ ...post, status: event.target.value as PostStatus }); }} disabled={!post}><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label>
+          <label className="admin-field"><span>Status</span><select value={post?.status ?? "draft"} onChange={(event) => { if (post) setPost({ ...post, status: event.target.value as PostStatus }); }} disabled={!post}><option value="draft">Draft</option>{post?.status === "scheduled" && <option value="scheduled">Scheduled</option>}<option value="published">Published</option><option value="archived">Archived</option></select></label>
+          {post?.status !== "published" && (
+            <div className="admin-field admin-schedule">
+              <label htmlFor="article-publish-at">Publish later (WAT)</label>
+              <input id="article-publish-at" type="datetime-local" value={scheduleAt} min={minScheduleAt} disabled={saving} onChange={(event) => setScheduleAt(event.target.value)} />
+              {post?.status === "scheduled" && post.publishAt && <small className="admin-field-help">Goes live {formatWat(post.publishAt)}.</small>}
+              <div className="admin-cover-actions">
+                <button className="admin-secondary-button" type="button" disabled={saving || !scheduleAt} onClick={() => void save("scheduled")}>{post?.status === "scheduled" ? "Reschedule" : "Schedule"}</button>
+                {post?.status === "scheduled" && <button className="admin-secondary-button" type="button" disabled={saving} onClick={() => void save("draft")}>Cancel schedule</button>}
+              </div>
+            </div>
+          )}
           <label className="admin-field"><span>Category</span><input required maxLength={80} value={draft.category} onChange={(event) => update("category", event.target.value)} /></label>
           <label className="admin-field"><span>Author</span><input required minLength={2} maxLength={120} value={draft.authorName} onChange={(event) => update("authorName", event.target.value)} /></label>
           <label className="admin-field"><span>Related service</span><select required value={draft.serviceSlug} onChange={(event) => update("serviceSlug", event.target.value)}><option value="">Choose a service</option>{services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}</select></label>
-          <label className="admin-field"><span>Featured image URL</span><input type="url" maxLength={2048} value={draft.coverImageUrl} onChange={(event) => update("coverImageUrl", event.target.value)} placeholder="https://…" /></label>
+          <AdminCoverPicker cover={cover} altText={draft.coverImageAlt ?? ""} disabled={saving} onChange={chooseCover} />
           <label className="admin-field"><span>Image alt text</span><input maxLength={250} value={draft.coverImageAlt} onChange={(event) => update("coverImageAlt", event.target.value)} placeholder="Describe the image" /></label>
+          {post?.status === "published" && <AdminShareLink slug={post.slug} />}
           <div className="admin-search-preview"><h2>Search preview</h2><span>/blog/{slug}</span><strong>{titlePreview}</strong><p>{excerptPreview}</p></div>
         </aside>
       </div>
       {(error || notice) && <p className={error ? "admin-error admin-editor-feedback" : "admin-success admin-editor-feedback"} role={error ? "alert" : "status"}>{error || notice}</p>}
-      <div className="admin-editor-bottom-actions"><Link className="admin-text-link" href="/admin/blog">Cancel and return to posts</Link><button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save(post?.status ?? "draft")}>{saving ? "Saving…" : post?.status === "published" ? "Save changes" : "Save draft"}</button></div>
+      <div className="admin-editor-bottom-actions"><Link className="admin-text-link" href="/admin/blog">Cancel and return to posts</Link><button className="admin-primary-button" type="button" disabled={saving} onClick={() => void save(post?.status ?? "draft")}>{saving ? "Saving…" : post?.status === "published" || post?.status === "scheduled" ? "Save changes" : "Save draft"}</button></div>
     </form>
   );
 }

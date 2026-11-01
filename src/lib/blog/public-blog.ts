@@ -1,8 +1,9 @@
 import type { BlogPost } from "@/lib/api/endpoints";
 import { articles, getArticle, type DemoArticle } from "@/content/demo-content";
 import { contentMode } from "@/content/trust-content";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
+import { BLOG_CACHE_SECONDS, BLOG_LIST_TAG, blogPostTag } from "@/lib/cache/blog-tags";
+import { isRenderableImageUrl } from "@/lib/media/media-url";
+import { API_BASE_URL } from "@/lib/env/api-base-url";
 
 export type PublicBlogPost = Pick<
   BlogPost,
@@ -14,6 +15,7 @@ export type PublicBlogPost = Pick<
   | "category"
   | "authorName"
   | "serviceSlug"
+  | "coverMediaId"
   | "coverImageUrl"
   | "coverImageAlt"
   | "seoTitle"
@@ -39,8 +41,9 @@ function fromDemo(article: DemoArticle): PublicBlogPost {
       ...article.takeaways.map((item) => `- ${item}`),
     ].join("\n\n"),
     category: article.category,
-    authorName: "M&G Cleaning Service",
+    authorName: "M&G Cleaning Services",
     serviceSlug: article.serviceSlug,
+    coverMediaId: null,
     coverImageUrl: article.image,
     coverImageAlt: article.title,
     seoTitle: null,
@@ -60,8 +63,12 @@ function demoFallback(slug?: string): PublicBlogPost[] | PublicBlogPost | null {
   return articles.map(fromDemo);
 }
 
-async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, { cache: "no-store" });
+/**
+ * Cached for up to an hour and purged by tag when the backend publishes, edits, or
+ * unpublishes an article (see `src/app/api/revalidate/route.ts`).
+ */
+async function request<T>(path: string, tags: string[]): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, { next: { revalidate: BLOG_CACHE_SECONDS, tags } });
   const body = (await response.json()) as BlogEnvelope<T>;
   if (!response.ok || !body.success || body.data === undefined) {
     throw new Error("Published articles are not available.");
@@ -73,7 +80,7 @@ export async function getPublishedBlogPosts(category?: string) {
   const params = new URLSearchParams({ page: "1", pageSize: "50" });
   if (category && category !== "All") params.set("category", category);
   try {
-    const data = await request<{ items: PublicBlogPost[] }>(`/blog?${params.toString()}`);
+    const data = await request<{ items: PublicBlogPost[] }>(`/blog?${params.toString()}`, [BLOG_LIST_TAG]);
     return data.items;
   } catch {
     if (contentMode === "demo") {
@@ -88,7 +95,7 @@ export async function getPublishedBlogPosts(category?: string) {
 
 export async function getPublishedBlogPost(slug: string) {
   try {
-    return await request<PublicBlogPost>(`/blog/${encodeURIComponent(slug)}`);
+    return await request<PublicBlogPost>(`/blog/${encodeURIComponent(slug)}`, [blogPostTag(slug)]);
   } catch {
     if (contentMode === "demo") return demoFallback(slug);
     return null;
@@ -111,7 +118,9 @@ export function toDemoArticle(post: PublicBlogPost): DemoArticle {
     publishedAt,
     readTime: `${Math.max(1, Math.ceil(words / 220))} min read`,
     tone: "mint",
-    image: post.coverImageUrl || (contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.png" : "/mg-cleaning-logo.svg"),
+    image: isRenderableImageUrl(post.coverImageUrl)
+      ? post.coverImageUrl
+      : contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.webp" : "/mg-cleaning-logo.svg",
     paragraphs,
     takeaways: [],
   };

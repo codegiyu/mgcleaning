@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_API_BASE_URL: http://localhost:4000/api/v1
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  NEXT_PUBLIC_CONTENT_MODE: demo
+  NEXT_PUBLIC_TURNSTILE_MODE: "off"
+
+jobs:
+  checks:
+    name: Lint, typecheck, unit tests, build, audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      # Production dependencies must stay free of high and critical advisories.
+      - run: npm audit --omit=dev --audit-level=high
+
+  e2e:
+    name: End-to-end (website + API)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: checks
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: mgcleaning_e2e
+          POSTGRES_USER: mgcleaning
+          POSTGRES_PASSWORD: mgcleaning-ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U mgcleaning -d mgcleaning_e2e"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+      mailpit:
+        image: axllent/mailpit:latest
+        ports: ["1025:1025", "8025:8025"]
+    env:
+      # Shared by the API and the website so review changes purge the cached pages.
+      REVALIDATE_SECRET: ci-only-revalidate-secret-of-at-least-32-chars
+      E2E_ADMIN_EMAIL: owner@ci.test
+      E2E_ADMIN_PASSWORD: ci-only-owner-password-1234
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: web
+      # The API lives in its own public repository. Pushes to main test against the API's
+      # main; staging and pull requests test against its staging.
+      - uses: actions/checkout@v4
+        with:
+          repository: codegiyu/mgcleaning-backend
+          ref: ${{ github.ref_name == 'main' && 'main' || 'staging' }}
+          path: api
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            api/package-lock.json
+
+      - name: Start the API
+        working-directory: api
+        env:
+          DATABASE_URL: postgres://mgcleaning:mgcleaning-ci@localhost:5432/mgcleaning_e2e
+          REDIS_URL: redis://localhost:6379
+          FRONTEND_ORIGIN: http://localhost:3000
+          EMAIL_PROVIDER: smtp
+          SMTP_HOST: localhost
+          SMTP_PORT: "1025"
+          INQUIRY_SECURITY_SECRET: ci-only-inquiry-security-secret-not-for-production
+          BOOTSTRAP_ADMIN_EMAIL: owner@ci.test
+          BOOTSTRAP_ADMIN_PASSWORD: ci-only-owner-password-1234
+        run: |
+          npm ci
+          npm run build
+          npm run db:migrate:runtime
+          npm run admin:bootstrap:runtime
+          nohup npm start > ../api.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:4000/api/v1/health/ready && exit 0; sleep 1; done
+          cat ../api.log; exit 1
+
+      - name: Start the website
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+          nohup npm start > ../web.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3000/ && exit 0; sleep 1; done
+          cat ../web.log; exit 1
+
+      - name: Run Playwright
+        working-directory: web
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+
+      - name: Keep the report and logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: |
+            web/playwright-report
+            web/test-results
+            api.log
+            web.log
+          retention-days: 7

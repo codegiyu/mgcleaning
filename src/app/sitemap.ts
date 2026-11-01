@@ -3,6 +3,7 @@ import { services } from "@/content/demo-content";
 import { contentMode } from "@/content/trust-content";
 import { getPublicServiceDetails } from "@/content/public-content";
 import { getPublishedBlogPosts } from "@/lib/blog/public-blog";
+import { getPublishedReviews } from "@/lib/reviews/public-reviews";
 import { getSiteUrl } from "@/lib/seo/site-seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -13,7 +14,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // the build time, which would make lastmod change on every deployment.
   const stablePageLastModified = new Date("2026-09-29T00:00:00.000Z");
   const stablePages = ["/", "/about", "/services", "/blog", "/gallery", "/faq", "/areas", "/book", "/contact", "/privacy", "/terms"];
-  const articles = await getPublishedBlogPosts();
+  const [articles, reviews] = await Promise.all([getPublishedBlogPosts(), getPublishedReviews()]);
+  // The reviews page is listed only once it has something to show (it is noindex while empty).
+  if (reviews.length) stablePages.push("/reviews");
   const approvedServices = getPublicServiceDetails();
   const serviceDetailsBySlug = new Map(approvedServices.map((details) => [details.serviceSlug, details]));
   return [

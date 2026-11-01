@@ -4,8 +4,8 @@ import * as React from "react";
 import Image from "next/image";
 
 export type GalleryItem =
-  | { id: string; type: "image"; src: string; alt: string; layout: string; serviceSlug?: string; tags?: string[]; disclosure?: string; caption?: string }
-  | { id: string; type: "video"; src: string; poster?: string; alt: string; label?: string; layout: string; serviceSlug?: string; tags?: string[]; disclosure?: string; caption?: string };
+  | { id: string; type: "image"; src: string; alt: string; layout: string; serviceSlug?: string; tags?: string[]; caption?: string }
+  | { id: string; type: "video"; src: string; poster?: string; alt: string; label?: string; layout: string; serviceSlug?: string; tags?: string[]; caption?: string };
 
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={direction === "left" ? "m14 5-7 7 7 7" : "m10 5 7 7-7 7"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
@@ -61,8 +61,6 @@ export function GalleryLightbox({ items }: { items: GalleryItem[] }) {
           <button className={`gallery-item gallery-item-${item.layout}`} key={item.id} type="button" onClick={() => setActiveIndex(index)} aria-label={`Open gallery item: ${item.alt}`}>
             <GridMedia item={item} />
             {item.tags?.[0] ? <span className="gallery-category">{item.tags[0]}</span> : null}
-            {item.disclosure ? <span className="gallery-disclosure">{item.disclosure}</span> : null}
-            {item.caption ? <span className="gallery-caption">{item.caption}</span> : null}
           </button>
         ))}
       </div>

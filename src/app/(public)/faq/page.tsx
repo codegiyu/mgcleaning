@@ -1,13 +1,11 @@
-import Link from "next/link";
-import { ArrowRight, CTASection, PageIntro } from "@/components/site-ui";
-import { DemoDisclosure } from "@/components/trust-ui";
-import { contentMode, getPublicFaqs } from "@/content/trust-content";
+import { PageCTA, PageIntro } from "@/components/site-ui";
+import { getPublicFaqs } from "@/content/trust-content";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, faqJsonLd, graphJsonLd } from "@/lib/seo/site-seo";
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "FAQs", path: "/faq" }];
-export const metadata = buildPageMetadata({ title: "Frequently asked questions", description: "Answers about the MG Cleaning request process, availability, and follow-up.", path: "/faq" });
+export const metadata = buildPageMetadata({ title: "Frequently asked questions", description: "Answers about the M&G Cleaning Services request process, availability, and follow-up.", path: "/faq" });
 
 export default function FaqPage() {
   const faqs = getPublicFaqs();
@@ -21,7 +19,6 @@ export default function FaqPage() {
         title="Start with the details that matter."
         description="The request process is designed to make scope, availability, and pricing clear before a visit is confirmed."
       />
-      {contentMode === "demo" ? <DemoDisclosure>Sample FAQ answers for design review · MG Cleaning should approve final wording before launch.</DemoDisclosure> : null}
       <section className="faq-list" aria-label="Frequently asked questions">
         {faqs.length ? faqs.map((faq) => (
           <details className="faq-item" key={faq.id} open={faq.id === "faq-request"}>
@@ -30,16 +27,12 @@ export default function FaqPage() {
           </details>
         )) : (
           <div className="empty-trust-state">
-            <h2>FAQs are being prepared.</h2>
-            <p>MG Cleaning will publish answers here after the service details have been confirmed.</p>
+            <h2 className="subsection-title">FAQs are being prepared.</h2>
+            <p>M&amp;G Cleaning Services will publish answers here after the service details have been confirmed.</p>
           </div>
         )}
       </section>
-      <section className="trust-next-step">
-        <div><p className="eyebrow">STILL UNSURE?</p><h2>Tell us what your space needs.</h2></div>
-        <Link className="text-link" href="/book">Start a cleaning request <ArrowRight /></Link>
-      </section>
-      <section className="section" style={{ paddingTop: 0 }}><CTASection compact /></section>
+      <PageCTA />
     </div>
   );
 }

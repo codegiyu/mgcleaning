@@ -32,10 +32,16 @@ export type CreateInquiryPayload = {
   location?: string;
   spaceType?: string;
   message: string;
+  /** First-touch attribution; the API normalises it and never rejects an enquiry over it. */
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  landingPath?: string;
 };
 
 export type InquiryStatus = "new" | "contacted" | "quoted" | "booked" | "closed";
-export type PostStatus = "draft" | "published" | "archived";
+export type PostStatus = "draft" | "scheduled" | "published" | "archived";
 
 export type AdminInquiry = {
   id: string;
@@ -55,9 +61,23 @@ export type AdminInquiry = {
   internalNote: string | null;
   publicReference: string;
   preferredContactMethod: "phone" | "whatsapp" | "either" | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmContent: string | null;
+  landingPath: string | null;
   createdAt: string;
   updatedAt: string;
 };
+
+export type InquiryNotification = {
+  kind: "internal" | "customer";
+  status: "pending" | "processing" | "sent" | "failed" | "dead_letter";
+  attempts: number;
+  sentAt: string | null;
+};
+
+export type AdminInquiryRecord = AdminInquiry & { notifications: InquiryNotification[] };
 
 export type BlogPost = {
   id: string;
@@ -68,12 +88,15 @@ export type BlogPost = {
   category: string;
   authorName: string;
   serviceSlug: string | null;
+  coverMediaId: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
   seoTitle: string | null;
   seoDescription: string | null;
   status: PostStatus;
   publishedAt: string | null;
+  /** Go-live time for scheduled posts (ISO); null otherwise. */
+  publishAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -93,13 +116,149 @@ export type BlogPostInput = {
   category: string;
   authorName: string;
   serviceSlug: string;
-  coverImageUrl?: string;
+  /** A verified upload; the server copies its public URL onto the post. */
+  coverMediaId?: string | null;
   coverImageAlt?: string;
   seoTitle?: string;
   seoDescription?: string;
 };
 
-export type BlogPostPatch = Partial<BlogPostInput> & { status?: PostStatus };
+export type AdminRole = "owner" | "staff";
+
+/** The signed-in account, as the session check and sign-in return it. */
+export type AdminIdentity = { id: string; email: string; role: AdminRole; mustChangePassword: boolean };
+
+/** An account on the Users page (owners only). */
+export type AdminAccount = {
+  id: string;
+  email: string;
+  role: AdminRole;
+  mustChangePassword: boolean;
+  deactivatedAt: string | null;
+  passwordChangedAt: string | null;
+  createdAt: string;
+};
+
+/** Returned once when an owner creates or resets an account; it is never shown again. */
+export type AdminAccountWithPassword = { user: AdminAccount; temporaryPassword: string };
+
+export type AdminSession = {
+  id: string;
+  createdAt: string;
+  lastUsedAt: string;
+  expiresAt: string;
+  userAgent: string | null;
+  current: boolean;
+};
+
+export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "review" | "site_settings";
+
+export type ReviewStatus = "draft" | "published";
+export type ReviewSource = "whatsapp" | "instagram" | "google" | "email" | "in_person" | "other";
+
+/** A customer review as the dashboard sees it. Only published rows with consent reach the site. */
+export type AdminReview = {
+  id: string;
+  displayName: string;
+  context: string | null;
+  quote: string;
+  rating: number | null;
+  serviceSlug: string | null;
+  source: ReviewSource;
+  /** Calendar date (YYYY-MM-DD) the customer gave the review. */
+  receivedOn: string | null;
+  featured: boolean;
+  status: ReviewStatus;
+  consentConfirmedAt: string | null;
+  consentConfirmedBy: string | null;
+  publishedAt: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ReviewInput = {
+  displayName: string;
+  context?: string | null;
+  quote: string;
+  rating?: number | null;
+  serviceSlug?: string | null;
+  source: ReviewSource;
+  receivedOn?: string | null;
+  featured?: boolean;
+  status?: ReviewStatus;
+  /** The editor confirms the customer agreed to the review and their full name appearing on the site; required to publish. */
+  consentConfirmed?: boolean;
+};
+
+/** `expectedUpdatedAt` is the `updatedAt` the edit started from; a newer row returns 409. */
+export type ReviewPatch = Partial<ReviewInput> & { expectedUpdatedAt: string };
+
+export type ReviewCounts = { published: number; publishedThisYear: number; draft: number };
+
+export type ChannelClickSummary = {
+  days: number;
+  total: number;
+  byChannel: { whatsapp: number; instagram: number; phone: number };
+  /** Campaign sources with the most taps; untagged visits count as "direct". */
+  topSources: { source: string; count: number }[];
+};
+
+export type AuditEvent = {
+  id: string;
+  action: string;
+  entityType: AuditEntityType;
+  entityId: string | null;
+  actorEmail: string | null;
+  metadata: Record<string, unknown>;
+  requestId: string | null;
+  createdAt: string;
+};
+
+export type SiteSettings = {
+  inquiryNotificationEmail: string | null;
+  effectiveNotificationEmail: string;
+  defaultAuthorName: string | null;
+  updatedAt: string | null;
+};
+
+export type MediaIntent = "blog-cover";
+
+export type MediaAsset = {
+  id: string;
+  url: string;
+  intent: MediaIntent;
+  contentType: string;
+  byteSize: number | null;
+  altText: string | null;
+  originalFilename: string | null;
+  status: "pending" | "verified" | "failed" | "expired" | "deleted";
+  createdAt: string;
+  verifiedAt: string | null;
+};
+
+export type MediaUploadRequest = {
+  intent: MediaIntent;
+  fileExtension: string;
+  byteSize: number;
+  filename?: string;
+  altText?: string;
+};
+
+export type MediaUploadTicket = {
+  asset: MediaAsset;
+  upload: {
+    url: string;
+    method: "PUT";
+    /** Must be sent unchanged: they are part of the presigned signature. */
+    headers: Record<string, string>;
+    expiresAt: string;
+  };
+};
+
+/** `publishAt` must carry a UTC offset; see `src/lib/admin/wat-time.ts`. */
+export type BlogPostPatch = Partial<BlogPostInput> & { status?: PostStatus; publishAt?: string };
 
 export interface AllEndpoints {
   GET_HEALTH: EndpointDefinition<
@@ -118,11 +277,11 @@ export interface AllEndpoints {
   >;
   POST_ADMIN_LOGIN: EndpointDefinition<
     { email: string; password: string },
-    { id: string; email: string }
+    AdminIdentity
   >;
   GET_ADMIN_SESSION: EndpointDefinition<
     undefined,
-    | { authenticated: true; user: { id: string; email: string } }
+    | { authenticated: true; user: AdminIdentity }
     | { authenticated: false; user: null }
   >;
   POST_ADMIN_LOGOUT: EndpointDefinition<undefined, { signedOut: true }>;
@@ -132,10 +291,13 @@ export interface AllEndpoints {
       inquiryCounts: { total: number; new: number };
       postCounts: { draft: number; published: number };
       emailOutboxCounts?: { pending: number; failed: number; deadLetter: number };
+      cacheRevalidationCounts?: { pending: number; deadLetter: number };
+      reviewCounts?: ReviewCounts;
+      channelClicks?: ChannelClickSummary;
     }
   >;
   GET_ADMIN_INQUIRIES: EndpointDefinition<undefined, Paginated<AdminInquiry>>;
-  GET_ADMIN_INQUIRY: EndpointDefinition<undefined, AdminInquiry>;
+  GET_ADMIN_INQUIRY: EndpointDefinition<undefined, AdminInquiryRecord>;
   PATCH_ADMIN_INQUIRY: EndpointDefinition<
     { status?: InquiryStatus; internalNote?: string | null },
     AdminInquiry
@@ -144,6 +306,32 @@ export interface AllEndpoints {
   GET_ADMIN_BLOG_POST: EndpointDefinition<undefined, BlogPost>;
   POST_ADMIN_BLOG_POST: EndpointDefinition<BlogPostInput, BlogPost>;
   PATCH_ADMIN_BLOG_POST: EndpointDefinition<BlogPostPatch, BlogPost>;
+  POST_ADMIN_MEDIA_UPLOAD: EndpointDefinition<MediaUploadRequest, MediaUploadTicket>;
+  POST_ADMIN_MEDIA_VERIFY: EndpointDefinition<undefined, MediaAsset>;
+  GET_ADMIN_MEDIA: EndpointDefinition<undefined, Paginated<MediaAsset>>;
+  PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
+  DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;
+  POST_ADMIN_CHANGE_PASSWORD: EndpointDefinition<{ currentPassword: string; newPassword: string }, { revokedSessions: number }>;
+  GET_ADMIN_SESSIONS: EndpointDefinition<undefined, AdminSession[]>;
+  DELETE_ADMIN_SESSION: EndpointDefinition<undefined, { revoked: true }>;
+  POST_ADMIN_REVOKE_OTHER_SESSIONS: EndpointDefinition<undefined, { revokedSessions: number }>;
+  GET_ADMIN_AUDIT: EndpointDefinition<undefined, Paginated<AuditEvent>>;
+  GET_ADMIN_SETTINGS: EndpointDefinition<undefined, SiteSettings>;
+  PATCH_ADMIN_SETTINGS: EndpointDefinition<{ inquiryNotificationEmail?: string | null; defaultAuthorName?: string | null }, SiteSettings>;
+  GET_ADMIN_REVIEWS: EndpointDefinition<undefined, Paginated<AdminReview> & { counts: ReviewCounts }>;
+  GET_ADMIN_REVIEW: EndpointDefinition<undefined, AdminReview>;
+  POST_ADMIN_REVIEW: EndpointDefinition<ReviewInput, AdminReview>;
+  PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
+  /** Pass `expectedUpdatedAt` as a query parameter. */
+  DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
+  /** Owners only: permanent, for a customer's deletion request. */
+  DELETE_ADMIN_INQUIRY: EndpointDefinition<undefined, { deleted: true }>;
+  GET_ADMIN_USERS: EndpointDefinition<undefined, AdminAccount[]>;
+  POST_ADMIN_USER: EndpointDefinition<{ email: string; role: AdminRole }, AdminAccountWithPassword>;
+  PATCH_ADMIN_USER: EndpointDefinition<{ role?: AdminRole; active?: boolean }, AdminAccount>;
+  POST_ADMIN_USER_RESET_PASSWORD: EndpointDefinition<undefined, AdminAccountWithPassword>;
+  /** Sent with navigator.sendBeacon (see src/lib/attribution/session.ts), not callApi; answers 204. */
+  POST_CHANNEL_CLICK: EndpointDefinition<string, null>;
 }
 
 export const ENDPOINTS = {
@@ -174,6 +362,69 @@ export const ENDPOINTS = {
   PATCH_ADMIN_BLOG_POST: {
     path: "/admin/blog/posts/:id",
     method: "PATCH",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_MEDIA_UPLOAD: { path: "/admin/media/uploads", method: "POST" },
+  POST_ADMIN_MEDIA_VERIFY: {
+    path: "/admin/media/:id/verify",
+    method: "POST",
+    pathParams: ["id"],
+  },
+  GET_ADMIN_MEDIA: { path: "/admin/media", method: "GET" },
+  PATCH_ADMIN_MEDIA: {
+    path: "/admin/media/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  DELETE_ADMIN_MEDIA: {
+    path: "/admin/media/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_CHANGE_PASSWORD: { path: "/admin/account/password", method: "POST" },
+  GET_ADMIN_SESSIONS: { path: "/admin/account/sessions", method: "GET" },
+  DELETE_ADMIN_SESSION: {
+    path: "/admin/account/sessions/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_REVOKE_OTHER_SESSIONS: { path: "/admin/account/sessions/revoke-others", method: "POST" },
+  GET_ADMIN_AUDIT: { path: "/admin/audit", method: "GET" },
+  GET_ADMIN_SETTINGS: { path: "/admin/settings", method: "GET" },
+  PATCH_ADMIN_SETTINGS: { path: "/admin/settings", method: "PATCH" },
+  GET_ADMIN_REVIEWS: { path: "/admin/reviews", method: "GET" },
+  GET_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "GET",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_REVIEW: { path: "/admin/reviews", method: "POST" },
+  PATCH_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  DELETE_ADMIN_REVIEW: {
+    path: "/admin/reviews/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  POST_CHANNEL_CLICK: { path: "/events/channel-click", method: "POST" },
+  DELETE_ADMIN_INQUIRY: {
+    path: "/admin/inquiries/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  GET_ADMIN_USERS: { path: "/admin/users", method: "GET" },
+  POST_ADMIN_USER: { path: "/admin/users", method: "POST" },
+  PATCH_ADMIN_USER: {
+    path: "/admin/users/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_USER_RESET_PASSWORD: {
+    path: "/admin/users/:id/reset-password",
+    method: "POST",
     pathParams: ["id"],
   },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;

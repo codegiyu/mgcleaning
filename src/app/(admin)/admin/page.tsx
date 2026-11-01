@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { callApi } from "@/lib/api/callApi";
 import type { AllEndpoints } from "@/lib/api/endpoints";
+import { REVIEW_TARGET } from "@/lib/admin/review-form";
 
 type Overview = AllEndpoints["GET_ADMIN_OVERVIEW"]["response"];
 
@@ -23,17 +24,30 @@ export default function AdminOverviewPage() {
 
   return (
     <section className="admin-content">
-      <header className="admin-page-heading"><div><h1>Overview</h1><p>A quick look at enquiries and the journal.</p></div></header>
+      <header className="admin-page-heading"><div><h1>Overview</h1><p>A quick look at enquiries, message taps, reviews, and the journal.</p></div></header>
       {error && <p className="admin-error" role="alert">{error}</p>}
       <div className="admin-summary-grid">
         <Link className="admin-summary" href="/admin/inquiries"><span>New enquiries</span><strong>{overview?.inquiryCounts.new ?? "—"}</strong><small>Open the inquiry inbox</small></Link>
         <Link className="admin-summary" href="/admin/inquiries"><span>All enquiries</span><strong>{overview?.inquiryCounts.total ?? "—"}</strong><small>Review and follow up</small></Link>
         <Link className="admin-summary" href="/admin/blog?status=draft"><span>Draft articles</span><strong>{overview?.postCounts.draft ?? "—"}</strong><small>Continue writing</small></Link>
         <Link className="admin-summary" href="/admin/blog?status=published"><span>Published articles</span><strong>{overview?.postCounts.published ?? "—"}</strong><small>Manage the journal</small></Link>
+        <Link className="admin-summary" href="/admin/reviews"><span>Reviews published this year</span><strong>{overview?.reviewCounts ? `${overview.reviewCounts.publishedThisYear}/${REVIEW_TARGET}` : "—"}</strong><small>{overview?.reviewCounts?.draft ? `${overview.reviewCounts.draft} waiting in drafts` : "Add a customer review"}</small></Link>
+        {overview?.cacheRevalidationCounts && overview.cacheRevalidationCounts.deadLetter > 0 && (
+          <Link className="admin-summary" href="/admin/blog?status=published"><span>Website update failures</span><strong>{overview.cacheRevalidationCounts.deadLetter}</strong><small>Article and review changes may take up to an hour to appear</small></Link>
+        )}
+        <div className="admin-summary">
+          <span>Message taps, last {overview?.channelClicks?.days ?? 30} days</span>
+          <strong>{overview?.channelClicks?.total ?? "—"}</strong>
+          <small>{overview?.channelClicks ? `WhatsApp ${overview.channelClicks.byChannel.whatsapp} · Instagram ${overview.channelClicks.byChannel.instagram} · Call ${overview.channelClicks.byChannel.phone}` : "Taps on WhatsApp, Instagram, and call links"}</small>
+          {overview?.channelClicks && overview.channelClicks.topSources.length > 0 && (
+            <small className="admin-summary-detail">From {overview.channelClicks.topSources.map((item) => `${item.source} ${item.count}`).join(" · ")}</small>
+          )}
+        </div>
         <Link className="admin-summary" href="/admin/inquiries"><span>Email failures</span><strong>{overview?.emailOutboxCounts ? overview.emailOutboxCounts.failed + overview.emailOutboxCounts.deadLetter : "—"}</strong><small>Check request notifications</small></Link>
       </div>
       <div className="admin-overview-links">
         <div><h2>Customer follow-up</h2><p>Review new enquiries, add private notes, and update their progress.</p><Link className="admin-text-link" href="/admin/inquiries">Go to inquiries →</Link></div>
+        <div><h2>Share what customers say</h2><p>Add reviews customers send on WhatsApp or Instagram, once they agree to them appearing on the site.</p><Link className="admin-text-link" href="/admin/reviews/new">Add a review →</Link></div>
         <div><h2>Publish useful articles</h2><p>Save a draft, then share its article link in an Instagram post.</p><Link className="admin-text-link" href="/admin/blog/new">Write an article →</Link></div>
       </div>
     </section>

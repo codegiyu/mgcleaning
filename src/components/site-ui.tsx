@@ -1,7 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { demoSite, type DemoArticle, type DemoService, type ServiceIconName } from "@/content/demo-content";
 import { MobileSiteNav } from "@/components/mobile-site-nav";
+import { businessContactFacts } from "@/content/public-content";
+import { messageResponseExpectation } from "@/content/response-expectation";
+import { whatsappRequestHref } from "@/lib/contact/request-links";
 
 export function ServiceIcon({ kind, className = "size-6" }: { kind: ServiceIconName; className?: string }) {
   const common = {
@@ -24,11 +28,20 @@ export function ServiceIcon({ kind, className = "size-6" }: { kind: ServiceIconN
   if (kind === "key") {
     return <svg {...common}><circle cx="8" cy="15" r="5" /><path d="m11.5 11.5 8-8L22 6l-2 2 1.5 1.5-2 2L18 10l-3 3" /><path d="M8 15h.01" /></svg>;
   }
+  if (kind === "calendar") {
+    return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 10h18" /><path d="m8 15 2 2 5-5" /></svg>;
+  }
   if (kind === "sofa") {
     return <svg {...common}><path d="M5 12V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" /><path d="M4 12a2 2 0 0 0-2 2v4h20v-4a2 2 0 0 0-2-2H4Z" /><path d="M5 18v3m14-3v3M4 12v-2m16 2v-2M8 11h8" /></svg>;
   }
   if (kind === "building") {
     return <svg {...common}><path d="M4 21V5l8-3v19m0-13h8v13M2 21h20" /><path d="M7 7h2m-2 4h2m-2 4h2m7-1h2m-2 4h2" /></svg>;
+  }
+  if (kind === "shield") {
+    return <svg {...common}><path d="M12 3 20 6v5c0 5-3.2 8.4-8 10-4.8-1.6-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></svg>;
+  }
+  if (kind === "tile") {
+    return <svg {...common}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M12 3v18M3 12h18" /><path d="m17 5 .6 1.4L19 7l-1.4.6L17 9l-.6-1.4L15 7l1.4-.6L17 5Z" /></svg>;
   }
   return <svg {...common}><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z" /><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" /></svg>;
 }
@@ -91,11 +104,12 @@ export function RoomIllustration() {
 export function SiteHeader() {
   return (
     <>
-      <div className="demo-ribbon"><span className="demo-ribbon-message">{demoSite.demoNotice}</span><span className="ribbon-socials"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer" aria-label="M&G Cleaning Service on Instagram"><InstagramIcon /></a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message M&G Cleaning Service on WhatsApp"><WhatsAppIcon /></a><a href={demoSite.phoneUrl} aria-label={"Call M&G Cleaning Service at " + demoSite.phoneNumber}><PhoneIcon /></a></span></div>
+      <a className="skip-link" href="#main">Skip to content</a>
+      <div className="demo-ribbon"><span className="demo-ribbon-message">{demoSite.demoNotice}</span><span className="ribbon-socials"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer" aria-label="M&G Cleaning Services on Instagram"><InstagramIcon /></a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message M&G Cleaning Services on WhatsApp"><WhatsAppIcon /></a><a href={demoSite.phoneUrl} aria-label={"Call M&G Cleaning Services at " + demoSite.phoneNumber}><PhoneIcon /></a></span></div>
       <header className="site-header">
         <div className="site-header-inner">
-          <Link className="brand-lockup" href="/" aria-label="M&G Cleaning Service home">
-            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Service" priority />
+          <Link className="brand-lockup" href="/" aria-label="M&G Cleaning Services home">
+            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Services" priority />
           </Link>
           <nav className="main-nav" aria-label="Main navigation">
             <Link href="/services">Services</Link>
@@ -117,10 +131,10 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-top">
         <div>
-          <Link className="brand-lockup brand-lockup-footer" href="/" aria-label="M&G Cleaning Service home">
-            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Service" />
+          <Link className="brand-lockup brand-lockup-footer" href="/" aria-label="M&G Cleaning Services home">
+            <Image src="/mg-cleaning-logo.svg" width={305} height={136} className="brand-logo" alt="M&G Cleaning Services" />
           </Link>
-          <p className="footer-description">Deep clean. Fresh feel.<br />Clean spaces. Strong impressions.</p>
+          <p className="footer-description">Professional cleaning. Thoughtfully done.<br />Clean spaces. Strong impressions.</p>
         </div>
         <div className="footer-links">
           <div><span className="footer-label">Explore</span><Link href="/services">Services</Link><Link href="/about">Our approach</Link><Link href="/blog">Journal</Link><Link href="/gallery">Gallery</Link></div>
@@ -128,7 +142,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-note footer-contact"><span className="footer-label">Contact M&amp;G</span><p>Let&apos;s talk about your space.</p><div className="footer-contact-links"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer"><InstagramIcon /> {demoSite.instagramHandle}</a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> {demoSite.phoneNumber}</a><a href={demoSite.phoneUrl}><PhoneIcon /> Call {demoSite.phoneNumber}</a></div></div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} {demoSite.name}</span><span>Demo content and inquiry form · Details to confirm</span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} {demoSite.name}</span><span>Professional cleaning. Thoughtfully done.</span></div>
     </footer>
   );
 }
@@ -149,7 +163,7 @@ export function ServiceCard({ service, index }: { service: DemoService; index: n
       <Image className="service-card-image" src={service.image} alt="" fill sizes="(max-width: 720px) 100vw, (max-width: 1060px) 50vw, 33vw" />
       <span className="service-card-overlay" aria-hidden="true" />
       <div className="service-card-content">
-        <span className="card-index">0{index + 1}</span>
+        <span className="card-index">{sequenceLabel(index)}</span>
         <h3>{service.title}</h3>
         <p>{service.short}</p>
         <span className="text-link">Explore service <ArrowRight /></span>
@@ -179,16 +193,126 @@ export function ArticleCard({ article, featured = false }: { article: DemoArticl
 }
 
 export function CTASection({ compact = false }: { compact?: boolean }) {
+  const { whatsapp } = businessContactFacts;
   return (
     <section className={"cta-panel " + (compact ? "cta-panel-compact" : "")}>
-      <div className="cta-copy">
-        <p className="eyebrow eyebrow-light">THAT&apos;S THE M&amp;G PROMISE</p>
-        <h2>Sit back and relax. We&apos;ll handle the rest.</h2>
-        <p>Professional team. Reliable service. Detailed cleaning. We care about your space.</p>
+      <SectionHeading
+        className="cta-copy"
+        layout="stacked"
+        tone="light"
+        eyebrow="YOUR SPACE · YOUR NEEDS · OUR EXPERTISE"
+        title="Tell us what your space needs."
+        description={["We'll assess it, agree the right scope, and deliver with professional care and attention to detail.", `Message us on WhatsApp or Instagram, or call. ${messageResponseExpectation}.`]}
+      />
+      <div className="cta-actions">
+        {whatsapp.href && <a className="button button-lime" href={whatsappRequestHref(whatsapp.href)} target="_blank" rel="noreferrer"><WhatsAppIcon /> Message us on WhatsApp<span className="sr-only"> (opens WhatsApp)</span></a>}
+        <Link className="button button-ghost-light" href="/book">Other ways to request <ArrowUpRight /></Link>
       </div>
-      <Link className="button button-lime" href="/book">Request a cleaning <ArrowUpRight /></Link>
       <span className="cta-orbit cta-orbit-one" aria-hidden="true" />
       <span className="cta-orbit cta-orbit-two" aria-hidden="true" />
     </section>
   );
+}
+
+/** Closing call to action on inner pages; the home page uses the full-size panel. */
+export function PageCTA() {
+  return <div className="section page-cta"><CTASection compact /></div>;
+}
+
+type HeadingAction = { href: string; label: string };
+
+/**
+ * The one section heading: eyebrow, display title, optional supporting text and link.
+ * Split puts the text and link beside the title (wide sections); stacked puts them
+ * below (inside bands, panels, and sticky columns). See docs/typography.md.
+ */
+export function SectionHeading({
+  eyebrow,
+  title,
+  id,
+  as: Title = "h2",
+  size = "section",
+  layout = "split",
+  description,
+  action,
+  divider = false,
+  tone = "dark",
+  className,
+}: {
+  eyebrow: string;
+  title: ReactNode;
+  id?: string;
+  as?: "h2" | "h3";
+  size?: "section" | "subsection";
+  layout?: "split" | "stacked";
+  /** One paragraph, or several for longer stacked introductions. */
+  description?: ReactNode | ReactNode[];
+  action?: HeadingAction;
+  /** Top rule, for headings that divide a long page into groups. */
+  divider?: boolean;
+  tone?: "dark" | "light";
+  className?: string;
+}) {
+  const paragraphs = (Array.isArray(description) ? description : description ? [description] : []).map((text, index) => (
+    <p className="section-lead" key={index}>{text}</p>
+  ));
+  const link = action ? <Link className="text-link" href={action.href}>{action.label} <ArrowRight /></Link> : null;
+  const classes = [
+    "section-heading",
+    `section-heading-${layout}`,
+    divider ? "section-heading-divider" : "",
+    tone === "light" ? "section-heading-light" : "",
+    className ?? "",
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div className={classes}>
+      <div className="section-heading-title">
+        <p className={tone === "light" ? "eyebrow eyebrow-light" : "eyebrow"}>{eyebrow}</p>
+        <Title id={id} className={size === "section" ? "section-title" : "subsection-title"}>{title}</Title>
+      </div>
+      {(paragraphs.length > 0 || link) && <div className="section-heading-aside">{paragraphs}{link}</div>}
+    </div>
+  );
+}
+
+/**
+ * The one text card: optional label (an index or short category), title, text, and link.
+ * `rule` sits on a top rule, `panel` is a filled card, and `row` puts the label in a
+ * side column for ordered steps.
+ */
+export function InfoCard({
+  label,
+  title,
+  children,
+  href,
+  linkLabel,
+  variant = "rule",
+  element: Element = "article",
+  titleAs: Title = "h3",
+}: {
+  label?: string;
+  title: ReactNode;
+  children: ReactNode;
+  href?: string;
+  linkLabel?: string;
+  variant?: "rule" | "panel" | "row";
+  element?: "article" | "li" | "div";
+  titleAs?: "h3" | "h4";
+}) {
+  return (
+    <Element className={`info-card info-card-${variant}`}>
+      {label && <span className="info-card-label">{label}</span>}
+      <div className="info-card-body">
+        <Title className="card-title">{title}</Title>
+        <p className="card-text">{children}</p>
+        {href && linkLabel ? <Link className="text-link" href={href}>{linkLabel} <ArrowRight /></Link> : null}
+      </div>
+    </Element>
+  );
+}
+
+/** Two-digit step or card number: 01, 02, … 10. */
+export function sequenceLabel(index: number) {
+  return String(index + 1).padStart(2, "0");
 }

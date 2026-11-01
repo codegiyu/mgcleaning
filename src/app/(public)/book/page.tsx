@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/site-ui";
 import { BookingForm } from "@/components/booking-form";
-import { demoSite } from "@/content/demo-content";
+import { RequestChannels } from "@/components/contact-channels";
+import { services } from "@/content/demo-content";
+import { messageResponseExpectation } from "@/content/response-expectation";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
@@ -9,23 +11,25 @@ import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site
 type Props = { searchParams: Promise<{ service?: string }> };
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "Request a cleaning", path: "/book" }];
-export const metadata: Metadata = buildPageMetadata({ title: "Request a cleaning", description: "Submit a cleaning request and M&G Cleaning Service will contact you to confirm availability and pricing.", path: "/book" });
+export const metadata: Metadata = buildPageMetadata({ title: "Request a cleaning", description: "Message M&G Cleaning Services on WhatsApp or Instagram, call, or send the request form to plan a cleaning.", path: "/book" });
 
 export default async function BookingPage({ searchParams }: Props) {
   const params = await searchParams;
+  // Only a known service title reaches the prefilled WhatsApp message.
+  const service = services.find((item) => item.title === params.service)?.title;
   return (
     <div className="section-shell">
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
-      <PageIntro eyebrow="REQUEST A CLEANING" title="Let&apos;s plan a fresher space." description="Submit a cleaning request and our team will contact you to confirm availability and pricing. We respond within one business day." />
+      <PageIntro eyebrow="REQUEST A CLEANING" title="Let&apos;s plan a fresher space." description={`The quickest way is a message: WhatsApp us, send an Instagram DM, or call, and tell us what needs cleaning. ${messageResponseExpectation}.`} />
       <div className="contact-layout">
         <aside className="contact-aside">
-          <h2>This is a request, not a confirmed appointment.</h2>
-          <p>Tell us what needs attention and we&apos;ll follow up by phone or WhatsApp to confirm the details, availability, and pricing.</p>
-          <div className="contact-info-block"><span>INSTAGRAM</span><strong><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer">{demoSite.instagramHandle}</a></strong><small>A direct way to see the M&amp;G work and updates</small></div>
-          <div className="contact-info-block"><span>CALL OR WHATSAPP</span><strong><a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a><a href={demoSite.whatsappUrl}>WhatsApp</a></strong><small>Use the same number for calls and WhatsApp</small></div>
+          <h2 className="panel-title">Message us to request a cleaning.</h2>
+          <p>No form needed. Tell us what needs cleaning, where, and when suits you, and our customer experience team will take it from there.</p>
+          <RequestChannels service={service} />
+          <p className="request-note">A request is not a confirmed appointment. We confirm the details, availability, and pricing with you first.</p>
         </aside>
-        <BookingForm initialService={params.service ?? ""} />
+        <BookingForm initialService={service ?? ""} />
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight, CheckMark, PageIntro, ServiceIcon } from "@/components/site-ui";
+import { RequestChannels } from "@/components/contact-channels";
 import { services } from "@/content/demo-content";
 import { getServiceWithDetails } from "@/content/public-content";
-import { DemoDisclosure } from "@/components/trust-ui";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd, serviceJsonLd } from "@/lib/seo/site-seo";
@@ -29,8 +29,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     <div className="section-shell">
       <Breadcrumbs items={breadcrumbs} />
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs), serviceJsonLd({ name: service.title, description: service.description, path: "/services/" + service.slug, serviceSlug: service.slug }))} />
-      <PageIntro eyebrow={details?.status === "demo" ? "MG CLEANING SERVICES · DEMO" : "MG CLEANING SERVICES"} title={service.title + ", with the details thought through."} description={service.short} />
-      {details?.status === "demo" ? <DemoDisclosure>Sample service information for design review · Confirm the final scope, timing, materials, pricing, and outcomes with MG Cleaning before launch.</DemoDisclosure> : null}
+      <PageIntro eyebrow="M&G CLEANING SERVICES" title={service.title + ", with the details thought through."} description={service.short} />
       <div className="service-detail">
         <div className="service-detail-main">
           <span className="service-icon"><ServiceIcon kind={service.icon} className="size-7" /></span>
@@ -40,14 +39,15 @@ export default async function ServiceDetailPage({ params }: Props) {
           <ServiceDetailSection title="Suitable spaces and surfaces" items={[...(details?.suitableFor ?? []), ...(details?.surfacesOrSpaces ?? [])]} />
           <ServiceDetailSection title="How to prepare" items={details?.preparation ?? ["Share your priorities and access details before the visit."]} />
           <ServiceDetailSection title="What affects pricing" items={details?.pricingFactors ?? ["Space, scope, condition, materials, access, and timing."]} />
-          <div className="service-detail-result"><h2>Expected result</h2><p>{details?.expectedResult ?? "MG Cleaning will confirm the expected result with you before the service is agreed."}</p></div>
-          <div className="service-detail-result"><h2>Important to know</h2><ul className="detail-list">{(details?.limitations ?? ["Final availability and inclusions are confirmed before a visit."]).map((item) => <li key={item}><CheckMark />{item}</li>)}</ul></div>
+          <section className="service-detail-section"><h2>Expected result</h2><p>{details?.expectedResult ?? "M&G Cleaning Services will confirm the expected result with you before the service is agreed."}</p></section>
+          <ServiceDetailSection title="Important to know" items={details?.limitations ?? ["Final availability and inclusions are confirmed before a visit."]} />
         </div>
         <aside className="service-detail-aside">
           <p className="eyebrow">LET&apos;S TALK ABOUT YOUR SPACE</p>
-          <h2>Start with a few details.</h2>
-          <p>Share the kind of clean you have in mind. We can shape the scope around your space and priorities.</p>
-          <Link className="button button-dark" href={"/book?service=" + encodeURIComponent(service.title)}>Request this service <ArrowUpRight /></Link>
+          <h2 className="panel-title">Start with a few details.</h2>
+          <p>Share the service or result you have in mind. We can shape the scope around your space and priorities.</p>
+          <RequestChannels tone="light" service={service.title} />
+          <p><Link className="text-link" href={"/book?service=" + encodeURIComponent(service.title)}>Or use the request form <ArrowUpRight /></Link></p>
           <p><Link className="text-link" href="/services">Back to all services <ArrowRight /></Link></p>
         </aside>
       </div>

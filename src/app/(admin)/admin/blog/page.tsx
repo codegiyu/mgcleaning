@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { AdminIcon } from "@/components/admin-shell";
 import { callApi } from "@/lib/api/callApi";
 import type { BlogPost, PostStatus } from "@/lib/api/endpoints";
+import { formatWat } from "@/lib/admin/wat-time";
 
 const filters: { id: PostStatus | "all"; label: string }[] = [
   { id: "all", label: "All posts" },
   { id: "draft", label: "Drafts" },
+  { id: "scheduled", label: "Scheduled" },
   { id: "published", label: "Published" },
   { id: "archived", label: "Archived" },
 ];
@@ -51,7 +53,7 @@ export default function AdminBlogPage() {
           <thead><tr><th scope="col">Article</th><th scope="col">Category</th><th scope="col">Status</th><th scope="col">Updated</th><th><span className="admin-visually-hidden">Edit article</span></th></tr></thead>
           <tbody>{posts.map((post) => <tr key={post.id}>
             <td><Link className="admin-post-title" href={`/admin/blog/${post.id}`}><strong>{post.title}</strong><small>/blog/{post.slug}</small></Link></td>
-            <td>{post.category}</td><td><span className={`admin-status admin-status-${post.status}`}>{post.status}</span></td><td>{formatDate(post.updatedAt)}</td>
+            <td>{post.category}</td><td><span className={`admin-status admin-status-${post.status}`}>{post.status}</span>{post.status === "scheduled" && post.publishAt && <small className="admin-status-note">{formatWat(post.publishAt)}</small>}</td><td>{formatDate(post.updatedAt)}</td>
             <td><Link className="admin-row-arrow" aria-label={`Edit ${post.title}`} href={`/admin/blog/${post.id}`}><AdminIcon name="chevron" /></Link></td>
           </tr>)}</tbody>
         </table></div>

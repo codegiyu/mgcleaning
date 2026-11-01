@@ -3,9 +3,7 @@ import "client-only";
 import axios, { type AxiosRequestConfig } from "axios";
 import type { ApiErrorResponse, ApiSuccessEnvelope, CallApiResponse } from "./http";
 import { ENDPOINTS, type CallApiOptions, type EndpointName } from "./endpoints";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "@/lib/env/api-base-url";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

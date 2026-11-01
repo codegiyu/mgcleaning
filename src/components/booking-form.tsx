@@ -1,19 +1,38 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { demoSite, services } from "@/content/demo-content";
+import { formResponseExpectation } from "@/content/response-expectation";
 import { callApi } from "@/lib/api/callApi";
+import { attributionPayload } from "@/lib/attribution/session";
+import { submitFailure, type SubmitFailure } from "@/lib/forms/submit-error";
 import { FormSelect } from "@/components/form-select";
 import { TurnstileField } from "@/components/turnstile-field";
 
-type FormStatus = "idle" | "submitting" | "success" | "saved-without-notification" | "error";
+type FormStatus = "idle" | "submitting" | "success" | "saved-without-notification" | SubmitFailure;
+
+/** Bookings can be requested up to a year ahead, matching the API's INQUIRY_MAX_DATE_DAYS. */
+const MAX_DAYS_AHEAD = 365;
+
+function localIsoDate(date: Date) {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+}
 
 export function BookingForm({ initialService = "" }: { initialService?: string }) {
   const router = useRouter();
   const [status, setStatus] = useState<FormStatus>("idle");
   const pendingRef = useRef(false);
   const submissionKeyRef = useRef<string | null>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
+
+  // Set after mount so the server-rendered HTML never disagrees with the visitor's date.
+  useEffect(() => {
+    if (!dateRef.current) return;
+    const today = new Date();
+    dateRef.current.min = localIsoDate(today);
+    dateRef.current.max = localIsoDate(new Date(today.getTime() + MAX_DAYS_AHEAD * 86_400_000));
+  }, []);
 
   function getSubmissionKey() {
     if (submissionKeyRef.current) return submissionKeyRef.current;
@@ -48,6 +67,7 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
       message: getValue("message"),
       ...(getValue("turnstileToken") ? { turnstileToken: getValue("turnstileToken") } : {}),
       email,
+      ...attributionPayload(),
     };
 
     pendingRef.current = true;
@@ -58,7 +78,7 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
         headers: { "Idempotency-Key": getSubmissionKey() },
       });
       if (result.type === "error") {
-        setStatus("error");
+        setStatus(submitFailure(result.error.responseCode));
         return;
       }
       form.reset();
@@ -66,7 +86,7 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
       submissionKeyRef.current = null;
       router.replace(`/book/confirmation?reference=${encodeURIComponent(result.data.reference)}`);
     } catch {
-      setStatus("error");
+      setStatus("unavailable");
     } finally {
       pendingRef.current = false;
     }
@@ -75,8 +95,8 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
   return (
     <form className="contact-form" onSubmit={handleSubmit} aria-busy={status === "submitting"}>
       <div>
-        <h2 className="form-title">Plan your cleaning visit.</h2>
-        <p className="form-demo-note">Submit a cleaning request and our team will contact you to confirm availability and pricing. We respond within one business day.</p>
+        <h2 className="form-title">Prefer to write it down?</h2>
+        <p className="form-demo-note">Send the details here and our team will confirm availability and pricing. {formResponseExpectation}</p>
       </div>
       <div className="form-row">
         <div className="form-field"><label htmlFor="booking-name">Your name</label><input id="booking-name" name="name" autoComplete="name" maxLength={120} required placeholder="e.g. Chinedu Adeyemi Musa" /></div>
@@ -85,19 +105,21 @@ export function BookingForm({ initialService = "" }: { initialService?: string }
       <div className="form-field"><label htmlFor="booking-email">Email address</label><input id="booking-email" name="email" type="email" autoComplete="email" maxLength={320} required placeholder="you@example.com" /></div>
       <div className="form-row">
         <FormSelect id="booking-service" name="serviceInterest" label="Service needed" placeholder="Choose a service" required defaultValue={initialService} options={services.map((service) => ({ value: service.title, label: service.title }))} />
-        <FormSelect id="booking-space-type" name="spaceType" label="Space type" placeholder="Choose a space" required options={[{ value: "Home", label: "Home" }, { value: "Office", label: "Office" }, { value: "Short-let", label: "Short-let" }, { value: "Other", label: "Other" }]} />
+        <FormSelect id="booking-space-type" name="spaceType" label="Space type" placeholder="Choose a space" required options={[{ value: "Home", label: "Home" }, { value: "Office", label: "Office" }, { value: "Commercial space", label: "Commercial space" }, { value: "Short-let", label: "Short-let" }, { value: "Post-construction site", label: "Post-construction site" }, { value: "Other", label: "Other" }]} />
       </div>
       <div className="form-row">
-        <div className="form-field"><label htmlFor="booking-date">Preferred date</label><input id="booking-date" name="preferredDate" type="date" required /></div>
+        <div className="form-field"><label htmlFor="booking-date">Preferred date</label><input ref={dateRef} id="booking-date" name="preferredDate" type="date" required /></div>
         <FormSelect id="booking-time" name="preferredTime" label="Preferred time" placeholder="Choose a time" required options={[{ value: "Morning (8am–12pm)", label: "Morning (8am–12pm)" }, { value: "Afternoon (12pm–4pm)", label: "Afternoon (12pm–4pm)" }, { value: "Late afternoon (4pm–7pm)", label: "Late afternoon (4pm–7pm)" }]} />
       </div>
       <FormSelect id="booking-contact-method" name="preferredContactMethod" label="How should we follow up?" placeholder="Choose a contact method" required options={[{ value: "phone", label: "Phone call" }, { value: "whatsapp", label: "WhatsApp" }, { value: "either", label: "Phone or WhatsApp" }]} />
       <div className="form-field"><label htmlFor="booking-location">Service location or area</label><input id="booking-location" name="location" maxLength={240} required placeholder="e.g. Wuse 2, Abuja" /></div>
-      <div className="form-field"><label htmlFor="booking-message">Tell us about the space</label><textarea id="booking-message" name="message" minLength={8} maxLength={4000} required placeholder="Rooms, fabric type, stains, access notes, or anything else we should know." /></div>
+      <div className="form-field"><label htmlFor="booking-message">Tell us about the space</label><textarea id="booking-message" name="message" minLength={8} maxLength={4000} required placeholder="Rooms, surfaces, pest concerns, access notes, priorities, or anything else we should know." /></div>
       <div className="form-honeypot" aria-hidden="true"><label htmlFor="booking-company-website">Company website</label><input id="booking-company-website" name="companyWebsite" type="text" tabIndex={-1} autoComplete="off" /></div>
       <TurnstileField />
       <button className="button button-dark form-submit" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Sending…" : "Submit cleaning request"} <span aria-hidden="true">↗</span></button>
-      {status === "error" && <p className="form-error" role="alert">We couldn&apos;t send your booking request. Please try <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
+      {status === "invalid" && <p className="form-error" role="alert">Some details need another look. Please check each field, including the date (from today up to a year ahead), and send again. You can also <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">message us on WhatsApp</a> instead.</p>}
+      {status === "rate-limited" && <p className="form-error" role="alert">We&apos;ve received several requests from you just now. Please try again in a few minutes, or <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">message us on WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
+      {status === "unavailable" && <p className="form-error" role="alert">We couldn&apos;t send your booking request. Please try <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
     </form>
   );
 }

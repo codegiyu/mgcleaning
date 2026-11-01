@@ -2,11 +2,23 @@ import type { Metadata } from "next";
 import { contentMode } from "@/content/trust-content";
 import { businessContactFacts, seoBusinessFacts } from "@/content/public-content";
 
-export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-default.svg";
-export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Service — Deep clean. Fresh feel.";
+export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-services-professional-v3.jpg";
+export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Services — professional cleaning, thoughtfully done.";
+export const DEPLOYED_SITE_URL_FALLBACK = "https://mgcleaning.vercel.app";
+
+function withHttpsProtocol(host: string | undefined) {
+  const value = host?.trim();
+  if (!value) return undefined;
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
 
 export function getSiteUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const vercelUrl = withHttpsProtocol(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL,
+  );
+  const developmentUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined;
+  const raw = configuredUrl || vercelUrl || developmentUrl || DEPLOYED_SITE_URL_FALLBACK;
   let url: URL;
   try {
     url = new URL(raw);
@@ -42,7 +54,6 @@ export function buildPageMetadata({
   type?: "website" | "article";
   noIndex?: boolean;
 }): Metadata {
-  const imageUrl = absoluteUrl(image);
   const pageUrl = absoluteUrl(path);
   return {
     title,
@@ -51,17 +62,17 @@ export function buildPageMetadata({
     robots: noIndex || contentMode !== "production" ? { index: false, follow: false } : undefined,
     openGraph: {
       type,
-      siteName: "M&G Cleaning Service",
+      siteName: "M&G Cleaning Services",
       title,
       description,
       url: pageUrl,
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: imageAlt }],
+      images: [{ url: image, width: 1200, height: 630, alt: imageAlt }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [imageUrl],
+      images: [image],
     },
   };
 }
@@ -85,9 +96,9 @@ export function websiteJsonLd() {
   return {
     "@type": "WebSite",
     "@id": `${absoluteUrl("/")}#website`,
-    name: "M&G Cleaning Service",
+    name: "M&G Cleaning Services",
     url: absoluteUrl("/"),
-    description: "Upholstery and cleaning services shaped around your space.",
+    description: "Personalized professional cleaning solutions shaped around your space, needs, and standards.",
     publisher: { "@id": `${absoluteUrl("/")}#organization` },
   };
 }
@@ -98,7 +109,7 @@ export function localBusinessJsonLd() {
   const data: Record<string, unknown> = {
     "@type": "LocalBusiness",
     "@id": `${absoluteUrl("/")}#organization`,
-    name: "M&G Cleaning Service",
+    name: "M&G Cleaning Services",
     url: absoluteUrl("/"),
     logo: absoluteUrl("/mg-cleaning-logo.svg"),
     telephone: businessContactFacts.phone.value,
