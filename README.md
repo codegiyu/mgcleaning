@@ -1,6 +1,6 @@
 # M&G Cleaning Services web app
 
-This repository contains the customer-facing M&G Cleaning Services website, built with Next.js 16, TypeScript, Tailwind CSS v4, and Zustand. The Hono API and background workers live in the sibling [`mgcleaning-backend`](../mgcleaning-backend) repository.
+This repository contains the customer-facing M&G Cleaning Services website, built with Next.js 16, TypeScript, and Tailwind CSS v4. The Hono API and background workers live in the sibling [`mgcleaning-backend`](../mgcleaning-backend) repository.
 
 See the [website and architecture plan](docs/website-and-architecture-plan.md) for the public page map, blog and Instagram flow, authenticated admin scope, API/data design, security boundaries, and delivery phases.
 
@@ -57,7 +57,7 @@ Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. `npm t
 
 - Use the browser-only `callApi` helper in `src/lib/api/callApi.ts` for frontend-to-backend calls.
 - Keep endpoint paths and request/response types in `src/lib/api/endpoints.ts`.
-- Use Zustand feature stores for shared state or client-side response caches; keep short-lived form state local to the component.
+- Use Zustand feature stores for shared state or client-side response caches (add the package with the first store; none exists yet); keep short-lived form state local to the component.
 - React Query is not used.
 
 The typed endpoint registry and centralized request/result shape follow the pattern in Firefall's `pinpoint-admin` app. Admin authentication is handled by the Hono backend using an HttpOnly session cookie; the browser does not store auth tokens.
