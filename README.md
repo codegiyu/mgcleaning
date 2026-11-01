@@ -60,6 +60,25 @@ Release, staging smoke-test, backup, restore, and rollback procedures for both a
 
 Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. `npm test` uses Node's built-in test runner with type stripping (`node --experimental-strip-types --test`), so pure modules under `src/**/*.test.ts` need no extra test dependencies; such modules import siblings with explicit `.ts` extensions and avoid `@/` aliases.
 
+End-to-end tests (`e2e/`, Playwright) run against a live stack: the production build (`npm run build && npm start`) and the API with Postgres and Redis. They cover:
+- the booking form, both blocked and complete;
+- the contact form;
+- the not-found page;
+- the phone layout of the booking page;
+- an owner publishing a review that then appears on the home page.
+
+They create real records, so use a local or CI stack. Run them with:
+
+```bash
+E2E_ADMIN_EMAIL=<owner> E2E_ADMIN_PASSWORD=<password> npm run test:e2e
+```
+
+Run `npx playwright install chromium` once beforehand.
+
+CI (`.github/workflows/ci.yml`) has two jobs:
+- **checks:** lint, typecheck, unit tests, build, and a production dependency audit;
+- **e2e:** starts Postgres, Redis, Mailpit, the API (checked out from `codegiyu/mgcleaning-backend`, which needs a `BACKEND_REPO_TOKEN` secret with read access) and the website, then runs Playwright.
+
 ## API and state conventions
 
 - Use the browser-only `callApi` helper in `src/lib/api/callApi.ts` for frontend-to-backend calls.
@@ -81,4 +100,4 @@ The launch replacement checklist is maintained in [`docs/trust-content-evidence-
 
 The recommended blog cadence and publication checklist are in [`docs/editorial-calendar.md`](docs/editorial-calendar.md).
 
-To create the first admin, configure `BOOTSTRAP_ADMIN_EMAIL` and `BOOTSTRAP_ADMIN_PASSWORD` in the backend `.env`, run the backend migrations, and execute `npm run admin:bootstrap` from `mgcleaning-backend`. Use a unique password of at least 12 characters and remove it from the environment after bootstrapping. Before public launch, add the live inquiry/mail smoke test, review access and recovery procedures, and replace the clearly labeled sample content with MG-approved copy.
+To create the first admin, configure `BOOTSTRAP_ADMIN_EMAIL` and `BOOTSTRAP_ADMIN_PASSWORD` in the backend `.env`, run the backend migrations, and execute `npm run admin:bootstrap` from `mgcleaning-backend`. Use a unique password of at least 12 characters and remove it from the environment after bootstrapping. The first account is an owner; add staff from **Admin → Users**. Before public launch, run the staging smoke test and recovery procedures in the backend runbook, and replace the clearly labeled sample content with MG-approved copy (the production build refuses to run until it is approved).
