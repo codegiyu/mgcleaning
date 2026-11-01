@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import { AdminShell } from "@/components/admin-shell";
 
 export const metadata: Metadata = {
+  // Each section sets its own title; the overview uses the default.
+  title: { default: "Overview · Admin", template: "%s · Admin | M&G Cleaning Services" },
   robots: { index: false, follow: false },
 };
 
