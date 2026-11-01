@@ -562,6 +562,7 @@ main { flex:1; overflow-x:clip; }
 .admin-summary span { color:#68748a; font-size:var(--text-small); }
 .admin-summary strong { margin-top:10px; color:#0b2858; font-size:33px; font-weight:650; letter-spacing:-.05em; }
 .admin-summary small { margin-top:5px; color:#8190a7; font-size:var(--text-small); }
+.admin-summary .admin-summary-detail { margin-top:3px; color:#68748a; }
 .admin-overview-links { display:grid; grid-template-columns:1fr 1fr; gap:46px; margin-top:45px; }
 .admin-overview-links>div { border-top:1px solid #dfe4ec; padding:20px 20px 0 0; }
 .admin-overview-links h2 { margin:0 0 9px; color:#0b2858; font-size:17px; }

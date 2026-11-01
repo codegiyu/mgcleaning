@@ -24,7 +24,7 @@ export default function AdminOverviewPage() {
 
   return (
     <section className="admin-content">
-      <header className="admin-page-heading"><div><h1>Overview</h1><p>A quick look at enquiries, reviews, and the journal.</p></div></header>
+      <header className="admin-page-heading"><div><h1>Overview</h1><p>A quick look at enquiries, message taps, reviews, and the journal.</p></div></header>
       {error && <p className="admin-error" role="alert">{error}</p>}
       <div className="admin-summary-grid">
         <Link className="admin-summary" href="/admin/inquiries"><span>New enquiries</span><strong>{overview?.inquiryCounts.new ?? "—"}</strong><small>Open the inquiry inbox</small></Link>
@@ -35,6 +35,14 @@ export default function AdminOverviewPage() {
         {overview?.cacheRevalidationCounts && overview.cacheRevalidationCounts.deadLetter > 0 && (
           <Link className="admin-summary" href="/admin/blog?status=published"><span>Website update failures</span><strong>{overview.cacheRevalidationCounts.deadLetter}</strong><small>Article and review changes may take up to an hour to appear</small></Link>
         )}
+        <div className="admin-summary">
+          <span>Message taps, last {overview?.channelClicks?.days ?? 30} days</span>
+          <strong>{overview?.channelClicks?.total ?? "—"}</strong>
+          <small>{overview?.channelClicks ? `WhatsApp ${overview.channelClicks.byChannel.whatsapp} · Instagram ${overview.channelClicks.byChannel.instagram} · Call ${overview.channelClicks.byChannel.phone}` : "Taps on WhatsApp, Instagram, and call links"}</small>
+          {overview?.channelClicks && overview.channelClicks.topSources.length > 0 && (
+            <small className="admin-summary-detail">From {overview.channelClicks.topSources.map((item) => `${item.source} ${item.count}`).join(" · ")}</small>
+          )}
+        </div>
         <Link className="admin-summary" href="/admin/inquiries"><span>Email failures</span><strong>{overview?.emailOutboxCounts ? overview.emailOutboxCounts.failed + overview.emailOutboxCounts.deadLetter : "—"}</strong><small>Check request notifications</small></Link>
       </div>
       <div className="admin-overview-links">
