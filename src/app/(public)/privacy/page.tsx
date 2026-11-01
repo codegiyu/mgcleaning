@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <h2>Use of request information</h2>
         <p>Request details are used to contact you about the cleaning service you asked about. They may be included in internal email notifications to M&amp;G Cleaning Services and in a confirmation email sent to the email address you provide.</p>
         <h2>Cookies and analytics</h2>
-        <p>The website does not intentionally set advertising or analytics cookies. Any future analytics or tracking will be disclosed in this policy.</p>
+        <p>The website does not set advertising or analytics cookies. To understand which posts and campaigns bring visitors, your browser tab keeps the campaign tags of the link you arrived from (for example, an Instagram post) until the tab is closed. Those tags are sent with a request form, and with an anonymous count when you tap a WhatsApp, Instagram, or call link. A tap count records only which link was tapped, the page it was on, and those campaign tags: no name, contact details, or IP address.</p>
       </article>
     </div>
   );
