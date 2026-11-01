@@ -77,7 +77,7 @@ Run `npx playwright install chromium` once beforehand.
 
 CI (`.github/workflows/ci.yml`) has two jobs:
 - **checks:** lint, typecheck, unit tests, build, and a production dependency audit;
-- **e2e:** starts Postgres, Redis, Mailpit, the API (checked out from `codegiyu/mgcleaning-backend`, which needs a `BACKEND_REPO_TOKEN` secret with read access) and the website, then runs Playwright.
+- **e2e:** starts Postgres, Redis, Mailpit, the API (checked out from the public `codegiyu/mgcleaning-backend`: its `main` for pushes to `main`, otherwise `staging`) and the website, then runs Playwright.
 
 ## API and state conventions
 
