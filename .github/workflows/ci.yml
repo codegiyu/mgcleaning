@@ -41,7 +41,7 @@ jobs:
     needs: checks
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:18-alpine
         env:
           POSTGRES_DB: mgcleaning_e2e
           POSTGRES_USER: mgcleaning
