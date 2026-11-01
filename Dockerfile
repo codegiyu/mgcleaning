@@ -25,10 +25,11 @@ RUN test -n "$NEXT_PUBLIC_API_BASE_URL" && test -n "$NEXT_PUBLIC_SITE_URL"
 RUN npm run build
 
 FROM node:22-alpine AS runner
+# 3100, not 3000: the server's 3000 and 4400 are taken. Coolify maps the domain to this port.
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000 \
+    PORT=3100 \
     HOSTNAME=0.0.0.0
 
 RUN addgroup -S -g 1001 nodejs \
@@ -39,7 +40,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-EXPOSE 3000
+EXPOSE 3100
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD ["node", "-e", "fetch('http://127.0.0.1:3000/admin/login').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+  CMD ["node", "-e", "fetch('http://127.0.0.1:' + process.env.PORT + '/admin/login').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
 CMD ["node", "server.js"]
