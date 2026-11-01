@@ -40,6 +40,13 @@ docker run --rm -p 3000:3000 mgcleaning-web
 
 Set `REVALIDATE_SECRET` as a **runtime** variable (not a build argument) to the same 32+ character value as the backend's `REVALIDATE_SECRET`. Published-article reads are cached for up to an hour and tagged `blog` / `blog:<slug>`. The backend calls `POST /api/revalidate` with an HMAC signature after every change that affects the public site; removals (unpublish, archive, slug change) expire immediately, and other changes refresh in the background. Without the secret the route returns 503 and pages fall back to the hourly refresh.
 
+A production server (`NODE_ENV=production`) checks its settings when it starts (`src/instrumentation.ts`, rules in `src/lib/env/validate.ts`) and exits with a list of problems unless:
+- `NEXT_PUBLIC_API_BASE_URL` and `NEXT_PUBLIC_SITE_URL` are set and use `https://` (plain `http://localhost` is allowed for local runs);
+- `REVALIDATE_SECRET` has 32+ characters;
+- a Turnstile site key is set when Turnstile is on.
+
+`npm start` runs the standalone production build locally (`scripts/start-standalone.mjs`).
+
 Next.js inlines `NEXT_PUBLIC_*` values into the built application, so changing these values in Coolify requires a new build and deploy. Production content mode intentionally fails the build while generated or unapproved trust records remain in `src/content/trust-content.ts`.
 
 On Vercel, social metadata resolves the site origin in this order: `NEXT_PUBLIC_SITE_URL`, Vercel's production/deployment URL, then `https://mgcleaning.vercel.app`. Set `NEXT_PUBLIC_SITE_URL` when the permanent domain is ready; the fallback prevents canonical and social-image tags from ever publishing localhost URLs in production builds.

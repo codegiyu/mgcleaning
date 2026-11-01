@@ -3,8 +3,7 @@ import { articles, getArticle, type DemoArticle } from "@/content/demo-content";
 import { contentMode } from "@/content/trust-content";
 import { BLOG_CACHE_SECONDS, BLOG_LIST_TAG, blogPostTag } from "@/lib/cache/blog-tags";
 import { isRenderableImageUrl } from "@/lib/media/media-url";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "@/lib/env/api-base-url";
 
 export type PublicBlogPost = Pick<
   BlogPost,

@@ -3,8 +3,7 @@ import "client-only";
 import { ENDPOINTS } from "@/lib/api/endpoints";
 import { channelClickBody, channelFromHref, type ClickPlacement } from "./channel-click";
 import { readFirstTouch, recordFirstTouch, type FirstTouch } from "./first-touch";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "@/lib/env/api-base-url";
 
 /** Storage can throw (private mode, blocked site data); attribution is optional, so failures are ignored. */
 export function captureFirstTouch() {

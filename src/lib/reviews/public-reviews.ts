@@ -1,7 +1,6 @@
 import { REVIEWS_CACHE_SECONDS, REVIEWS_TAG } from "@/lib/cache/review-tags";
 import { parsePublicReviews, type PublicReview } from "@/lib/reviews/review-data";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "@/lib/env/api-base-url";
 
 /**
  * Published reviews, cached for up to an hour and purged by tag when the team

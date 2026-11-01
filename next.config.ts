@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { API_BASE_URL } from "./src/lib/env/api-base-url";
 import { securityHeaders } from "./src/lib/security/headers";
 
 const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL?.replace(/\/+$/, "");
@@ -15,7 +16,7 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders({
-          apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api/v1",
+          apiBaseUrl: API_BASE_URL,
           mediaBaseUrl,
           siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
           turnstile: process.env.NEXT_PUBLIC_TURNSTILE_MODE === "on",
