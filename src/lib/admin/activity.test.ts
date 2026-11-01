@@ -35,3 +35,10 @@ test("describes review changes without naming the customer", () => {
   assert.equal(describeActivity({ action: "review.unpublish", metadata: { statusFrom: "published", statusTo: "draft" } }), "Unpublished a review");
   assert.equal(describeActivity({ action: "review.delete", metadata: { statusFrom: "published" } }), "Deleted a published review");
 });
+
+test("describes account management without naming the account", () => {
+  assert.equal(describeActivity({ action: "user.create", metadata: { role: "staff" } }), "Added a staff account");
+  assert.equal(describeActivity({ action: "user.role_change", metadata: { roleFrom: "staff", roleTo: "owner" } }), "Changed an account from staff to owner");
+  assert.equal(describeActivity({ action: "user.deactivate", metadata: { revokedSessions: 2 } }), "Deactivated an account and signed it out");
+  assert.equal(describeActivity({ action: "user.password_reset", metadata: {} }), "Reset an account's password");
+});

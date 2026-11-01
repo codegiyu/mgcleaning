@@ -123,6 +123,25 @@ export type BlogPostInput = {
   seoDescription?: string;
 };
 
+export type AdminRole = "owner" | "staff";
+
+/** The signed-in account, as the session check and sign-in return it. */
+export type AdminIdentity = { id: string; email: string; role: AdminRole; mustChangePassword: boolean };
+
+/** An account on the Users page (owners only). */
+export type AdminAccount = {
+  id: string;
+  email: string;
+  role: AdminRole;
+  mustChangePassword: boolean;
+  deactivatedAt: string | null;
+  passwordChangedAt: string | null;
+  createdAt: string;
+};
+
+/** Returned once when an owner creates or resets an account; it is never shown again. */
+export type AdminAccountWithPassword = { user: AdminAccount; temporaryPassword: string };
+
 export type AdminSession = {
   id: string;
   createdAt: string;
@@ -258,11 +277,11 @@ export interface AllEndpoints {
   >;
   POST_ADMIN_LOGIN: EndpointDefinition<
     { email: string; password: string },
-    { id: string; email: string }
+    AdminIdentity
   >;
   GET_ADMIN_SESSION: EndpointDefinition<
     undefined,
-    | { authenticated: true; user: { id: string; email: string } }
+    | { authenticated: true; user: AdminIdentity }
     | { authenticated: false; user: null }
   >;
   POST_ADMIN_LOGOUT: EndpointDefinition<undefined, { signedOut: true }>;
@@ -305,6 +324,10 @@ export interface AllEndpoints {
   PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
   /** Pass `expectedUpdatedAt` as a query parameter. */
   DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
+  GET_ADMIN_USERS: EndpointDefinition<undefined, AdminAccount[]>;
+  POST_ADMIN_USER: EndpointDefinition<{ email: string; role: AdminRole }, AdminAccountWithPassword>;
+  PATCH_ADMIN_USER: EndpointDefinition<{ role?: AdminRole; active?: boolean }, AdminAccount>;
+  POST_ADMIN_USER_RESET_PASSWORD: EndpointDefinition<undefined, AdminAccountWithPassword>;
   /** Sent with navigator.sendBeacon (see src/lib/attribution/session.ts), not callApi; answers 204. */
   POST_CHANNEL_CLICK: EndpointDefinition<string, null>;
 }
@@ -385,6 +408,18 @@ export const ENDPOINTS = {
     pathParams: ["id"],
   },
   POST_CHANNEL_CLICK: { path: "/events/channel-click", method: "POST" },
+  GET_ADMIN_USERS: { path: "/admin/users", method: "GET" },
+  POST_ADMIN_USER: { path: "/admin/users", method: "POST" },
+  PATCH_ADMIN_USER: {
+    path: "/admin/users/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_USER_RESET_PASSWORD: {
+    path: "/admin/users/:id/reset-password",
+    method: "POST",
+    pathParams: ["id"],
+  },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;
 
 export type EndpointName = keyof AllEndpoints;

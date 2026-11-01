@@ -687,3 +687,14 @@ main { flex:1; overflow-x:clip; }
   .admin-table-footer{ align-items:flex-start; flex-direction:column; }
   .admin-primary-link{ width:100%; }
 }
+/* Users page (owners only) and the first-sign-in password screen. */
+.admin-user-create { max-width:720px; margin-bottom:20px; }
+.admin-issued-password { display:grid; gap:8px; max-width:720px; margin-bottom:20px; border-left:3px solid #2a6a42; background:#effaf2; padding:14px 16px; color:#1f4d31; font-size:var(--text-small); }
+.admin-issued-password p { margin:0; line-height:1.6; }
+.admin-issued-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.admin-issued-row code { border:1px solid #b9dcc5; background:white; padding:9px 12px; color:#0b2858; font-size:16px; font-weight:700; letter-spacing:.06em; }
+.admin-user-table td { vertical-align:middle; }
+.admin-user-actions { min-width:200px; }
+.admin-confirm-inline { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.admin-first-password .admin-settings-card { max-width:520px; }
+.admin-user-email small { color:#9fb0cc; }

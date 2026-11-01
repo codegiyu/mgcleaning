@@ -23,6 +23,7 @@ const label = (value: unknown) => (typeof value === "string" ? statusLabels[valu
 const text = (value: unknown) => (typeof value === "string" ? value : "");
 const count = (value: unknown) => (typeof value === "number" ? value : 0);
 const fields = (value: unknown) => (Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
+const roleName = (value: unknown) => (value === "owner" ? "owner" : value === "staff" ? "staff" : "another role");
 const plural = (value: number, word: string) => `${value} ${word}${value === 1 ? "" : "s"}`;
 
 /** Plain-language summary of an audit event. Metadata holds names and statuses only, never customer details. */
@@ -63,6 +64,11 @@ export function describeActivity({ action, metadata }: ActivityEvent): string {
     case "review.publish": return "Published a review";
     case "review.unpublish": return "Unpublished a review";
     case "review.delete": return metadata.statusFrom === "published" ? "Deleted a published review" : "Deleted a draft review";
+    case "user.create": return metadata.role === "owner" ? "Added an owner account" : "Added a staff account";
+    case "user.role_change": return `Changed an account from ${roleName(metadata.roleFrom)} to ${roleName(metadata.roleTo)}`;
+    case "user.deactivate": return "Deactivated an account and signed it out";
+    case "user.reactivate": return "Reactivated an account";
+    case "user.password_reset": return "Reset an account's password";
     case "settings.update": {
       const names = fields(metadata.fields).map((name) => fieldLabels[name] ?? name);
       return names.length ? `Updated settings: ${names.join(", ")}` : "Updated settings";

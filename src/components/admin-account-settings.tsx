@@ -130,6 +130,7 @@ export function AdminSessionList({ refreshKey }: { refreshKey: number }) {
 
 export function AdminSiteSettingsForm() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [canEdit, setCanEdit] = useState(false);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
 
@@ -139,6 +140,10 @@ export function AdminSiteSettingsForm() {
       if (!active) return;
       if (result.type === "error") setFeedback({ kind: "error", message: result.message });
       else setSettings(result.data);
+    });
+    // Only owners may change these; the API enforces it, this just avoids offering it.
+    void callApi("GET_ADMIN_SESSION").then((result) => {
+      if (active && result.type === "success" && result.data.authenticated) setCanEdit(result.data.user.role === "owner");
     });
     return () => { active = false; };
   }, []);
@@ -172,23 +177,23 @@ export function AdminSiteSettingsForm() {
   return (
     <form className="admin-settings-card" onSubmit={(event) => void submit(event)}>
       <h2>Operations</h2>
-      <p className="admin-settings-help">Business details shown on the website are managed separately and need approval before they change.</p>
+      <p className="admin-settings-help">Business details shown on the website are managed separately and need approval before they change.{!canEdit && settings ? " Only an owner can change these settings." : ""}</p>
       {!settings ? <p className="admin-inline-state">Loading settings…</p> : (
         <>
           <label className="admin-field">
             <span>Inquiry alert inbox</span>
-            <input name="inquiryNotificationEmail" type="email" maxLength={320} defaultValue={settings.inquiryNotificationEmail ?? ""} placeholder={settings.effectiveNotificationEmail} />
+            <input name="inquiryNotificationEmail" type="email" maxLength={320} disabled={!canEdit} defaultValue={settings.inquiryNotificationEmail ?? ""} placeholder={settings.effectiveNotificationEmail} />
             <small className="admin-field-help">New requests are emailed to {settings.effectiveNotificationEmail}. Leave blank to use the server default.</small>
           </label>
           <label className="admin-field">
             <span>Default article author</span>
-            <input name="defaultAuthorName" minLength={2} maxLength={120} defaultValue={settings.defaultAuthorName ?? ""} placeholder="M&G Cleaning Services" />
+            <input name="defaultAuthorName" minLength={2} maxLength={120} disabled={!canEdit} defaultValue={settings.defaultAuthorName ?? ""} placeholder="M&G Cleaning Services" />
           </label>
           {settings.updatedAt && <small className="admin-field-help">Last changed {formatWat(settings.updatedAt)}.</small>}
         </>
       )}
       <FeedbackLine feedback={feedback} />
-      <div className="admin-save-row"><button className="admin-primary-button" type="submit" disabled={saving || !settings}>{saving ? "Saving…" : "Save settings"}</button></div>
+      {canEdit && <div className="admin-save-row"><button className="admin-primary-button" type="submit" disabled={saving || !settings}>{saving ? "Saving…" : "Save settings"}</button></div>}
     </form>
   );
 }
