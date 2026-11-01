@@ -169,7 +169,7 @@ export type ReviewInput = {
   receivedOn?: string | null;
   featured?: boolean;
   status?: ReviewStatus;
-  /** The editor confirms the customer agreed to the review and name appearing on the site; required to publish. */
+  /** The editor confirms the customer agreed to the review and their full name appearing on the site; required to publish. */
   consentConfirmed?: boolean;
 };
 
@@ -177,6 +177,14 @@ export type ReviewInput = {
 export type ReviewPatch = Partial<ReviewInput> & { expectedUpdatedAt: string };
 
 export type ReviewCounts = { published: number; publishedThisYear: number; draft: number };
+
+export type ChannelClickSummary = {
+  days: number;
+  total: number;
+  byChannel: { whatsapp: number; instagram: number; phone: number };
+  /** Campaign sources with the most taps; untagged visits count as "direct". */
+  topSources: { source: string; count: number }[];
+};
 
 export type AuditEvent = {
   id: string;
@@ -266,6 +274,7 @@ export interface AllEndpoints {
       emailOutboxCounts?: { pending: number; failed: number; deadLetter: number };
       cacheRevalidationCounts?: { pending: number; deadLetter: number };
       reviewCounts?: ReviewCounts;
+      channelClicks?: ChannelClickSummary;
     }
   >;
   GET_ADMIN_INQUIRIES: EndpointDefinition<undefined, Paginated<AdminInquiry>>;
@@ -296,6 +305,8 @@ export interface AllEndpoints {
   PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
   /** Pass `expectedUpdatedAt` as a query parameter. */
   DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
+  /** Sent with navigator.sendBeacon (see src/lib/attribution/session.ts), not callApi; answers 204. */
+  POST_CHANNEL_CLICK: EndpointDefinition<string, null>;
 }
 
 export const ENDPOINTS = {
@@ -373,6 +384,7 @@ export const ENDPOINTS = {
     method: "DELETE",
     pathParams: ["id"],
   },
+  POST_CHANNEL_CLICK: { path: "/events/channel-click", method: "POST" },
 } as const satisfies Record<keyof AllEndpoints, EndpointDetails>;
 
 export type EndpointName = keyof AllEndpoints;
