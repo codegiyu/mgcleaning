@@ -1,6 +1,6 @@
 # MG Cleaning client-feedback plan
 
-Status: Phases 1–5 implemented (default wording pending Q1/Q2; live email setup pending Q3) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
+Status: Phases 1–6 implemented (response wording kept as is; live email setup pending Q3) · 2026-10-27 · spans `mgcleaning` and `mgcleaning-backend`
 
 ## Goal and scope
 
@@ -245,3 +245,25 @@ Each phase ships as small signed commits, with the backend contract and tests be
   - Confirm the alert on their phone.
 
   The steps are in the backend runbook under "Inquiry alerts".
+
+## Client decisions (2026-11-01)
+
+- **Q1/Q2:** keep the current response-time wording ("We reply to messages within 15 minutes"; forms "shortly", WhatsApp fastest).
+- **Q4:** show reviewers' **full names** and **star ratings**. The editor now asks for the customer's full name, and the consent box confirms their full name may appear. Ratings show as stars whenever an editor sets one; the rating field stays optional, so a review without one still publishes.
+- **No Reviews link in the site menu for now.** The home page section is the way in.
+
+## Phase 6 amendments (as built)
+
+- **One listener covers every link.** `ChannelClickTracker`, in the public layout, listens for clicks and middle-clicks and recognises WhatsApp (`wa.me`, `api.whatsapp.com`), Instagram (`ig.me`, `instagram.com`), and `tel:` links by their href. Every link counts without tagging: request buttons, the closing call to action, header ribbon, footer, the `/links` hub, and form error messages. Placement is header, page, or footer.
+- **The beacon.** `navigator.sendBeacon` sends `text/plain` JSON, so there is no CORS preflight and the beacon outlives the hand-off to the app; `fetch` with `keepalive` is the fallback. It bypasses `callApi` because axios cannot outlive the navigation. The route is still in the endpoint registry (`POST_CHANNEL_CLICK`).
+- **What is stored** (`channel_clicks`): channel, placement, page path, and the tab's first-touch UTM tags. There is no IP, user agent, or identifier. The rate limit counts per hashed IP in Redis (30 per 10 minutes); if Redis is unavailable the tap is dropped, not stored unchecked.
+- **The dashboard** overview has a "Message taps, last 30 days" card: the total, per channel, and the top five sources. These are taps, not conversations.
+- **Privacy page** "Cookies and analytics" now discloses first-touch campaign tags and the anonymous tap counts. It is governed legal copy, so the client should approve it.
+- **Not built:** retention or cleanup for `channel_clicks`. Rows are tiny and anonymous; add a cleanup job if the table ever matters.
+- **Verified locally.** On `/links` opened from a tagged Instagram link, all nine channel links stored a row with the right channel, placement, and campaign, and the overview showed 9 (WhatsApp 3 · Instagram 3 · Call 3, from instagram 9).
+
+## Migrations merged (2026-11-01)
+
+The backend had never been deployed and no database existed, so the 14 pre-launch migrations (`0000`–`0013`, including Phase 6's `channel_clicks`) were replaced with one generated migration, `drizzle/0000_initial.sql`. Earlier sections of this plan that cite `0011` or `0012` describe history. The only hand-written SQL dropped was a legacy backfill in the old `0003`, which had nothing to backfill.
+
+The old chain and the merged migration were applied to two fresh Postgres 17 databases and compared, ignoring column order: all 208 facts were identical (columns, types, nullability, defaults, constraints, and indexes across 11 tables). The only difference is column order inside some tables, which the app never relies on. From the first deploy on, migrations are forward-only again (see the backend runbook).
