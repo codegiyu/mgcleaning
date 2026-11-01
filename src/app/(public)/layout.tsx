@@ -10,7 +10,7 @@ export default function PublicLayout({ children }: Readonly<{ children: React.Re
       <ChannelClickTracker />
       <ScrollRevealController />
       <SiteHeader />
-      <main>{children}</main>
+      <main id="main" tabIndex={-1}>{children}</main>
       <SiteFooter />
     </>
   );

@@ -104,6 +104,7 @@ export function RoomIllustration() {
 export function SiteHeader() {
   return (
     <>
+      <a className="skip-link" href="#main">Skip to content</a>
       <div className="demo-ribbon"><span className="demo-ribbon-message">{demoSite.demoNotice}</span><span className="ribbon-socials"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer" aria-label="M&G Cleaning Services on Instagram"><InstagramIcon /></a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message M&G Cleaning Services on WhatsApp"><WhatsAppIcon /></a><a href={demoSite.phoneUrl} aria-label={"Call M&G Cleaning Services at " + demoSite.phoneNumber}><PhoneIcon /></a></span></div>
       <header className="site-header">
         <div className="site-header-inner">

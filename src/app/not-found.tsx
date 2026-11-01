@@ -10,7 +10,7 @@ export default function NotFound() {
   return (
     <>
       <SiteHeader />
-      <main id="main" className="section-shell not-found-page">
+      <main id="main" tabIndex={-1} className="section-shell not-found-page">
         <PageIntro eyebrow="PAGE NOT FOUND" title="We couldn't find that page." description="The link may be old or mistyped. Here are the places most people are looking for." />
         <div className="hero-actions">
           <Link className="button button-dark" href="/">Back to the home page <ArrowRight /></Link>
