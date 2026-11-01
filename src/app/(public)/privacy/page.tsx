@@ -24,6 +24,7 @@ export default function PrivacyPage() {
         <p>You can ask M&amp;G Cleaning Services to delete the details you sent at any time by messaging us on <a href={businessContactFacts.whatsapp.href}>WhatsApp</a> or calling <a href={businessContactFacts.phone.href}>{businessContactFacts.phone.value}</a>. Please mention your request reference if you have it.</p>
         <h2>Cookies and analytics</h2>
         <p>The website does not set advertising or analytics cookies. To understand which posts and campaigns bring visitors, your browser tab keeps the campaign tags of the link you arrived from (for example, an Instagram post) until the tab is closed. Those tags are sent with a request form, and with an anonymous count when you tap a WhatsApp, Instagram, or call link. A tap count records only which link was tapped, the page it was on, and those campaign tags: no name, contact details, or IP address.</p>
+        <p className="legal-meta">M&amp;G Cleaning Services is responsible for the information described on this page. Last updated 1 November 2026.</p>
       </article>
     </div>
   );
