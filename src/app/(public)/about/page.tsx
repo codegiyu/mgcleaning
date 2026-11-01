@@ -15,7 +15,7 @@ export default function AboutPage() {
       <JsonLd data={graphJsonLd(breadcrumbJsonLd(breadcrumbs))} />
       <PageIntro eyebrow="THE M&G APPROACH" title="Clear steps. Thoughtful service." description="A professional clean starts before our team arrives. We listen, assess, confirm the scope, deliver, and follow up." />
       <div className="about-grid">
-        <div className="about-illustration"><Image className="about-illustration-image" src="/images/generated/about-consultation-v2.png" alt="A cleaning professional assessing a client&apos;s space" width={1792} height={1024} priority /></div>
+        <div className="about-illustration"><Image className="about-illustration-image" src="/images/generated/about-consultation-v2.webp" alt="A cleaning professional assessing a client&apos;s space" width={1792} height={1024} priority /></div>
         <SectionHeading
           className="about-copy"
           layout="stacked"

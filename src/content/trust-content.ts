@@ -60,7 +60,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-hero", "Generated image for layout review; it is not an M&G Cleaning Services project."),
     type: "image",
-    src: "/images/generated/hero-professional-cleaning-v2.png",
+    src: "/images/generated/hero-professional-cleaning-v2.webp",
     serviceSlug: "home-cleaning",
     tags: ["Home", "Professional cleaning"],
     alt: "A cleaning professional caring for a bright modern space",
@@ -70,7 +70,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-approach", "Generated image for layout review; it does not show an M&G Cleaning Services team member or client."),
     type: "image",
-    src: "/images/generated/about-consultation-v2.png",
+    src: "/images/generated/about-consultation-v2.webp",
     tags: ["Process", "Assessment"],
     alt: "A cleaning professional assessing a client's space",
     caption: "Every service begins with understanding the space and desired result.",
@@ -79,7 +79,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-upholstery", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-upholstery.png",
+    src: "/images/generated/service-upholstery.webp",
     serviceSlug: "upholstery-cleaning",
     tags: ["Upholstery"],
     alt: "Upholstery cleaning in a bright living room",
@@ -89,7 +89,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-home", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-home.png",
+    src: "/images/generated/service-home.webp",
     serviceSlug: "home-cleaning",
     tags: ["Home"],
     alt: "A cleaner refreshing a bright home interior",
@@ -99,7 +99,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-office", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-office.png",
+    src: "/images/generated/service-office.webp",
     serviceSlug: "office-cleaning",
     tags: ["Office"],
     alt: "A cleaner caring for a modern office space",
@@ -109,7 +109,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-short-let", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-short-let.png",
+    src: "/images/generated/service-short-let.webp",
     serviceSlug: "short-let-turnover",
     tags: ["Short let"],
     alt: "A cleaner preparing a short-let room",
@@ -119,7 +119,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-retainer", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-retainer-cleaning.png",
+    src: "/images/generated/service-retainer-cleaning.webp",
     serviceSlug: "retainer-cleaning",
     tags: ["Retainer", "Office"],
     alt: "A professional team providing scheduled office cleaning",
@@ -129,7 +129,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-fumigation", "Generated image for layout review; it does not demonstrate M&G's confirmed treatment method or equipment."),
     type: "image",
-    src: "/images/generated/service-fumigation.png",
+    src: "/images/generated/service-fumigation.webp",
     serviceSlug: "fumigation",
     tags: ["Fumigation", "Specialist"],
     alt: "A protected pest-control technician preparing treatment equipment",
@@ -139,7 +139,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-tile-polishing", "Generated image for layout review; no customer result or material suitability is being claimed."),
     type: "image",
-    src: "/images/generated/service-tile-polishing.png",
+    src: "/images/generated/service-tile-polishing.webp",
     serviceSlug: "tile-polishing",
     tags: ["Tile polishing", "Specialist"],
     alt: "A professional operating a floor-polishing machine",
@@ -149,7 +149,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-deep-clean", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-deep-cleaning.png",
+    src: "/images/generated/service-deep-cleaning.webp",
     serviceSlug: "deep-cleaning",
     tags: ["Deep cleaning"],
     alt: "Detailed deep cleaning in progress",
@@ -159,7 +159,7 @@ export const trustGallery: TrustGalleryAsset[] = [
   {
     ...demoRecord("gallery-post-construction", "Generated image for layout review; no customer result is being claimed."),
     type: "image",
-    src: "/images/generated/service-post-construction.png",
+    src: "/images/generated/service-post-construction.webp",
     serviceSlug: "post-construction-cleaning",
     tags: ["Post-construction"],
     alt: "A bright space being prepared after construction work",

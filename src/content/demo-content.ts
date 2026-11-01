@@ -142,7 +142,7 @@ export const services: DemoService[] = [
     description:
       "From lived-in family spaces to a quick refresh before guests arrive, this service is shaped around the priorities you share with the team.",
     icon: "home",
-    image: "/images/generated/service-home.png",
+    image: "/images/generated/service-home.webp",
     bullets: ["Kitchen and bathroom refresh", "Dusting and surface care", "Floors and finishing touches"],
     group: "ongoing",
   },
@@ -153,7 +153,7 @@ export const services: DemoService[] = [
     description:
       "Keep shared work areas feeling orderly with a practical clean planned around your space and schedule.",
     icon: "office",
-    image: "/images/generated/service-office.png",
+    image: "/images/generated/service-office.webp",
     bullets: ["Shared areas and touchpoints", "Kitchenette and washroom reset", "Desk areas cleaned as agreed"],
     group: "ongoing",
   },
@@ -164,7 +164,7 @@ export const services: DemoService[] = [
     description:
       "A room-by-room clean for short-let hosts who want their space prepared for the next arrival. Timing and linen arrangements are agreed in advance.",
     icon: "key",
-    image: "/images/generated/service-short-let.png",
+    image: "/images/generated/service-short-let.webp",
     bullets: ["Guest areas and bathrooms", "Kitchen and visible surfaces", "Host checklist and handover notes"],
     group: "ongoing",
   },
@@ -175,7 +175,7 @@ export const services: DemoService[] = [
     description:
       "A recurring cleaning plan built around your space, preferred frequency, agreed priorities, and access arrangements.",
     icon: "calendar",
-    image: "/images/generated/service-retainer-cleaning.png",
+    image: "/images/generated/service-retainer-cleaning.webp",
     bullets: ["Agreed recurring schedule", "Consistent scope and priorities", "Service review and follow-up"],
     group: "ongoing",
   },
@@ -186,7 +186,7 @@ export const services: DemoService[] = [
     description:
       "We assess the material and areas of concern, then agree suitable vacuuming, spot treatment, odor care, and fabric-refreshing work for sofas, chairs, mattresses, and other upholstery.",
     icon: "sofa",
-    image: "/images/generated/service-upholstery.png",
+    image: "/images/generated/service-upholstery.webp",
     bullets: ["Vacuuming to remove loose dirt", "Agreed stain and spot treatment", "Odor and fabric-care discussion", "Material suitability confirmed before treatment"],
     group: "specialist",
   },
@@ -197,7 +197,7 @@ export const services: DemoService[] = [
     description:
       "For a seasonal reset or a space that needs extra attention, a deep clean can focus on agreed rooms and details beyond a routine tidy.",
     icon: "sparkle",
-    image: "/images/generated/service-deep-cleaning.png",
+    image: "/images/generated/service-deep-cleaning.webp",
     bullets: ["Room-by-room priorities", "Edges and high-touch details", "A clear scope before the visit"],
     group: "specialist",
   },
@@ -208,7 +208,7 @@ export const services: DemoService[] = [
     description:
       "We assess the affected areas, identify the treatment requirements, agree preparation and access arrangements, and provide clear instructions for leaving and re-entering the space.",
     icon: "shield",
-    image: "/images/generated/service-fumigation.png",
+    image: "/images/generated/service-fumigation.webp",
     bullets: ["Site and pest-concern assessment", "Treatment of agreed areas", "Preparation, ventilation, and re-entry guidance"],
     group: "specialist",
   },
@@ -219,7 +219,7 @@ export const services: DemoService[] = [
     description:
       "We inspect the tile material and condition, test the proposed method where necessary, and use a surface-appropriate process to clean, polish, and refresh the finish.",
     icon: "tile",
-    image: "/images/generated/service-tile-polishing.png",
+    image: "/images/generated/service-tile-polishing.webp",
     bullets: ["Material and condition assessment", "Surface-appropriate preparation and polishing", "Final buffing and visual handover"],
     group: "specialist",
   },
@@ -230,7 +230,7 @@ export const services: DemoService[] = [
     description:
       "Once building work has finished, this service focuses on removing ordinary fine dust and residue from agreed surfaces so the space can be set up.",
     icon: "building",
-    image: "/images/generated/service-post-construction.png",
+    image: "/images/generated/service-post-construction.webp",
     bullets: ["Walk-through and scope agreement", "Surface-appropriate cleaning", "Clear handoff for final inspection"],
     group: "project",
   },
@@ -249,7 +249,7 @@ export const articles: DemoArticle[] = [
     publishedAt: "2026-09-08",
     readTime: "4 min read",
     tone: "mint",
-    image: "/images/generated/journal-deep-clean-prep.png",
+    image: "/images/generated/journal-deep-clean-prep.webp",
     paragraphs: [
       "A deep clean works best when the priorities are clear. Before the visit, take a quick walk through the rooms and note the areas you would most like the team to focus on.",
       "Put away valuables and personal items, clear the surfaces you want cleaned, and let the team know about delicate finishes or materials that need special care. If something should be left untouched, mark it clearly.",
@@ -271,7 +271,7 @@ export const articles: DemoArticle[] = [
     publishedAt: "2026-09-02",
     readTime: "5 min read",
     tone: "lime",
-    image: "/images/generated/journal-short-let.png",
+    image: "/images/generated/journal-short-let.webp",
     paragraphs: [
       "A reliable turnover starts with a clear sequence. Walk the space first, check the host notes, and gather the supplies needed for the rooms on the list.",
       "Work from one area to the next: air the rooms where possible, reset the bathroom and kitchen, make beds according to the host's instructions, then finish with floors and a final visual check.",
@@ -293,7 +293,7 @@ export const articles: DemoArticle[] = [
     publishedAt: "2026-08-26",
     readTime: "3 min read",
     tone: "sand",
-    image: "/images/generated/journal-office.png",
+    image: "/images/generated/journal-office.webp",
     paragraphs: [
       "An office feels easier to return to when shared spaces have a clear reset routine. Start with the entrance and meeting areas, then move through the kitchenette and washrooms.",
       "Agree which desk surfaces can be cleaned and which should be left alone. This avoids moving personal work and keeps the team's expectations consistent.",

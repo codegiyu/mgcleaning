@@ -120,7 +120,7 @@ export function toDemoArticle(post: PublicBlogPost): DemoArticle {
     tone: "mint",
     image: isRenderableImageUrl(post.coverImageUrl)
       ? post.coverImageUrl
-      : contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.png" : "/mg-cleaning-logo.svg",
+      : contentMode === "demo" ? "/images/generated/journal-deep-clean-prep.webp" : "/mg-cleaning-logo.svg",
     paragraphs,
     takeaways: [],
   };

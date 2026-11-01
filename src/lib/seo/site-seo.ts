@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { contentMode } from "@/content/trust-content";
 import { businessContactFacts, seoBusinessFacts } from "@/content/public-content";
 
-export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-services-professional-v3.png";
+export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-services-professional-v3.jpg";
 export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Services — professional cleaning, thoughtfully done.";
 export const DEPLOYED_SITE_URL_FALLBACK = "https://mgcleaning.vercel.app";
 

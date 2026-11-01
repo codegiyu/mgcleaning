@@ -40,7 +40,7 @@ export default async function HomePage() {
           <p className="hero-response">{messageResponseExpectation}.</p>
         </div>
         <div className="hero-visual">
-          <div className="hero-art-wrap"><Image src="/images/generated/hero-professional-cleaning-v2.png" alt="M&G cleaning professional caring for a bright modern space" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
+          <div className="hero-art-wrap"><Image src="/images/generated/hero-professional-cleaning-v2.webp" alt="M&G cleaning professional caring for a bright modern space" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
           <div className="hero-side-label">YOUR SPACE. YOUR NEEDS. OUR EXPERTISE.</div>
           <div className="hero-note"><span className="hero-note-top"><i>✳</i> TAILORED CLEANING</span><strong>The right solution for your space.</strong><small>We assess your needs, agree the scope, and deliver with care.</small></div>
         </div>
@@ -90,7 +90,7 @@ export default async function HomePage() {
       </section>
       <section className="section section-shell section-flush">
         <div className="approach-band">
-          <div className="approach-visual"><Image src="/images/generated/about-consultation-v2.png" alt="M&G cleaning professional assessing a client&apos;s space" fill sizes="(max-width: 760px) 100vw, 50vw" /></div>
+          <div className="approach-visual"><Image src="/images/generated/about-consultation-v2.webp" alt="M&G cleaning professional assessing a client&apos;s space" fill sizes="(max-width: 760px) 100vw, 50vw" /></div>
           <SectionHeading
             className="approach-copy"
             layout="stacked"
