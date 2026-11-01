@@ -84,7 +84,7 @@ export function publishBlockers(draft: ReviewDraft) {
   const blockers: string[] = [];
   if (draft.displayName.trim().length < 2) blockers.push("Add the customer's name as it should appear.");
   if (draft.quote.trim().length < QUOTE_MIN) blockers.push(`The review needs at least ${QUOTE_MIN} characters.`);
-  if (!draft.consentConfirmed) blockers.push("Confirm the customer agreed to this review and name appearing on the site.");
+  if (!draft.consentConfirmed) blockers.push("Confirm the customer agreed to this review and their full name appearing on the site.");
   return blockers;
 }
 
