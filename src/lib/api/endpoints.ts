@@ -324,6 +324,8 @@ export interface AllEndpoints {
   PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
   /** Pass `expectedUpdatedAt` as a query parameter. */
   DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
+  /** Owners only: permanent, for a customer's deletion request. */
+  DELETE_ADMIN_INQUIRY: EndpointDefinition<undefined, { deleted: true }>;
   GET_ADMIN_USERS: EndpointDefinition<undefined, AdminAccount[]>;
   POST_ADMIN_USER: EndpointDefinition<{ email: string; role: AdminRole }, AdminAccountWithPassword>;
   PATCH_ADMIN_USER: EndpointDefinition<{ role?: AdminRole; active?: boolean }, AdminAccount>;
@@ -408,6 +410,11 @@ export const ENDPOINTS = {
     pathParams: ["id"],
   },
   POST_CHANNEL_CLICK: { path: "/events/channel-click", method: "POST" },
+  DELETE_ADMIN_INQUIRY: {
+    path: "/admin/inquiries/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
   GET_ADMIN_USERS: { path: "/admin/users", method: "GET" },
   POST_ADMIN_USER: { path: "/admin/users", method: "POST" },
   PATCH_ADMIN_USER: {

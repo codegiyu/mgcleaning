@@ -42,3 +42,7 @@ test("describes account management without naming the account", () => {
   assert.equal(describeActivity({ action: "user.deactivate", metadata: { revokedSessions: 2 } }), "Deactivated an account and signed it out");
   assert.equal(describeActivity({ action: "user.password_reset", metadata: {} }), "Reset an account's password");
 });
+
+test("describes an enquiry deletion by its reference only", () => {
+  assert.equal(describeActivity({ action: "inquiry.delete", metadata: { reference: "MG-20261101-ABC123" } }), "Deleted enquiry MG-20261101-ABC123");
+});

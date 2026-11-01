@@ -64,6 +64,7 @@ export function describeActivity({ action, metadata }: ActivityEvent): string {
     case "review.publish": return "Published a review";
     case "review.unpublish": return "Unpublished a review";
     case "review.delete": return metadata.statusFrom === "published" ? "Deleted a published review" : "Deleted a draft review";
+    case "inquiry.delete": return `Deleted enquiry ${text(metadata.reference) || ""}`.trim();
     case "user.create": return metadata.role === "owner" ? "Added an owner account" : "Added a staff account";
     case "user.role_change": return `Changed an account from ${roleName(metadata.roleFrom)} to ${roleName(metadata.roleTo)}`;
     case "user.deactivate": return "Deactivated an account and signed it out";

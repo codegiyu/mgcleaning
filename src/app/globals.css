@@ -698,3 +698,4 @@ main { flex:1; overflow-x:clip; }
 .admin-confirm-inline { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
 .admin-first-password .admin-settings-card { max-width:520px; }
 .admin-user-email small { color:#9fb0cc; }
+.admin-inquiry-delete { margin-top:28px; }
