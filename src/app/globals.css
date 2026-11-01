@@ -442,6 +442,8 @@ main { flex:1; overflow-x:clip; }
 .admin-page-heading h1,.admin-editor-header h1 { margin:0; color:#0b2858; font-size:32px; font-weight:650; letter-spacing:-.045em; line-height:1.1; }
 .admin-page-heading p,.admin-editor-header p { margin:7px 0 0; color:#68748a; font-size:13px; line-height:1.5; }
 .admin-page-heading>div { min-width:0; }
+.admin-link-button { display:inline-flex; align-items:center; text-decoration:none; }
+.not-found-page,.error-page { padding-bottom:90px; }
 .admin-page-heading>.admin-primary-link { flex-shrink:0; white-space:nowrap; }
 .admin-search { width:min(310px,37vw); min-height:42px; display:flex; align-items:center; gap:10px; border:1px solid #dbe0e9; background:white; padding:0 12px; color:#68748a; }
 .admin-search>span[aria-hidden] { font-size:21px; line-height:1; }
