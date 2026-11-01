@@ -4,10 +4,11 @@ import { useRef, useState, type FormEvent } from "react";
 import { demoSite } from "@/content/demo-content";
 import { callApi } from "@/lib/api/callApi";
 import { attributionPayload } from "@/lib/attribution/session";
+import { submitFailure, type SubmitFailure } from "@/lib/forms/submit-error";
 import { FormSelect } from "@/components/form-select";
 import { TurnstileField } from "@/components/turnstile-field";
 
-type FormStatus = "idle" | "submitting" | "success" | "saved-without-notification" | "error";
+type FormStatus = "idle" | "submitting" | "success" | "saved-without-notification" | SubmitFailure;
 
 export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -53,7 +54,7 @@ export function ContactForm() {
         headers: { "Idempotency-Key": getSubmissionKey() },
       });
       if (result.type === "error") {
-        setStatus("error");
+        setStatus(submitFailure(result.error.responseCode));
         return;
       }
       form.reset();
@@ -61,7 +62,7 @@ export function ContactForm() {
       submissionKeyRef.current = null;
       setStatus(result.data.notificationQueued ? "success" : "saved-without-notification");
     } catch {
-      setStatus("error");
+      setStatus("unavailable");
     } finally {
       pendingRef.current = false;
     }
@@ -87,7 +88,9 @@ export function ContactForm() {
       <button className="button button-dark form-submit" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Sending…" : "Send message"} <span aria-hidden="true">↗</span></button>
       {status === "success" && <p className="form-confirmation" role="status">Thanks. Your message has been received, and the M&amp;G team can follow up using the details you shared.</p>}
       {status === "saved-without-notification" && <p className="form-confirmation" role="status">Your message was saved, but its email alert could not be queued. Please also <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">message MG on WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a> so the team sees it.</p>}
-      {status === "error" && <p className="form-error" role="alert">We couldn&apos;t send your message. Please try <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
+      {status === "invalid" && <p className="form-error" role="alert">Some details need another look. Please check each field and send again, or <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">message us on WhatsApp</a> instead.</p>}
+      {status === "rate-limited" && <p className="form-error" role="alert">We&apos;ve received several messages from you just now. Please try again in a few minutes, or <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">message us on WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
+      {status === "unavailable" && <p className="form-error" role="alert">We couldn&apos;t send your message. Please try <a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a> or call <a href={demoSite.phoneUrl}>{demoSite.phoneNumber}</a>.</p>}
     </form>
   );
 }
