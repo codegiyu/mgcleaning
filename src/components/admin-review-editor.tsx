@@ -8,6 +8,7 @@ import { services } from "@/content/demo-content";
 import { callApi } from "@/lib/api/callApi";
 import type { AdminReview, ReviewStatus } from "@/lib/api/endpoints";
 import { formatWat } from "@/lib/admin/wat-time";
+import { clearSavedParam, savedNoticeFor } from "@/lib/admin/saved-notice";
 import {
   blankReviewDraft,
   draftFromReview,
@@ -23,7 +24,7 @@ import {
 
 const CONFLICT = 409;
 
-export function AdminReviewEditor({ id }: { id?: string }) {
+export function AdminReviewEditor({ id, savedStatus }: { id?: string; savedStatus?: string }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [draft, setDraft] = useState<ReviewDraft>(blankReviewDraft);
@@ -31,7 +32,11 @@ export function AdminReviewEditor({ id }: { id?: string }) {
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState(() => savedNoticeFor("review", savedStatus));
+
+  useEffect(() => {
+    if (savedStatus) clearSavedParam();
+  }, [savedStatus]);
   const [conflict, setConflict] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [today] = useState(() => watToday());
@@ -92,7 +97,7 @@ export function AdminReviewEditor({ id }: { id?: string }) {
         : wasPublished ? "Review unpublished. It no longer appears on the website."
           : "Draft saved.",
     );
-    if (!id) router.replace(`/admin/reviews/${result.data.id}`);
+    if (!id) router.replace(`/admin/reviews/${result.data.id}?saved=${targetStatus}`);
   }
 
   async function remove() {

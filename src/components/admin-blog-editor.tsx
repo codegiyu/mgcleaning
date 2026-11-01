@@ -9,6 +9,7 @@ import { services } from "@/content/demo-content";
 import { AdminCoverPicker, type SelectedCover } from "@/components/admin-cover-picker";
 import { AdminShareLink } from "@/components/admin-share-link";
 import { formatWat, isoToWatInput, watInputToIso } from "@/lib/admin/wat-time";
+import { clearSavedParam, savedNoticeFor } from "@/lib/admin/saved-notice";
 
 type Draft = BlogPostInput;
 const blankDraft: Draft = { title: "", slug: "", excerpt: "", body: "", category: "Cleaning advice", authorName: "M&G Cleaning Services", serviceSlug: "home-cleaning", coverMediaId: null, coverImageAlt: "", seoTitle: "", seoDescription: "" };
@@ -17,7 +18,7 @@ function makeSlug(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 180);
 }
 
-export function AdminBlogEditor({ id }: { id?: string }) {
+export function AdminBlogEditor({ id, savedStatus }: { id?: string; savedStatus?: string }) {
   const router = useRouter();
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -30,7 +31,11 @@ export function AdminBlogEditor({ id }: { id?: string }) {
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState(() => savedNoticeFor("article", savedStatus));
+
+  useEffect(() => {
+    if (savedStatus) clearSavedParam();
+  }, [savedStatus]);
 
   useEffect(() => {
     if (id) return;
@@ -175,7 +180,7 @@ export function AdminBlogEditor({ id }: { id?: string }) {
         : targetStatus === "scheduled" && result.data.publishAt ? `Scheduled for ${formatWat(result.data.publishAt)}.`
           : "Draft saved.",
     );
-    if (!id) router.replace(`/admin/blog/${result.data.id}`);
+    if (!id) router.replace(`/admin/blog/${result.data.id}?saved=${targetStatus}`);
   }
 
   function submitDraft(event: FormEvent<HTMLFormElement>) {
