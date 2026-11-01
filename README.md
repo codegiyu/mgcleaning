@@ -14,9 +14,9 @@ The backend API defaults to `http://localhost:4000/api/v1`; set `NEXT_PUBLIC_API
 
 ## Docker and Coolify
 
-The root `Dockerfile` builds a multi-stage production image using Next.js standalone output. The final image runs as the unprivileged `nextjs` user and listens on port `3000`.
+The root `Dockerfile` builds a multi-stage production image using Next.js standalone output. The final image runs as the unprivileged `nextjs` user and listens on port `3100` (the server's `3000` is taken; override with the `PORT` runtime variable).
 
-For Coolify, create a Dockerfile application from this repository, expose port `3000`, and assign the public website domain. Set these **build-time** variables before deployment (they are public URLs, not secrets):
+For Coolify, create a Dockerfile application from this repository, set its port to `3100`, and assign the public website domain. Set these **build-time** variables before deployment (they are public URLs, not secrets):
 
 - `NEXT_PUBLIC_API_BASE_URL=https://api.<your-domain>/api/v1`
 - `NEXT_PUBLIC_SITE_URL=https://<your-domain>`
@@ -35,7 +35,7 @@ docker build \
   --build-arg NEXT_PUBLIC_CONTENT_MODE=demo \
   --build-arg NEXT_PUBLIC_TURNSTILE_MODE=off \
   -t mgcleaning-web .
-docker run --rm -p 3000:3000 mgcleaning-web
+docker run --rm -p 3000:3100 mgcleaning-web
 ```
 
 Set `REVALIDATE_SECRET` as a **runtime** variable (not a build argument) to the same 32+ character value as the backend's `REVALIDATE_SECRET`. Published-article reads are cached for up to an hour and tagged `blog` / `blog:<slug>`. The backend calls `POST /api/revalidate` with an HMAC signature after every change that affects the public site; removals (unpublish, archive, slug change) expire immediately, and other changes refresh in the background. Without the secret the route returns 503 and pages fall back to the hourly refresh.
