@@ -58,13 +58,16 @@ const confirmedContactRecord = (id: string, label: string, sourceNote: string): 
   lastReviewedAt: "2026-09-29",
 });
 
+// Pending facts and service details do not block a production build: until approved they are
+// not shown as fact (pages say "To be confirmed" or use generic wording, and the local-business
+// structured data is omitted). Approve a record, with real content, to publish it.
 const pendingFactRecord = (id: string, sourceNote: string): GovernedRecord => ({
   id,
   status: "draft",
   provenance: "staff-supplied",
   rightsStatus: "pending",
   sourceNote,
-  requiredForProduction: true,
+  requiredForProduction: false,
 });
 
 export const businessContactFacts: BusinessContactFacts = {
@@ -129,7 +132,7 @@ const serviceRecord = (serviceSlug: string, sourceNote: string): GovernedRecord 
   provenance: "generated-demo",
   rightsStatus: "not-for-launch",
   sourceNote,
-  requiredForProduction: true,
+  requiredForProduction: false,
 });
 
 const serviceDetails: ServiceDetails[] = [
@@ -238,8 +241,11 @@ export function getPublicBusinessFacts() {
   return businessContactFacts;
 }
 
+/** Service details as published: in production only approved records, so draft scope claims never go live. */
 export function getServiceDetails(slug: string) {
-  return serviceDetails.find((service) => service.serviceSlug === slug);
+  return serviceDetails.find(
+    (service) => service.serviceSlug === slug && (contentMode === "demo" || (service.status === "approved" && service.rightsStatus === "approved")),
+  );
 }
 
 export function getPublicServiceDetails() {
@@ -257,7 +263,10 @@ export function assertProductionPublicContent() {
   const facts = Object.values(businessContactFacts);
   const missingFacts = facts.filter((fact) => fact.requiredForProduction && (fact.status !== "approved" || !fact.value));
   const unapprovedServices = serviceDetails.filter((service) => service.requiredForProduction && (service.status !== "approved" || service.rightsStatus !== "approved" || !service.typicalDuration));
-  if (missingFacts.length || unapprovedServices.length || seoBusinessFacts.status !== "approved" || !seoBusinessFacts.serviceArea || !seoBusinessFacts.googleBusinessProfileUrl || seoBusinessFacts.openingHours.length === 0) {
+  // Local SEO facts may stay unapproved (the structured data is then omitted), but an
+  // "approved" set must be complete.
+  const incompleteSeo = seoBusinessFacts.status === "approved" && (!seoBusinessFacts.serviceArea || !seoBusinessFacts.googleBusinessProfileUrl || seoBusinessFacts.openingHours.length === 0);
+  if (missingFacts.length || unapprovedServices.length || incompleteSeo) {
     throw new Error(
       `Production public content is not ready. Confirm business facts (${missingFacts.map((fact) => fact.id).join(", ") || "none"}), service records (${unapprovedServices.map((service) => service.id).join(", ") || "none"}), and local SEO facts before building.`,
     );
