@@ -117,7 +117,7 @@ export function SiteHeader() {
             <Link href="/blog">Journal</Link>
             <Link href="/gallery">Gallery</Link>
             <Link href="/faq">FAQs</Link>
-            <Link href="/areas">Service areas</Link>
+            {/* Service areas link hidden until coverage is confirmed; /areas still exists. */}
           </nav>
           <div className="header-actions"><Link className="button button-dark header-cta" href="/book">Request a cleaning <ArrowUpRight /></Link><MobileSiteNav /></div>
         </div>
@@ -138,7 +138,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-links">
           <div><span className="footer-label">Explore</span><Link href="/services">Services</Link><Link href="/about">Our approach</Link><Link href="/blog">Journal</Link><Link href="/gallery">Gallery</Link></div>
-          <div><span className="footer-label">Say hello</span><Link href="/book">Request a cleaning</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQs</Link><Link href="/areas">Service areas</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Request terms</Link></div>
+          <div><span className="footer-label">Say hello</span><Link href="/book">Request a cleaning</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQs</Link>{/* Service areas hidden here too (see the header nav). */}<Link href="/privacy">Privacy</Link><Link href="/terms">Request terms</Link></div>
         </div>
         <div className="footer-note footer-contact"><span className="footer-label">Contact M&amp;G</span><p>Let&apos;s talk about your space.</p><div className="footer-contact-links"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer"><InstagramIcon /> {demoSite.instagramHandle}</a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> {demoSite.phoneNumber}</a><a href={demoSite.phoneUrl}><PhoneIcon /> Call {demoSite.phoneNumber}</a></div></div>
       </div>

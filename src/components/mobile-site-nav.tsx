@@ -28,7 +28,7 @@ export function MobileSiteNav() {
             <Link href="/blog" onClick={close}>Journal <span aria-hidden="true">→</span></Link>
             <Link href="/gallery" onClick={close}>Gallery <span aria-hidden="true">→</span></Link>
             <Link href="/faq" onClick={close}>FAQs <span aria-hidden="true">→</span></Link>
-            <Link href="/areas" onClick={close}>Service areas <span aria-hidden="true">→</span></Link>
+            {/* Service areas link hidden until coverage is confirmed; /areas still exists. */}
             <Link href="/contact" onClick={close}>Contact <span aria-hidden="true">→</span></Link>
           </nav>
           <div className="mobile-menu-footer">
