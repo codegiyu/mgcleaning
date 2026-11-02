@@ -56,6 +56,7 @@ main { flex:1; overflow-x:clip; }
 @keyframes scroll-reveal-right { to { opacity:1; transform:translate3d(0,0,0); } }
 @keyframes scroll-reveal-scale { to { opacity:1; transform:scale(1); } }
 @media(prefers-reduced-motion:reduce) {
+  .admin-sidebar{ transition:none; }
   .scroll-reveal-enabled [data-scroll-reveal]{ opacity:1; transform:none; animation:none; }
 }
 .section-shell { width:min(1160px,calc(100% - 64px)); margin:0 auto; }
@@ -454,6 +455,9 @@ main { flex:1; overflow-x:clip; }
 .admin-sidebar { position:sticky; top:0; height:100vh; display:flex; flex-direction:column; gap:42px; background:#0b2858; padding:25px 12px 16px; color:#d9e2f2; }
 .admin-brand { width:min(100%,150px); display:flex; align-items:center; justify-content:center; border-radius:3px; background:#fff; padding:5px 8px; }
 .admin-brand-logo { display:block; width:100%; height:auto; }
+.admin-sidebar-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+/* Phone-only: the top bar with the menu button, and the drawer's close button. */
+.admin-mobile-bar,.admin-drawer-close { display:none; }
 .admin-nav { display:grid; gap:5px; }
 .admin-nav-link { min-height:48px; display:flex; align-items:center; gap:13px; border:0; border-left:3px solid transparent; background:transparent; padding:0 14px; color:#d9e2f2; font-size:13px; text-align:left; cursor:pointer; }
 .admin-nav-link>span { width:19px; color:#c6d2e6; font-size:18px; text-align:center; }
@@ -688,17 +692,18 @@ main { flex:1; overflow-x:clip; }
   .admin-editor-grid{ grid-template-columns:minmax(0,1fr) 300px; }
 }
 @media(max-width:760px) {
-  .admin-shell{ grid-template-columns:minmax(0,1fr); }
-  .admin-sidebar{ position:relative; width:100%; min-width:0; height:auto; gap:14px; padding:12px 16px 10px; }
-  .admin-brand{ width:96px; padding:3px 5px; }
-  .admin-nav{ display:flex; overflow-x:auto; gap:4px; }
-  .admin-nav-link{ min-height:40px; flex-shrink:0; border-left:0; border-bottom:2px solid transparent; padding:0 10px; font-size:var(--text-small); }
-  .admin-nav-active{ border-bottom-color:#f2c400; }
-  .admin-nav-link>span{ font-size:15px; }
-  .admin-sidebar-bottom{ position:absolute; top:12px; right:14px; display:flex; align-items:center; gap:6px; margin:0; border:0; padding:0; }
-  .admin-user-email{ display:none; }
-  .admin-logout{ width:auto; min-height:36px; }
-  .admin-logout>span{ display:none; }
+  /* auto row for the top bar: on short pages the spare height goes to the content, not the bar. */
+  .admin-shell{ grid-template-columns:minmax(0,1fr); grid-template-rows:auto 1fr; }
+  .admin-mobile-bar{ position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:58px; background:#0b2858; padding:8px 10px 8px 16px; }
+  .admin-mobile-bar .admin-brand{ width:96px; padding:3px 5px; }
+  .admin-menu-button,.admin-drawer-close{ display:grid; place-items:center; width:44px; height:44px; border:0; border-radius:3px; background:transparent; color:#fff; cursor:pointer; }
+  .admin-menu-button:hover,.admin-drawer-close:hover{ background:#ffffff15; }
+  .admin-menu-button:focus-visible,.admin-drawer-close:focus-visible{ outline:2px solid #f2c400; outline-offset:-2px; }
+  .admin-menu-button svg,.admin-drawer-close svg{ width:24px; height:24px; }
+  /* The desktop sidebar, as a drawer from the left. */
+  .admin-sidebar{ position:fixed; z-index:50; top:0; bottom:0; left:0; width:min(84vw,290px); height:100dvh; overflow-y:auto; overscroll-behavior:contain; transform:translateX(-100%); transition:transform .22s ease; }
+  .admin-drawer-open .admin-sidebar{ box-shadow:12px 0 32px #08142d40; transform:none; }
+  .admin-drawer-backdrop{ position:fixed; z-index:40; inset:0; background:#08142d80; }
   .admin-content{ padding:27px 18px 42px; }
   .admin-page-heading{ align-items:flex-start; flex-direction:column; margin-bottom:19px; }
   .admin-page-heading h1,.admin-editor-header h1{ font-size:27px; }
@@ -724,7 +729,6 @@ main { flex:1; overflow-x:clip; }
   .admin-login-panel{ padding:29px 24px 25px; }
 }
 @media(max-width:430px) {
-  .admin-nav-link{ gap:7px; padding:0 8px; }
   .admin-table{ min-width:620px; }
   .admin-table-footer{ align-items:flex-start; flex-direction:column; }
   .admin-primary-link{ width:100%; }
