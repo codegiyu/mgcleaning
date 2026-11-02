@@ -47,8 +47,10 @@ export default async function ServiceDetailPage({ params }: Props) {
           <h2 className="panel-title">Start with a few details.</h2>
           <p>Share the service or result you have in mind. We can shape the scope around your space and priorities.</p>
           <RequestChannels tone="light" service={service.title} />
-          <p><Link className="text-link" href={"/book?service=" + encodeURIComponent(service.title)}>Or use the request form <ArrowUpRight /></Link></p>
-          <p><Link className="text-link" href="/services">Back to all services <ArrowRight /></Link></p>
+          <div className="service-detail-links">
+            <Link className="text-link" href={"/book?service=" + encodeURIComponent(service.title)}>Or use the request form <ArrowUpRight /></Link>
+            <Link className="text-link" href="/services">Back to all services <ArrowRight /></Link>
+          </div>
         </aside>
       </div>
     </div>

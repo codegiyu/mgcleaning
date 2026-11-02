@@ -209,6 +209,7 @@ main { flex:1; overflow-x:clip; }
 .service-detail-aside { align-self:start; border-radius:20px; background:var(--soft); padding:27px; }
 .service-detail-aside p:not(.eyebrow) { color:var(--muted); font-size:var(--text-small); line-height:1.7; }
 .service-detail-aside .button { margin-top:8px; }
+.service-detail-links { display:grid; justify-items:start; gap:10px; margin-top:22px; }
 .category-tabs { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 25px; }
 .category-tab { border:1px solid #dfe4d8; border-radius:99px; background:transparent; padding:9px 14px; color:var(--muted); font-size:var(--text-small); font-weight:700; }
 .category-tab:hover,.category-tab-active { border-color:var(--navy); background:var(--navy); color:white; }
