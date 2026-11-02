@@ -7,6 +7,9 @@ const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL?.replace(/\/+$/, "")
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  // The Docker build sets SKIP_TYPECHECK: CI has already run `tsc --noEmit` on the same
+  // commit, and repeating it on the deploy server adds well over a minute. Local builds and CI still check.
+  typescript: { ignoreBuildErrors: process.env.SKIP_TYPECHECK === "1" },
   images: {
     // Blog covers are served from the R2 custom domain; no other remote host is allowed.
     remotePatterns: mediaBaseUrl ? [new URL(`${mediaBaseUrl}/**`)] : [],
