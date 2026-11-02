@@ -72,8 +72,11 @@ const pendingFactRecord = (id: string, sourceNote: string): GovernedRecord => ({
 
 export const businessContactFacts: BusinessContactFacts = {
   email: {
-    ...pendingFactRecord("business-email", "Official MG Cleaning email address has not been supplied."),
-    label: "Official email",
+    ...confirmedContactRecord("business-email", "Email", "Official email supplied by the MG Cleaning project owner on 2026-11-02."),
+    lastReviewedAt: "2026-11-02",
+    label: "Email",
+    value: demoSite.email,
+    href: demoSite.emailUrl,
   },
   phone: {
     ...confirmedContactRecord("business-phone", "Phone", "Confirmed by the MG Cleaning project owner."),
@@ -97,9 +100,13 @@ export const businessContactFacts: BusinessContactFacts = {
     ...pendingFactRecord("business-service-area", "Abuja coverage is a candidate claim awaiting explicit service-area approval."),
     label: "Service area",
   },
+  // The days of the week were not given, so only the times are published (and no
+  // opening-hours structured data until they are).
   operatingHours: {
-    ...pendingFactRecord("business-operating-hours", "Operating hours and timezone have not been supplied."),
+    ...confirmedContactRecord("business-operating-hours", "Operating hours", "8am to 7pm supplied by the MG Cleaning project owner on 2026-11-02; days of the week not yet given."),
+    lastReviewedAt: "2026-11-02",
     label: "Operating hours",
+    value: "8am – 7pm",
   },
   responseExpectation: {
     ...confirmedContactRecord("business-response-expectation", "Response expectation", "15-minute maximum for messages confirmed by the client on 2026-10-26; whether it applies outside working hours is pending."),

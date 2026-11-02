@@ -218,7 +218,8 @@ export type AuditEvent = {
 
 export type SiteSettings = {
   inquiryNotificationEmail: string | null;
-  effectiveNotificationEmail: string;
+  /** Every inbox alerts go to: the one set here, if any, and always the server's INQUIRY_NOTIFICATION_TO. */
+  notificationRecipients: string[];
   defaultAuthorName: string | null;
   updatedAt: string | null;
 };

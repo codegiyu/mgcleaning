@@ -6,7 +6,7 @@ import { articles, services, whyMgReasons } from "@/content/demo-content";
 import { messageResponseExpectation } from "@/content/response-expectation";
 import { getPublicFaqs } from "@/content/trust-content";
 import { getPublishedBlogPosts, toDemoArticle } from "@/lib/blog/public-blog";
-import { ReviewCard } from "@/components/review-card";
+import { ReviewSlideshow } from "@/components/review-slideshow";
 import { getPublishedReviews } from "@/lib/reviews/public-reviews";
 import { homeReviews } from "@/lib/reviews/review-data";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
@@ -76,7 +76,7 @@ export default async function HomePage() {
             description="Reviews shared by M&G Cleaning Services customers, published with their permission."
             action={reviews.length > shownReviews.length ? { href: "/reviews", label: `Read all ${reviews.length} reviews` } : { href: "/reviews", label: "See all reviews" }}
           />
-          <ul className="review-grid">{shownReviews.map((review) => <ReviewCard key={review.id} review={review} element="li" />)}</ul>
+          <ReviewSlideshow reviews={shownReviews} />
         </section>
       )}
       <section className="section section-shell">

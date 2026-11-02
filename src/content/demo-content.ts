@@ -58,6 +58,8 @@ export const demoSite = {
   instagramUrl: "https://www.instagram.com/mgcleaningservices_1/",
   instagramHandle: "@mgcleaningservices_1",
   phoneNumber: "08167715346",
+  email: "m.gcleaningservices62@gmail.com",
+  emailUrl: "mailto:m.gcleaningservices62@gmail.com",
   phoneUrl: "tel:+2348167715346",
   whatsappUrl: "https://wa.me/2348167715346",
 };

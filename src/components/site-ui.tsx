@@ -70,6 +70,10 @@ export function PhoneIcon({ className = "size-4" }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.7 3.8 9.3 3c.6-.2 1.2.1 1.5.7l1.2 2.8c.2.5.1 1-.3 1.4l-1.4 1.1a13.5 13.5 0 0 0 4.7 4.7l1.1-1.4c.3-.4.9-.5 1.4-.3l2.8 1.2c.6.3.9.9.7 1.5l-.8 2.6c-.2.7-.9 1.2-1.6 1.2C10.4 18.5 5.5 13.6 5.5 5.4c0-.7.5-1.4 1.2-1.6Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /></svg>;
 }
 
+export function EmailIcon({ className = "size-4" }: { className?: string }) {
+  return <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.7" /><path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+}
+
 export function RoomIllustration() {
   return (
     <svg viewBox="0 0 620 520" className="h-full w-full" role="img" aria-label="Illustration of a bright, freshly cleaned living room">
@@ -117,7 +121,7 @@ export function SiteHeader() {
             <Link href="/blog">Journal</Link>
             <Link href="/gallery">Gallery</Link>
             <Link href="/faq">FAQs</Link>
-            <Link href="/areas">Service areas</Link>
+            {/* Service areas link hidden until coverage is confirmed; /areas still exists. */}
           </nav>
           <div className="header-actions"><Link className="button button-dark header-cta" href="/book">Request a cleaning <ArrowUpRight /></Link><MobileSiteNav /></div>
         </div>
@@ -138,9 +142,9 @@ export function SiteFooter() {
         </div>
         <div className="footer-links">
           <div><span className="footer-label">Explore</span><Link href="/services">Services</Link><Link href="/about">Our approach</Link><Link href="/blog">Journal</Link><Link href="/gallery">Gallery</Link></div>
-          <div><span className="footer-label">Say hello</span><Link href="/book">Request a cleaning</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQs</Link><Link href="/areas">Service areas</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Request terms</Link></div>
+          <div><span className="footer-label">Say hello</span><Link href="/book">Request a cleaning</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQs</Link>{/* Service areas hidden here too (see the header nav). */}<Link href="/privacy">Privacy</Link><Link href="/terms">Request terms</Link></div>
         </div>
-        <div className="footer-note footer-contact"><span className="footer-label">Contact M&amp;G</span><p>Let&apos;s talk about your space.</p><div className="footer-contact-links"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer"><InstagramIcon /> {demoSite.instagramHandle}</a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> {demoSite.phoneNumber}</a><a href={demoSite.phoneUrl}><PhoneIcon /> Call {demoSite.phoneNumber}</a></div></div>
+        <div className="footer-note footer-contact"><span className="footer-label">Contact M&amp;G</span><p>Let&apos;s talk about your space.</p><div className="footer-contact-links"><a href={demoSite.instagramUrl} target="_blank" rel="noreferrer"><InstagramIcon /> {demoSite.instagramHandle}</a><a href={demoSite.whatsappUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> {demoSite.phoneNumber}</a><a href={demoSite.phoneUrl}><PhoneIcon /> Call {demoSite.phoneNumber}</a><a href={demoSite.emailUrl}><EmailIcon /> {demoSite.email}</a></div></div>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} {demoSite.name}</span><span>Professional cleaning. Thoughtfully done.</span></div>
     </footer>
