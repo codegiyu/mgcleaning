@@ -10,7 +10,8 @@ This ledger is the launch checklist for replacing demo trust content with verifi
 | Before-and-after pair | Authentic paired images, same project, approved caption, customer permission | Missing | MG Cleaning | Per asset |
 | Team/technician images | Staff permission, approved names and roles, image rights | Missing | MG Cleaning | When staff changes |
 | Service areas | Confirmed coverage list, exclusions, effective date | Missing | MG Cleaning | Review on coverage change |
-| Operating hours | Approved weekly schedule, timezone, holiday exceptions | Missing | MG Cleaning | Review on schedule change |
+| Operating hours | Approved weekly schedule, timezone, holiday exceptions. 8am–7pm supplied on 2026-11-02 and shown on Contact; days of the week, timezone, and holidays still missing | Partially approved | MG Cleaning | Review on schedule change |
+| Official email | Address MG reads, approved for publication | Approved (m.gcleaningservices62@gmail.com, supplied 2026-11-02; on Contact, footer, privacy) | MG Cleaning | Review if the inbox changes |
 | Business location | Approved public wording distinguishing office, dispatch base, and service region | Missing | MG Cleaning | Review on location change |
 | Certifications | Issuer, certificate ID, dates, verification source, logo rights | Missing | MG Cleaning | Certificate expiry |
 | Service guarantees | Written terms, exclusions, remedy, effective date | Missing | MG Cleaning | Policy review |

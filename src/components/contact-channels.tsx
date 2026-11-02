@@ -20,8 +20,8 @@ export function ContactChannels({ channels, children }: { channels: Channel[]; c
       </ContactBlock>
     ),
     email: (
-      <ContactBlock label={email.label} note="The official inbox will be added when M&G Cleaning Services supplies it.">
-        {email.value ?? "To be confirmed"}
+      <ContactBlock label={email.label} note="For the fastest reply, message us on WhatsApp.">
+        {email.value && email.href ? <a href={email.href}>{email.value}</a> : "To be confirmed"}
       </ContactBlock>
     ),
     hours: (
