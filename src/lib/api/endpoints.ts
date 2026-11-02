@@ -313,6 +313,9 @@ export interface AllEndpoints {
   PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
   DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;
   POST_ADMIN_CHANGE_PASSWORD: EndpointDefinition<{ currentPassword: string; newPassword: string }, { revokedSessions: number }>;
+  POST_ADMIN_PASSWORD_RESET_REQUEST: EndpointDefinition<{ email: string }, undefined>;
+  POST_ADMIN_PASSWORD_RESET_CONFIRM: EndpointDefinition<{ token: string; newPassword: string }, undefined>;
+  POST_ADMIN_SEND_PASSWORD_RESET_LINK: EndpointDefinition<undefined, undefined>;
   GET_ADMIN_SESSIONS: EndpointDefinition<undefined, AdminSession[]>;
   DELETE_ADMIN_SESSION: EndpointDefinition<undefined, { revoked: true }>;
   POST_ADMIN_REVOKE_OTHER_SESSIONS: EndpointDefinition<undefined, { revokedSessions: number }>;
@@ -383,6 +386,9 @@ export const ENDPOINTS = {
     pathParams: ["id"],
   },
   POST_ADMIN_CHANGE_PASSWORD: { path: "/admin/account/password", method: "POST" },
+  POST_ADMIN_PASSWORD_RESET_REQUEST: { path: "/admin/auth/password-reset/request", method: "POST" },
+  POST_ADMIN_PASSWORD_RESET_CONFIRM: { path: "/admin/auth/password-reset/confirm", method: "POST" },
+  POST_ADMIN_SEND_PASSWORD_RESET_LINK: { path: "/admin/account/password-reset-link", method: "POST" },
   GET_ADMIN_SESSIONS: { path: "/admin/account/sessions", method: "GET" },
   DELETE_ADMIN_SESSION: {
     path: "/admin/account/sessions/:id",

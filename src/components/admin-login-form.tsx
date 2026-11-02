@@ -57,6 +57,7 @@ export function AdminLoginForm() {
           </label>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <button className="admin-primary-button" type="submit" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>
+          <Link className="admin-forgot-link" href="/admin/forgot-password">Forgot password?</Link>
         </form>
         <Link className="admin-back-link" href="/">Back to the website</Link>
       </div>
