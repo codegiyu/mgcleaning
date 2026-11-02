@@ -77,6 +77,10 @@ main { flex:1; overflow-x:clip; }
 .hero-note small { display:block; margin-top:4px; color:var(--muted); font-size:var(--text-small); line-height:1.5; }
 .hero-side-label { position:absolute; top:30px; right:-3px; display:flex; align-items:center; gap:8px; writing-mode:vertical-rl; color:#243b68; font-size:var(--text-small); font-weight:800; letter-spacing:.16em; }
 .hero-side-label:before { width:1px; height:28px; background:#c6a522; content:""; }
+/* Desktop: keep the image and note clear of the vertical label on the right. */
+@media(min-width:761px) { .hero-art-wrap { right:46px; } .hero-note { right:36px; } }
+/* Tablet: the label wraps to two columns here, so it needs more room. */
+@media(min-width:761px) and (max-width:900px) { .hero-art-wrap { right:66px; } .hero-note { right:56px; } }
 .trust-strip { border-block:1px solid var(--line); background:#ffffff80; }
 .trust-strip-inner { min-height:80px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
 .trust-label { color:#78847a; font-size:var(--text-small); font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
