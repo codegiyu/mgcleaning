@@ -38,7 +38,8 @@ export function describeActivity({ action, metadata }: ActivityEvent): string {
       const revoked = count(metadata.revokedSessions);
       return revoked ? `Changed password and signed out ${plural(revoked, "other session")}` : "Changed password";
     }
-    case "auth.password_reset": return "Password reset by an operator";
+    case "auth.password_reset": return metadata.method === "email_link" ? "Reset their password from an emailed link" : "Password reset by an operator";
+    case "auth.password_reset_request": return "Asked for a password reset link";
     case "auth.session_revoke":
       return metadata.scope === "others" ? `Signed out ${plural(count(metadata.revokedSessions), "other session")}` : "Signed out another session";
     case "inquiry.update": {
