@@ -181,9 +181,9 @@ export function AdminSiteSettingsForm() {
       {!settings ? <p className="admin-inline-state">Loading settings…</p> : (
         <>
           <label className="admin-field">
-            <span>Inquiry alert inbox</span>
-            <input name="inquiryNotificationEmail" type="email" maxLength={320} disabled={!canEdit} defaultValue={settings.inquiryNotificationEmail ?? ""} placeholder={settings.effectiveNotificationEmail} />
-            <small className="admin-field-help">New requests are emailed to {settings.effectiveNotificationEmail}. Leave blank to use the server default.</small>
+            <span>Extra inquiry alert inbox <span>(optional)</span></span>
+            <input name="inquiryNotificationEmail" type="email" maxLength={320} disabled={!canEdit} defaultValue={settings.inquiryNotificationEmail ?? ""} placeholder="team@example.com" />
+            <small className="admin-field-help">New requests are emailed to {settings.notificationRecipients.join(" and ")}. The server&apos;s inbox always gets them; add one here to copy another inbox.</small>
           </label>
           <label className="admin-field">
             <span>Default article author</span>
