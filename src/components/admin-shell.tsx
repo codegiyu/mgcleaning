@@ -18,7 +18,7 @@ const navigation = [
   { href: "/admin/users", label: "Users", icon: "users", ownerOnly: true },
 ] as const;
 
-export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "reviews" | "activity" | "settings" | "users" | "logout" | "search" | "chevron" | "menu" | "close" }) {
+export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "reviews" | "activity" | "settings" | "users" | "logout" | "search" | "chevron" | "menu" | "close" | "website" }) {
   const common = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
   if (name === "overview") return <svg {...common}><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" /></svg>;
   if (name === "inquiries") return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="m4 7 8 6 8-6" /></svg>;
@@ -30,6 +30,7 @@ export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | 
   if (name === "logout") return <svg {...common}><path d="M10 4H5v16h5m4-4 4-4-4-4m4 4H9" /></svg>;
   if (name === "menu") return <svg {...common}><path d="M4 7h16M4 12h16M4 17h16" /></svg>;
   if (name === "close") return <svg {...common}><path d="m6 6 12 12M18 6 6 18" /></svg>;
+  if (name === "website") return <svg {...common}><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>;
   if (name === "search") return <svg {...common}><circle cx="10.8" cy="10.8" r="6.5" /><path d="m16 16 4 4" /></svg>;
   return <svg {...common}><path d="m9 5 7 7-7 7" /></svg>;
 }
@@ -152,6 +153,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
         <div className="admin-sidebar-bottom">
           <span className="admin-user-email" title={user?.email}>{user?.email}{user?.role === "owner" && <small> · Owner</small>}</span>
+          {/* A new tab, so unsaved work in the dashboard stays open. */}
+          <a className="admin-nav-link" href="/" target="_blank" rel="noopener" onClick={() => setDrawerOpen(false)}>
+            <span aria-hidden="true"><AdminIcon name="website" /></span>View website<span className="admin-visually-hidden"> (opens in a new tab)</span>
+          </a>
           <button className="admin-nav-link admin-logout" type="button" onClick={signOut} disabled={signingOut}>
             <span aria-hidden="true"><AdminIcon name="logout" /></span>{signingOut ? "Signing out…" : "Sign out"}
           </button>
