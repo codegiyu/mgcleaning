@@ -47,12 +47,28 @@ export type TrustFact = TrustRecord & {
 export const contentMode = process.env.NEXT_PUBLIC_CONTENT_MODE === "production" ? "production" : "demo";
 export const isDemoContent = contentMode === "demo";
 
+// Gallery images and business facts stay "demo" until the client supplies real photos and
+// confirmed details. They are not required for a production build: the public getters below
+// hide anything not approved, and the gallery and service-area pages show a "being prepared"
+// state instead. Flip a record to "approved" (with real content) to publish it.
 const demoRecord = (id: string, sourceNote: string): TrustRecord => ({
   id,
   status: "demo",
   provenance: "generated-demo",
   rightsStatus: "not-for-launch",
   sourceNote,
+  requiredForProduction: false,
+});
+
+const approvedFaqRecord = (id: string, sourceNote: string): TrustRecord => ({
+  id,
+  status: "approved",
+  provenance: "staff-supplied",
+  rightsStatus: "approved",
+  sourceNote,
+  approvedBy: "codegiyu",
+  approvedAt: "2026-11-02",
+  lastReviewedAt: "2026-11-02",
   requiredForProduction: true,
 });
 
@@ -207,27 +223,27 @@ export const trustFacts: TrustFact[] = [
 
 export const trustFaqs: TrustFaq[] = [
   {
-    ...demoRecord("faq-request", "Messaging-first request flow agreed with the client on 2026-10-26; the form is the second option."),
+    ...approvedFaqRecord("faq-request", "Messaging-first request flow agreed with the client on 2026-10-26; the form is the second option."),
     question: "How do I request a cleaning?",
     answer: "Send us a message on WhatsApp or Instagram, or give us a call, and tell us what needs cleaning, where, and when suits you. Our customer experience team will take it from there and confirm availability and pricing. Prefer to write it down? You can also use the cleaning request form.",
   },
   {
-    ...demoRecord("faq-response", "Uses the shared response promises in src/content/response-expectation.ts."),
+    ...approvedFaqRecord("faq-response", "Uses the shared response promises in src/content/response-expectation.ts."),
     question: "How quickly will M&G Cleaning Services respond?",
     answer: `${messageResponseExpectation} on WhatsApp and Instagram. If you use the request form, ${formResponseExpectation.charAt(0).toLowerCase()}${formResponseExpectation.slice(1)}`,
   },
   {
-    ...demoRecord("faq-coverage", "Coverage is intentionally not claimed before MG confirms its service area."),
+    ...approvedFaqRecord("faq-coverage", "Coverage is intentionally not claimed before MG confirms its service area."),
     question: "Do you cover my area?",
     answer: "Tell us your area when you message us or in the request form, and M&G Cleaning Services will confirm whether the requested service is available there.",
   },
   {
-    ...demoRecord("faq-pricing", "Pricing is intentionally not invented in demo content."),
+    ...approvedFaqRecord("faq-pricing", "Pricing is intentionally not stated; it is confirmed per request."),
     question: "How is pricing confirmed?",
     answer: "Pricing depends on the requested service and space. M&G Cleaning Services will discuss the scope and pricing with you before confirming an appointment.",
   },
   {
-    ...demoRecord("faq-appointment", "Placeholder answer avoids inventing rescheduling or cancellation policy."),
+    ...approvedFaqRecord("faq-appointment", "The answer deliberately avoids stating a rescheduling or cancellation policy."),
     question: "Is sending a request an appointment confirmation?",
     answer: "No. A message or the form starts a cleaning request. A visit is only confirmed after M&G Cleaning Services and the customer agree the availability, timing, and pricing by phone or WhatsApp.",
   },
