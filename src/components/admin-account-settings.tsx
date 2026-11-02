@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { AdminPasswordInput } from "@/components/admin-password-input";
 import { callApi } from "@/lib/api/callApi";
 import type { AdminSession, SiteSettings } from "@/lib/api/endpoints";
 import { describeUserAgent } from "@/lib/admin/user-agent";
@@ -18,9 +19,19 @@ function FeedbackLine({ feedback }: { feedback: Feedback }) {
 }
 
 /** Inputs stay local and are cleared after every attempt; passwords are never stored anywhere in the browser. */
-export function AdminPasswordForm({ onChanged }: { onChanged: () => void }) {
+export function AdminPasswordForm({ onChanged, offerResetLink = false }: { onChanged: () => void; offerResetLink?: boolean }) {
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
+  const [sendingLink, setSendingLink] = useState(false);
+
+  /** For an admin who is signed in but has forgotten their current password. */
+  async function sendResetLink() {
+    setSendingLink(true);
+    setFeedback(null);
+    const result = await callApi("POST_ADMIN_SEND_PASSWORD_RESET_LINK");
+    setSendingLink(false);
+    setFeedback(result.type === "error" ? { kind: "error", message: result.message } : { kind: "success", message: result.message });
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -51,11 +62,14 @@ export function AdminPasswordForm({ onChanged }: { onChanged: () => void }) {
     <form className="admin-settings-card" onSubmit={(event) => void submit(event)}>
       <h2>Change password</h2>
       <p className="admin-settings-help">Changing your password signs out every other device.</p>
-      <label className="admin-field"><span>Current password</span><input name="currentPassword" type="password" autoComplete="current-password" required maxLength={200} /></label>
-      <label className="admin-field"><span>New password</span><input name="newPassword" type="password" autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} /><small className="admin-field-help">At least {MIN_PASSWORD_LENGTH} characters.</small></label>
-      <label className="admin-field"><span>Confirm new password</span><input name="confirmPassword" type="password" autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} /></label>
+      <label className="admin-field"><span>Current password</span><AdminPasswordInput name="currentPassword" autoComplete="current-password" required maxLength={200} /></label>
+      <label className="admin-field"><span>New password</span><AdminPasswordInput name="newPassword" autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} /><small className="admin-field-help">At least {MIN_PASSWORD_LENGTH} characters.</small></label>
+      <label className="admin-field"><span>Confirm new password</span><AdminPasswordInput name="confirmPassword" autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} /></label>
       <FeedbackLine feedback={feedback} />
       <div className="admin-save-row"><button className="admin-primary-button" type="submit" disabled={saving}>{saving ? "Changing…" : "Change password"}</button></div>
+      {offerResetLink && (
+        <p className="admin-settings-help">Forgot your current password? <button className="admin-text-button" type="button" disabled={sendingLink} onClick={() => void sendResetLink()}>{sendingLink ? "Sending…" : "Email me a reset link"}</button></p>
+      )}
     </form>
   );
 }

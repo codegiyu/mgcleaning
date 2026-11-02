@@ -10,7 +10,8 @@ test("an owner publishes a review and it appears on the home page", async ({ pag
 
   await page.goto("/admin/login");
   await page.getByLabel("Email address").fill(email!);
-  await page.getByLabel("Password").fill(password!);
+  // exact: the show/hide button is named "Show password".
+  await page.getByLabel("Password", { exact: true }).fill(password!);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 

@@ -32,10 +32,13 @@ export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | 
   return <svg {...common}><path d="m9 5 7 7-7 7" /></svg>;
 }
 
+const SIGNED_OUT_PAGES = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"];
+
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const loginPage = pathname === "/admin/login";
+  // Pages used while signed out: no session check and no dashboard chrome.
+  const loginPage = SIGNED_OUT_PAGES.includes(pathname);
   const [sessionState, setSessionState] = useState<"checking" | "ready">(loginPage ? "ready" : "checking");
   const [user, setUser] = useState<AdminIdentity | null>(null);
   const [sessionVersion, setSessionVersion] = useState(0);

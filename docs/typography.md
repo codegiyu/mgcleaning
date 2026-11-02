@@ -11,6 +11,19 @@ Two typefaces, each with a fixed set of roles, rendered through a few shared com
 
 Both fonts are self-hosted by `next/font`, with size-matched fallbacks, so every device renders the same faces without layout shift. `body` uses `--font-sans`; everything inherits it unless it is a display role. Do not write font stacks in component CSS. Use the tokens.
 
+## Text size scale
+
+Text sizes come from four tokens on `:root` in `src/app/globals.css`. Use them instead of writing pixel sizes for body-level text.
+
+| Token | Size | Use |
+|---|---|---|
+| `--text-label` | 12px | Only uppercase, letter-spaced labels: eyebrows, card labels, the header ribbon, footer column labels, table headers, status badges, image tags. Keep 12px rare. |
+| `--text-small` | 13px | Secondary text: form labels, links, navigation, captions, meta lines, admin tables and help text. |
+| `--text-body` | 14px | Reading text and buttons: card and section copy, FAQ answers, form notes, legal text, admin notes and messages. |
+| `--text-input` | 16px | Every input, select, and textarea, public and admin: below 16px, iPhones zoom the page when a field is focused. |
+
+Nothing renders below 12px. Headings and display text keep their own sizes (below).
+
 ## Roles and sizes
 
 | Role | Style | Class | Rendered by |
@@ -23,10 +36,10 @@ Both fonts are self-hosted by `next/font`, with size-matched fallbacks, so every
 | **Panel title** | Geist 600, 26px | `.panel-title`, `.form-title` | Side panels (contact, booking, service detail) and form cards |
 | **Card title** | Geist 600, 22px | `.card-title` | `InfoCard` |
 | **Image-card title** | Geist 600, 20px | `.service-card h3`, `.article-card h3` | `ServiceCard`, `ArticleCard` |
-| **Eyebrow and card label** | Geist 800, 12px, `.18em`, gold | `.eyebrow`, `.info-card-label` | `SectionHeading`, `PageIntro`, `InfoCard` |
-| **Section lead** | Geist 400, 13px, `--muted` | `.section-lead` | `SectionHeading` description |
-| **Card text** | Geist 400, 12px, `--muted` | `.card-text` | `InfoCard` body |
-| **Body and UI** | Geist (inherited) | — | Paragraphs, navigation, forms, footer, the whole admin |
+| **Eyebrow and card label** | Geist 800, `--text-label` (12px), `.18em`, gold | `.eyebrow`, `.info-card-label` | `SectionHeading`, `PageIntro`, `InfoCard` |
+| **Section lead** | Geist 400, `--text-body` (14px), `--muted` | `.section-lead` | `SectionHeading` description |
+| **Card text** | Geist 400, `--text-body` (14px), `--muted` | `.card-text` | `InfoCard` body |
+| **Body and UI** | Geist, sizes from the scale above | — | Paragraphs, navigation, forms, footer, the whole admin |
 
 ## Components (`src/components/site-ui.tsx`)
 

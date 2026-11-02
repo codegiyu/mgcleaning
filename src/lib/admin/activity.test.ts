@@ -41,6 +41,9 @@ test("describes account management without naming the account", () => {
   assert.equal(describeActivity({ action: "user.role_change", metadata: { roleFrom: "staff", roleTo: "owner" } }), "Changed an account from staff to owner");
   assert.equal(describeActivity({ action: "user.deactivate", metadata: { revokedSessions: 2 } }), "Deactivated an account and signed it out");
   assert.equal(describeActivity({ action: "user.password_reset", metadata: {} }), "Reset an account's password");
+  assert.equal(describeActivity({ action: "auth.password_reset", metadata: { method: "email_link", revokedSessions: 2 } }), "Reset their password from an emailed link");
+  assert.equal(describeActivity({ action: "auth.password_reset", metadata: {} }), "Password reset by an operator");
+  assert.equal(describeActivity({ action: "auth.password_reset_request", metadata: {} }), "Asked for a password reset link");
 });
 
 test("describes an enquiry deletion by its reference only", () => {
