@@ -12,6 +12,15 @@ See the [website and architecture plan](docs/website-and-architecture-plan.md) f
 
 The backend API defaults to `http://localhost:4000/api/v1`; set `NEXT_PUBLIC_API_BASE_URL` to change it.
 
+**Using the live API locally.** Pointing `NEXT_PUBLIC_API_BASE_URL` straight at a deployed API works for public pages and forms, but admin sign-in will not stick: the API's session cookie is `SameSite=Lax` on the API's own domain, and browsers do not send it on requests from `localhost`. Instead, let the dev server proxy the API:
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1
+API_PROXY_TARGET=https://mgcleaning-api.firefalltechnologies.ng
+```
+
+`next dev` then forwards `/api/v1/*` to that origin (`rewrites` in `next.config.ts`), so the browser only ever talks to `localhost` and the session cookie stays first-party. The API must list `http://localhost:3000` in `FRONTEND_ORIGINS`. Chrome, Edge, and Firefox accept the API's `Secure` cookie on `http://localhost`. Everything you do is real: enquiries, edits, and sign-ins reach production and its activity log. Production builds ignore `API_PROXY_TARGET`.
+
 ## Docker and Coolify
 
 The root `Dockerfile` builds a multi-stage production image using Next.js standalone output. The final image runs as the unprivileged `nextjs` user and listens on port `3100` (the server's `3000` is taken; override with the `PORT` runtime variable).
