@@ -22,7 +22,7 @@ Text sizes come from four tokens on `:root` in `src/app/globals.css`. Use them i
 | `--text-body` | 14px | Reading text and buttons: card and section copy, FAQ answers, form notes, legal text, admin notes and messages. |
 | `--text-input` | 16px | Every input, select, and textarea, public and admin: below 16px, iPhones zoom the page when a field is focused. |
 
-Nothing renders below 12px. Headings and display text keep their own sizes (below).
+Nothing renders below 12px. A bare `<small>` never drops below `--text-small` (browsers otherwise shrink it to 80%). Sentence-case text is never `--text-label`, even if it looks like a label: admin table headers, status badges, and summary titles use `--text-small`. Headings and display text keep their own sizes (below).
 
 ## Roles and sizes
 
