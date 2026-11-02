@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
+import { AdminPasswordInput } from "@/components/admin-password-input";
 import { AdminLoginBrand } from "@/components/admin-shell";
 import { callApi } from "@/lib/api/callApi";
 
@@ -53,7 +54,7 @@ export function AdminLoginForm() {
           </label>
           <label className="admin-field">
             <span>Password</span>
-            <input autoComplete="current-password" type="password" required maxLength={200} value={password} onChange={(event) => setPassword(event.target.value)} />
+            <AdminPasswordInput autoComplete="current-password" required maxLength={200} value={password} onChange={(event) => setPassword(event.target.value)} />
           </label>
           {error && <p className="admin-error" role="alert">{error}</p>}
           <button className="admin-primary-button" type="submit" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>

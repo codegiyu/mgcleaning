@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
+import { AdminPasswordInput } from "@/components/admin-password-input";
 import { AdminLoginBrand } from "@/components/admin-shell";
 import { callApi } from "@/lib/api/callApi";
 
@@ -113,11 +114,11 @@ export function AdminResetPasswordForm() {
         <form className="admin-form" onSubmit={submit}>
           <label className="admin-field">
             <span>New password</span>
-            <input autoComplete="new-password" type="password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} value={password} onChange={(event) => setPassword(event.target.value)} />
+            <AdminPasswordInput autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} value={password} onChange={(event) => setPassword(event.target.value)} />
           </label>
           <label className="admin-field">
             <span>Confirm new password</span>
-            <input autoComplete="new-password" type="password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
+            <AdminPasswordInput autoComplete="new-password" required minLength={MIN_PASSWORD_LENGTH} maxLength={200} value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
           </label>
           {error && (
             <p className="admin-error" role="alert">

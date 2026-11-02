@@ -549,6 +549,14 @@ main { flex:1; overflow-x:clip; }
 .admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus { border-color:#0b2858; box-shadow:0 0 0 2px #e6edf8; }
 .admin-field textarea { resize:vertical; line-height:1.55; }
 .admin-field textarea::placeholder,.admin-field input::placeholder { color:#909bad; }
+/* Password fields with a show/hide button (src/components/admin-password-input.tsx). */
+.admin-password-control { position:relative; display:block; }
+.admin-password-control input { padding-right:46px; }
+.admin-password-control input::-ms-reveal { display:none; }
+.admin-password-toggle { position:absolute; top:50%; right:4px; display:grid; place-items:center; width:38px; height:38px; transform:translateY(-50%); border:0; border-radius:3px; background:none; color:#51637e; cursor:pointer; }
+.admin-password-toggle:hover { background:#f0f3f8; color:#0b2858; }
+.admin-password-toggle:focus-visible { outline:2px solid #0b2858; outline-offset:-2px; }
+.admin-password-toggle svg { width:19px; height:19px; }
 .admin-save-row { display:flex; align-items:center; gap:14px; }
 .admin-primary-button,.admin-primary-link { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid #e5bc00; background:#f2c400; padding:0 16px; color:#172746; font-size:var(--text-small); font-weight:700; cursor:pointer; }
 .admin-primary-button:hover,.admin-primary-link:hover { background:#ffda26; }
