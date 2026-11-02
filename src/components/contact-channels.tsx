@@ -59,7 +59,8 @@ export function requestChannels(service?: string): RequestChannel[] {
 /**
  * The primary way to request a cleaning. `buttons` is the bold stack used before the
  * booking form and in panels; `inline` is a compact row under FAQ answers. Pass a
- * service title from the services manifest to name it in the WhatsApp message.
+ * service title from the services manifest to name it in the WhatsApp message. The
+ * messaging channels (WhatsApp and Instagram) are highlighted; a call is the plain option.
  */
 export function RequestChannels({ variant = "buttons", tone = "dark", service }: { variant?: "buttons" | "inline"; tone?: "dark" | "light"; service?: string }) {
   const channels = requestChannels(service);
@@ -78,9 +79,9 @@ export function RequestChannels({ variant = "buttons", tone = "dark", service }:
   }
   return (
     <ul className={"request-channels request-channels-" + tone}>
-      {channels.map((channel, index) => (
+      {channels.map((channel) => (
         <li key={channel.id}>
-          <a className={"request-channel" + (index === 0 ? " request-channel-primary" : "")} href={channel.href} {...(channel.external ? { target: "_blank", rel: "noreferrer" } : {})}>
+          <a className={"request-channel" + (channel.id === "phone" ? "" : " request-channel-primary")} href={channel.href} {...(channel.external ? { target: "_blank", rel: "noreferrer" } : {})}>
             <span className="request-channel-icon" aria-hidden="true">{channel.icon}</span>
             <span className="request-channel-text">
               <strong>{channel.label}</strong>
