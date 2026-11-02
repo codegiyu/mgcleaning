@@ -348,7 +348,8 @@ main { flex:1; overflow-x:clip; }
 .contact-info-block strong a { text-decoration:underline; text-decoration-color:#f2c400; text-underline-offset:4px; }
 .contact-info-block strong a + a { margin-left:10px; }
 .contact-info-block small { display:block; margin-top:4px; color:#b5c6ba; font-size:var(--text-small); }
-.contact-form { display:grid; gap:15px; border:1px solid var(--line); border-radius:22px; background:white; padding:28px; }
+/* align-content: when the form is stretched to a taller side panel, keep rows (and the button) at their natural height. */
+.contact-form { display:grid; align-content:start; gap:15px; border:1px solid var(--line); border-radius:22px; background:white; padding:28px; }
 .form-demo-note { margin:0 0 5px; color:var(--muted); font-size:var(--text-small); line-height:1.6; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .form-field { display:grid; gap:6px; }
