@@ -18,3 +18,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Owner-only admin features (Users, settings changes, deleting enquiries) are enforced by the API; the UI only hides them from staff.
 - Run `npm run test:e2e` against a local stack after changing forms, the admin review flow, or navigation.
 - Do not publish service, location, review, or certification claims until MG confirms them. Customer reviews come only from the admin dashboard (`/admin/reviews`), where MG confirms each customer's consent before publishing; never hard-code or generate review copy.
+- Gallery media comes only from the admin dashboard (`/admin/gallery`), where the editor confirms M&G owns each photo or video and anyone shown agreed. Never hard-code real gallery media in the repo; the images in `src/content/trust-content.ts` are demo-build placeholders only.

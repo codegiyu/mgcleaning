@@ -151,7 +151,7 @@ export type AdminSession = {
   current: boolean;
 };
 
-export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "review" | "site_settings";
+export type AuditEntityType = "admin_user" | "inquiry" | "blog_post" | "media_asset" | "review" | "gallery_item" | "site_settings";
 
 export type ReviewStatus = "draft" | "published";
 export type ReviewSource = "whatsapp" | "instagram" | "google" | "email" | "in_person" | "other";
@@ -197,6 +197,57 @@ export type ReviewPatch = Partial<ReviewInput> & { expectedUpdatedAt: string };
 
 export type ReviewCounts = { published: number; publishedThisYear: number; draft: number };
 
+export type GalleryItemType = "image" | "video";
+export type GalleryLayout = "featured" | "tall" | "standard" | "wide";
+export type GalleryItemStatus = "draft" | "published";
+
+/** A gallery photo or video as the dashboard sees it. Only published rows with confirmed rights reach the site. */
+export type AdminGalleryItem = {
+  id: string;
+  /** Set by the API from the uploaded file. */
+  type: GalleryItemType;
+  mediaId: string;
+  posterMediaId: string | null;
+  altText: string;
+  caption: string | null;
+  serviceSlug: string | null;
+  tags: string[];
+  layout: GalleryLayout;
+  /** Ascending display order. */
+  position: number;
+  status: GalleryItemStatus;
+  rightsConfirmedAt: string | null;
+  rightsConfirmedBy: string | null;
+  publishedAt: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  mediaUrl: string;
+  mediaContentType: string;
+  posterUrl: string | null;
+};
+
+export type GalleryItemInput = {
+  /** A verified `gallery` upload; one upload backs at most one item. */
+  mediaId: string;
+  altText: string;
+  caption?: string | null;
+  serviceSlug?: string | null;
+  tags?: string[];
+  layout?: GalleryLayout;
+  status?: GalleryItemStatus;
+  /** Videos only: a verified `gallery` image shown before playback; required to publish a video. */
+  posterMediaId?: string | null;
+  /** The editor confirms M&G owns the media and anyone shown agreed; required to publish. */
+  rightsConfirmed?: boolean;
+};
+
+/** `expectedUpdatedAt` is the `updatedAt` the edit started from; a newer row returns 409. The file itself cannot change. */
+export type GalleryItemPatch = Partial<Omit<GalleryItemInput, "mediaId">> & { expectedUpdatedAt: string };
+
+export type GalleryCounts = { published: number; draft: number };
+
 export type ChannelClickSummary = {
   days: number;
   total: number;
@@ -224,7 +275,8 @@ export type SiteSettings = {
   updatedAt: string | null;
 };
 
-export type MediaIntent = "blog-cover";
+/** `gallery` also takes MP4 and WebM video; article covers are images only. */
+export type MediaIntent = "blog-cover" | "gallery";
 
 export type MediaAsset = {
   id: string;
@@ -309,6 +361,7 @@ export interface AllEndpoints {
   PATCH_ADMIN_BLOG_POST: EndpointDefinition<BlogPostPatch, BlogPost>;
   POST_ADMIN_MEDIA_UPLOAD: EndpointDefinition<MediaUploadRequest, MediaUploadTicket>;
   POST_ADMIN_MEDIA_VERIFY: EndpointDefinition<undefined, MediaAsset>;
+  /** Newest first; pass `intent` to list one kind, e.g. article covers only. */
   GET_ADMIN_MEDIA: EndpointDefinition<undefined, Paginated<MediaAsset>>;
   PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
   DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;
@@ -328,6 +381,15 @@ export interface AllEndpoints {
   PATCH_ADMIN_REVIEW: EndpointDefinition<ReviewPatch, AdminReview>;
   /** Pass `expectedUpdatedAt` as a query parameter. */
   DELETE_ADMIN_REVIEW: EndpointDefinition<undefined, { deleted: true }>;
+  /** The whole gallery in display order (no paging; capped at `limit`). Filter with `?status=`. */
+  GET_ADMIN_GALLERY: EndpointDefinition<undefined, { items: AdminGalleryItem[]; counts: GalleryCounts; limit: number }>;
+  GET_ADMIN_GALLERY_ITEM: EndpointDefinition<undefined, AdminGalleryItem>;
+  POST_ADMIN_GALLERY_ITEM: EndpointDefinition<GalleryItemInput, AdminGalleryItem>;
+  PATCH_ADMIN_GALLERY_ITEM: EndpointDefinition<GalleryItemPatch, AdminGalleryItem>;
+  /** Every current item id, top first; a stale list returns 409. */
+  PUT_ADMIN_GALLERY_ORDER: EndpointDefinition<{ ids: string[] }, { items: AdminGalleryItem[] }>;
+  /** Pass `expectedUpdatedAt` as a query parameter. Any admin may delete; the item's files go with it. */
+  DELETE_ADMIN_GALLERY_ITEM: EndpointDefinition<undefined, { deleted: true }>;
   /** Owners only: permanent, for a customer's deletion request. */
   DELETE_ADMIN_INQUIRY: EndpointDefinition<undefined, { deleted: true }>;
   GET_ADMIN_USERS: EndpointDefinition<undefined, AdminAccount[]>;
@@ -413,6 +475,24 @@ export const ENDPOINTS = {
   },
   DELETE_ADMIN_REVIEW: {
     path: "/admin/reviews/:id",
+    method: "DELETE",
+    pathParams: ["id"],
+  },
+  GET_ADMIN_GALLERY: { path: "/admin/gallery", method: "GET" },
+  GET_ADMIN_GALLERY_ITEM: {
+    path: "/admin/gallery/:id",
+    method: "GET",
+    pathParams: ["id"],
+  },
+  POST_ADMIN_GALLERY_ITEM: { path: "/admin/gallery", method: "POST" },
+  PATCH_ADMIN_GALLERY_ITEM: {
+    path: "/admin/gallery/:id",
+    method: "PATCH",
+    pathParams: ["id"],
+  },
+  PUT_ADMIN_GALLERY_ORDER: { path: "/admin/gallery/order", method: "PUT" },
+  DELETE_ADMIN_GALLERY_ITEM: {
+    path: "/admin/gallery/:id",
     method: "DELETE",
     pathParams: ["id"],
   },

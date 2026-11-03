@@ -65,6 +65,12 @@ export function describeActivity({ action, metadata }: ActivityEvent): string {
     case "review.publish": return "Published a review";
     case "review.unpublish": return "Unpublished a review";
     case "review.delete": return metadata.statusFrom === "published" ? "Deleted a published review" : "Deleted a draft review";
+    case "gallery.create": return metadata.type === "video" ? "Added a gallery video as a draft" : "Added a gallery photo as a draft";
+    case "gallery.update": return "Edited a gallery item";
+    case "gallery.publish": return "Published a gallery item";
+    case "gallery.unpublish": return "Unpublished a gallery item";
+    case "gallery.reorder": return `Reordered the gallery (${plural(count(metadata.count), "item")})`;
+    case "gallery.delete": return metadata.statusFrom === "published" ? "Deleted a published gallery item" : "Deleted a draft gallery item";
     case "inquiry.delete": return `Deleted enquiry ${text(metadata.reference) || ""}`.trim();
     case "user.create": return metadata.role === "owner" ? "Added an owner account" : "Added a staff account";
     case "user.role_change": return `Changed an account from ${roleName(metadata.roleFrom)} to ${roleName(metadata.roleTo)}`;

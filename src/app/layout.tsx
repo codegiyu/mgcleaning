@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Newsreader } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { JsonLd } from "@/components/seo/json-ld";
 import { contentMode } from "@/content/trust-content";
 import { absoluteUrl, DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, getSiteUrl, graphJsonLd, localBusinessJsonLd, websiteJsonLd } from "@/lib/seo/site-seo";
@@ -57,7 +58,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${newsreader.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col"><JsonLd data={globalStructuredData} />{children}</body>
+      <body className="min-h-full flex flex-col">
+        {/* Progress bar for in-app link navigation; brand yellow, matching --yellow in globals.css. */}
+        <NextTopLoader color="#f2c400" height={3} showSpinner={false} shadow="0 0 10px #f2c400,0 0 5px #f2c400" />
+        <JsonLd data={globalStructuredData} />{children}
+      </body>
     </html>
   );
 }

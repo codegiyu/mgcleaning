@@ -2,37 +2,15 @@ import "client-only";
 
 import { callApi } from "@/lib/api/callApi";
 import type { MediaAsset, MediaIntent } from "@/lib/api/endpoints";
+import { fileExtension, validateMediaFile } from "@/lib/media/media-rules";
 
-/** Mirrors the backend default `MEDIA_MAX_UPLOAD_BYTES`; the server enforces the real limit. */
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-export const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp";
-
-const EXTENSION_BY_TYPE: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+export { ACCEPTED_IMAGE_TYPES } from "@/lib/media/media-rules";
 
 export class ImageUploadError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "ImageUploadError";
   }
-}
-
-function fileExtension(file: File) {
-  const fromType = EXTENSION_BY_TYPE[file.type];
-  if (fromType) return fromType;
-  const fromName = file.name.split(".").pop()?.toLowerCase();
-  return fromName && fromName !== file.name.toLowerCase() ? fromName : "";
-}
-
-/** Quick client-side check for a clear message; the API repeats every check. */
-export function validateImageFile(file: File): string | null {
-  if (!EXTENSION_BY_TYPE[file.type]) return "Choose a JPG, PNG, or WebP image.";
-  if (file.size === 0) return "That file is empty.";
-  if (file.size > MAX_IMAGE_BYTES) return `Images must be ${MAX_IMAGE_BYTES / (1024 * 1024)} MB or smaller.`;
-  return null;
 }
 
 /**
@@ -55,7 +33,7 @@ function putFile(
     };
     request.onload = () => {
       if (request.status >= 200 && request.status < 300) resolve();
-      else reject(new ImageUploadError("The image could not be stored. Please try again."));
+      else reject(new ImageUploadError("The file could not be stored. Please try again."));
     };
     request.onerror = () => reject(new ImageUploadError("The upload was interrupted. Check your connection and try again."));
     request.onabort = () => reject(new DOMException("Upload cancelled.", "AbortError"));
@@ -64,11 +42,12 @@ function putFile(
   });
 }
 
-export async function uploadImage(
+/** Request a signed URL, put the file straight into storage, then have the API verify it. Gallery uploads may be video. */
+export async function uploadMedia(
   file: File,
   options: { intent: MediaIntent; altText?: string; onProgress?: (fraction: number) => void; signal?: AbortSignal },
 ): Promise<MediaAsset> {
-  const invalid = validateImageFile(file);
+  const invalid = validateMediaFile(file, options.intent);
   if (invalid) throw new ImageUploadError(invalid);
 
   const ticket = await callApi("POST_ADMIN_MEDIA_UPLOAD", {
