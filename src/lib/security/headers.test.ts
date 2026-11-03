@@ -12,10 +12,11 @@ const production: SecurityHeaderOptions = {
 
 const directive = (policy: string, name: string) => policy.split("; ").find((part) => part.startsWith(`${name} `));
 
-test("production locks the page to the site, the API, and the media host", () => {
+test("production locks the page to the site, the API, R2 uploads, and the media host", () => {
   const policy = contentSecurityPolicy(production);
-  assert.equal(directive(policy, "connect-src"), "connect-src 'self' https://api.mgcleaning.example");
+  assert.equal(directive(policy, "connect-src"), "connect-src 'self' https://api.mgcleaning.example https://*.r2.cloudflarestorage.com");
   assert.equal(directive(policy, "img-src"), "img-src 'self' data: blob: https://media.mgcleaning.example");
+  assert.equal(directive(policy, "media-src"), "media-src 'self' blob: https://media.mgcleaning.example");
   assert.equal(directive(policy, "frame-ancestors"), "frame-ancestors 'none'");
   assert.equal(directive(policy, "object-src"), "object-src 'none'");
   assert.equal(directive(policy, "frame-src"), "frame-src 'none'");
@@ -34,7 +35,7 @@ test("a local http site gets no HSTS and no request upgrading", () => {
   const local = { ...production, siteUrl: "http://localhost:3000", apiBaseUrl: "http://localhost:4000/api/v1", mediaBaseUrl: undefined };
   assert.ok(!securityHeaders(local).some((header) => header.key === "Strict-Transport-Security"));
   assert.ok(!contentSecurityPolicy(local).includes("upgrade-insecure-requests"));
-  assert.equal(directive(contentSecurityPolicy(local), "connect-src"), "connect-src 'self' http://localhost:4000");
+  assert.equal(directive(contentSecurityPolicy(local), "connect-src"), "connect-src 'self' http://localhost:4000 https://*.r2.cloudflarestorage.com");
 });
 
 test("Turnstile and dev tooling are allowed only when switched on", () => {
@@ -47,5 +48,5 @@ test("Turnstile and dev tooling are allowed only when switched on", () => {
 });
 
 test("a malformed URL is left out rather than breaking the policy", () => {
-  assert.equal(directive(contentSecurityPolicy({ ...production, apiBaseUrl: "not a url", mediaBaseUrl: "::" }), "connect-src"), "connect-src 'self'");
+  assert.equal(directive(contentSecurityPolicy({ ...production, apiBaseUrl: "not a url", mediaBaseUrl: "::" }), "connect-src"), "connect-src 'self' https://*.r2.cloudflarestorage.com");
 });
