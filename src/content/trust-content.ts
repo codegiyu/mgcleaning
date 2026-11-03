@@ -47,10 +47,14 @@ export type TrustFact = TrustRecord & {
 export const contentMode = process.env.NEXT_PUBLIC_CONTENT_MODE === "production" ? "production" : "demo";
 export const isDemoContent = contentMode === "demo";
 
-// Gallery images and business facts stay "demo" until the client supplies real photos and
-// confirmed details. They are not required for a production build: the public getters below
-// hide anything not approved, and the gallery and service-area pages show a "being prepared"
-// state instead. Flip a record to "approved" (with real content) to publish it.
+// Business facts stay "demo" until the client supplies confirmed details. They are not
+// required for a production build: the public getters below hide anything not approved, and
+// the service-area page shows a "being prepared" state instead. Flip a record to "approved"
+// (with real content) to publish it.
+//
+// The gallery images here are placeholders for demo builds only. Real gallery media is
+// uploaded and published from the admin dashboard (`/admin/gallery`), which records the
+// rights confirmation for each item; production builds never show these.
 const demoRecord = (id: string, sourceNote: string): TrustRecord => ({
   id,
   status: "demo",
@@ -249,10 +253,9 @@ export const trustFaqs: TrustFaq[] = [
   },
 ];
 
-export function getPublicGallery() {
-  return isDemoContent
-    ? trustGallery
-    : trustGallery.filter((item) => item.status === "approved" && item.provenance !== "generated-demo" && item.rightsStatus === "approved");
+/** Placeholder tiles while nothing is published; always empty in production builds. */
+export function getGalleryPlaceholders() {
+  return isDemoContent ? trustGallery : [];
 }
 
 export function getPublicFaqs() {

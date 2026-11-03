@@ -1,5 +1,5 @@
 import type { GalleryItem } from "@/components/gallery-lightbox";
-import { contentMode, getPublicGallery } from "@/content/trust-content";
+import { contentMode, getGalleryPlaceholders } from "@/content/trust-content";
 import { GALLERY_CACHE_SECONDS, GALLERY_TAG } from "@/lib/cache/gallery-tags";
 import { API_BASE_URL } from "@/lib/env/api-base-url";
 import { isRenderableImageUrl } from "@/lib/media/media-url";
@@ -22,5 +22,5 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
   } catch (error) {
     console.error("Published gallery is unavailable.", error instanceof Error ? error.message : error);
   }
-  return chooseGalleryItems(published, contentMode, getPublicGallery());
+  return chooseGalleryItems(published, contentMode, getGalleryPlaceholders());
 }
