@@ -491,7 +491,8 @@ main { flex:1; overflow-x:clip; }
 .admin-tab-active { border-bottom-color:#f2c400; color:#0b2858; font-weight:700; }
 .admin-inquiry-workspace { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(310px,.9fr); border-bottom:1px solid #e3e6ed; }
 .admin-inquiry-table-wrap { min-width:0; padding:22px 18px 16px 0; }
-.admin-table-scroll { width:100%; overflow-x:auto; }
+/* Positioned so absolutely placed children (visually hidden headings) scroll with the table instead of widening the page. */
+.admin-table-scroll { position:relative; width:100%; overflow-x:auto; }
 .admin-table { width:100%; border-collapse:collapse; font-size:var(--text-small); text-align:left; }
 .admin-table th { height:46px; background:#f8f9fb; color:#637088; font-size:var(--text-small); font-weight:700; }
 .admin-table th,.admin-table td { border-bottom:1px solid #e5e8ee; padding:8px 12px; white-space:nowrap; }
@@ -664,7 +665,7 @@ main { flex:1; overflow-x:clip; }
 .admin-editor-main { display:grid; align-content:start; gap:15px; border-right:1px solid #e3e6ed; padding:27px clamp(25px,3vw,48px); }
 .admin-editor-title input { min-height:47px; font-size:17px; font-weight:600; }
 .admin-field-help,.admin-character-count { color:#8995a7; font-size:var(--text-small); font-weight:400; }
-.admin-character-count { justify-self:end; margin-top:-5px; }
+.admin-character-count { justify-self:end; }
 .admin-editor-toolbar { min-height:42px; display:flex; align-items:center; gap:7px; border:1px solid #d3dbe7; border-bottom:0; background:#f7f8fa; padding:5px 7px; }
 .admin-editor-toolbar span { margin-right:auto; color:#68748a; font-size:var(--text-small); font-weight:400; }
 .admin-editor-toolbar button { min-width:34px; min-height:30px; border:1px solid #dbe1ea; background:white; padding:0 7px; color:#2b3c59; font-size:var(--text-small); cursor:pointer; }
@@ -679,7 +680,8 @@ main { flex:1; overflow-x:clip; }
 .admin-search-preview strong { color:#1559a0; font-size:15px; font-weight:500; line-height:1.35; }
 .admin-search-preview p { margin:0; color:#596a85; font-size:var(--text-body); line-height:1.55; }
 .admin-field em { color:#8995a7; font-style:normal; font-weight:400; }
-.admin-form-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0 14px; }
+/* The row owns the spacing its fields would have had: between them when they stack, and after the row. */
+.admin-form-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px 14px; margin-bottom:15px; }
 .admin-form-row .admin-field { margin:0; }
 .admin-checkbox { display:flex; align-items:flex-start; gap:11px; color:#3c4c67; font-size:var(--text-small); cursor:pointer; }
 .admin-checkbox input { width:17px; height:17px; flex-shrink:0; margin:1px 0 0; accent-color:#0b2858; }
