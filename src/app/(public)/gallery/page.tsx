@@ -1,6 +1,6 @@
 import { PageCTA, PageIntro } from "@/components/site-ui";
-import { getPublicGallery } from "@/content/trust-content";
-import { GalleryLightbox, type GalleryItem } from "@/components/gallery-lightbox";
+import { GalleryLightbox } from "@/components/gallery-lightbox";
+import { getGalleryItems } from "@/lib/gallery/public-gallery";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
@@ -8,8 +8,8 @@ import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "Gallery", path: "/gallery" }];
 export const metadata = buildPageMetadata({ title: "Gallery", description: "Explore the M&G Cleaning gallery and the visual work this site is prepared to present.", path: "/gallery" });
 
-export default function GalleryPage() {
-  const galleryItems: GalleryItem[] = getPublicGallery();
+export default async function GalleryPage() {
+  const galleryItems = await getGalleryItems();
 
   return (
     <div className="section-shell">
