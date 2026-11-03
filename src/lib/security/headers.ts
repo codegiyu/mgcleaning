@@ -16,6 +16,12 @@ export type SecurityHeaderOptions = {
 };
 
 const TURNSTILE_ORIGIN = "https://challenges.cloudflare.com";
+/**
+ * Admin uploads `PUT` straight to R2's S3 endpoint (`<bucket>.<account>.r2.cloudflarestorage.com`)
+ * with a presigned URL. The account id is not a website setting, so the policy allows any R2
+ * endpoint; uploads still need a URL signed by the API.
+ */
+const R2_UPLOAD_ORIGIN = "https://*.r2.cloudflarestorage.com";
 
 function originOf(url: string | undefined) {
   if (!url) return null;
@@ -36,9 +42,11 @@ export function contentSecurityPolicy(options: SecurityHeaderOptions) {
     "script-src": ["'self'", "'unsafe-inline'", ...(options.isDev ? ["'unsafe-eval'"] : []), ...turnstile],
     "style-src": ["'self'", "'unsafe-inline'"],
     "img-src": ["'self'", "data:", "blob:", ...(media ? [media] : [])],
+    // Gallery videos play from the media host; `blob:` lets the admin read a picked clip's length and frames.
+    "media-src": ["'self'", "blob:", ...(media ? [media] : [])],
     "font-src": ["'self'"],
-    // The browser calls the API directly (forms, admin, tap beacons); dev adds the HMR socket.
-    "connect-src": ["'self'", ...(api ? [api] : []), ...(options.isDev ? ["ws:"] : [])],
+    // The browser calls the API directly (forms, admin, tap beacons) and uploads media to R2; dev adds the HMR socket.
+    "connect-src": ["'self'", ...(api ? [api] : []), R2_UPLOAD_ORIGIN, ...(options.isDev ? ["ws:"] : [])],
     "frame-src": turnstile.length ? turnstile : ["'none'"],
     "frame-ancestors": ["'none'"],
     "object-src": ["'none'"],
