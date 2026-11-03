@@ -12,6 +12,15 @@ See the [website and architecture plan](docs/website-and-architecture-plan.md) f
 
 The backend API defaults to `http://localhost:4000/api/v1`; set `NEXT_PUBLIC_API_BASE_URL` to change it.
 
+**Using the live API locally.** Pointing `NEXT_PUBLIC_API_BASE_URL` straight at a deployed API works for public pages and forms, but admin sign-in will not stick: the API's session cookie is `SameSite=Lax` on the API's own domain, and browsers do not send it on requests from `localhost`. Instead, let the dev server proxy the API:
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1
+API_PROXY_TARGET=https://mgcleaning-api.firefalltechnologies.ng
+```
+
+`next dev` then forwards `/api/v1/*` to that origin (`rewrites` in `next.config.ts`), so the browser only ever talks to `localhost` and the session cookie stays first-party. The API must list `http://localhost:3000` in `FRONTEND_ORIGINS`. Chrome, Edge, and Firefox accept the API's `Secure` cookie on `http://localhost`. Everything you do is real: enquiries, edits, and sign-ins reach production and its activity log. Production builds ignore `API_PROXY_TARGET`.
+
 ## Docker and Coolify
 
 The root `Dockerfile` builds a multi-stage production image using Next.js standalone output. The final image runs as the unprivileged `nextjs` user and listens on port `3100` (the server's `3000` is taken; override with the `PORT` runtime variable).
@@ -102,4 +111,4 @@ The launch replacement checklist is maintained in [`docs/trust-content-evidence-
 
 The recommended blog cadence and publication checklist are in [`docs/editorial-calendar.md`](docs/editorial-calendar.md).
 
-To create the first admin, configure `BOOTSTRAP_ADMIN_EMAIL` and `BOOTSTRAP_ADMIN_PASSWORD` in the backend `.env`, run the backend migrations, and execute `npm run admin:bootstrap` from `mgcleaning-backend`. Use a unique password of at least 12 characters and remove it from the environment after bootstrapping. The first account is an owner; add staff from **Admin → Users**. Before public launch, run the staging smoke test and recovery procedures in the backend runbook, and replace the clearly labeled sample content with MG-approved copy (the production build refuses to run until it is approved).
+To create the first admin, configure `BOOTSTRAP_ADMIN_EMAIL` and `BOOTSTRAP_ADMIN_PASSWORD` in the backend `.env`, run the backend migrations, and start the API: it creates any missing owner accounts on start (`npm run admin:bootstrap` in `mgcleaning-backend` does the same by hand). Use a unique password of at least 12 characters and remove it from the environment after bootstrapping. The first account is an owner; add staff from **Admin → Users**. Before public launch, run the staging smoke test and recovery procedures in the backend runbook, and replace the clearly labeled sample content with MG-approved copy (the production build refuses to run until it is approved).

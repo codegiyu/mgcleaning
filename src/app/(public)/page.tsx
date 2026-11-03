@@ -50,6 +50,10 @@ export default async function HomePage() {
         <SectionHeading eyebrow="WHY M&G" title={<>A professional service,<br />built around you.</>} description="We combine clear communication, thoughtful planning, and careful execution to deliver a cleaning experience tailored to each space." />
         <div className="why-mg-grid">{whyMgReasons.map((reason, index) => <InfoCard key={reason.title} variant="panel" label={sequenceLabel(index)} title={reason.title}>{reason.description}</InfoCard>)}</div>
       </section>
+      {/*
+        "Clear from the start" is hidden for now: the home page read as too much copy, especially
+        on phones. Its FAQ preview moved to its own section below the reviews. To restore, remove
+        this comment wrapper.
       <section className="section section-shell trust-evidence-section">
         <SectionHeading
           eyebrow="CLEAR FROM THE START"
@@ -62,23 +66,8 @@ export default async function HomePage() {
           <InfoCard label="CLEAR SCOPE" title="Know what to expect." href="/services" linkLabel="Explore services">The service scope, availability, and pricing are confirmed with you before the team gets to work.</InfoCard>
           <InfoCard label="24-HOUR FOLLOW-UP" title="Care continues after the clean." href="/faq" linkLabel="Read the FAQs">We check in within 24 hours of your service to make sure you are satisfied with the result.</InfoCard>
         </div>
-        <div className="faq-preview">
-          <SectionHeading as="h3" size="subsection" eyebrow="QUICK ANSWERS" title="Before you send a request." action={{ href: "/faq", label: "All FAQs" }} />
-          <div className="faq-preview-grid">{getPublicFaqs().slice(0, 3).map((faq) => <InfoCard key={faq.id} element="div" titleAs="h4" title={faq.question}>{faq.answer}</InfoCard>)}</div>
-          <RequestChannels variant="inline" />
-        </div>
       </section>
-      {shownReviews.length > 0 && (
-        <section className="section section-shell section-flush">
-          <SectionHeading
-            eyebrow="WHAT CLIENTS SAY"
-            title="In their own words."
-            description="Reviews shared by M&G Cleaning Services customers, published with their permission."
-            action={reviews.length > shownReviews.length ? { href: "/reviews", label: `Read all ${reviews.length} reviews` } : { href: "/reviews", label: "See all reviews" }}
-          />
-          <ReviewSlideshow reviews={shownReviews} />
-        </section>
-      )}
+      */}
       <section className="section section-shell">
         <SectionHeading
           eyebrow="PROFESSIONAL CLEANING SOLUTIONS"
@@ -100,6 +89,29 @@ export default async function HomePage() {
             action={{ href: "/about", label: "See how we work" }}
           />
         </div>
+      </section>
+      {shownReviews.length > 0 && (
+        <section className="section section-shell section-flush">
+          <SectionHeading
+            eyebrow="WHAT CLIENTS SAY"
+            title="In their own words."
+            description="Reviews shared by M&G Cleaning Services customers, published with their permission."
+            action={reviews.length > shownReviews.length ? { href: "/reviews", label: `Read all ${reviews.length} reviews` } : { href: "/reviews", label: "See all reviews" }}
+          />
+          <ReviewSlideshow reviews={shownReviews} />
+        </section>
+      )}
+      <section className="section section-shell home-faqs">
+        <SectionHeading eyebrow="QUICK ANSWERS" title="Before you send a request." action={{ href: "/faq", label: "All FAQs" }} />
+        <div className="faq-list home-faq-list">
+          {getPublicFaqs().slice(0, 3).map((faq) => (
+            <details className="faq-item" key={faq.id}>
+              <summary>{faq.question}<span aria-hidden="true">+</span></summary>
+              <p>{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+        <RequestChannels variant="inline" />
       </section>
       <section className="section journal-section"><div className="section-shell">
         <SectionHeading

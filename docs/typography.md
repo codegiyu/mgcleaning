@@ -22,7 +22,7 @@ Text sizes come from four tokens on `:root` in `src/app/globals.css`. Use them i
 | `--text-body` | 14px | Reading text and buttons: card and section copy, FAQ answers, form notes, legal text, admin notes and messages. |
 | `--text-input` | 16px | Every input, select, and textarea, public and admin: below 16px, iPhones zoom the page when a field is focused. |
 
-Nothing renders below 12px. Headings and display text keep their own sizes (below).
+Nothing renders below 12px. A bare `<small>` never drops below `--text-small` (browsers otherwise shrink it to 80%). Sentence-case text is never `--text-label`, even if it looks like a label: admin table headers, status badges, and summary titles use `--text-small`. Headings and display text keep their own sizes (below).
 
 ## Roles and sizes
 
@@ -36,6 +36,7 @@ Nothing renders below 12px. Headings and display text keep their own sizes (belo
 | **Panel title** | Geist 600, 26px | `.panel-title`, `.form-title` | Side panels (contact, booking, service detail) and form cards |
 | **Card title** | Geist 600, 22px | `.card-title` | `InfoCard` |
 | **Image-card title** | Geist 600, 20px | `.service-card h3`, `.article-card h3` | `ServiceCard`, `ArticleCard` |
+| **FAQ question** | Geist 600, 18px (17px on phones), with a gold + that turns to × | `.faq-item summary` | The `/faq` accordion (820px reading width) and the home page Quick answers (full section width) |
 | **Eyebrow and card label** | Geist 800, `--text-label` (12px), `.18em`, gold | `.eyebrow`, `.info-card-label` | `SectionHeading`, `PageIntro`, `InfoCard` |
 | **Section lead** | Geist 400, `--text-body` (14px), `--muted` | `.section-lead` | `SectionHeading` description |
 | **Card text** | Geist 400, `--text-body` (14px), `--muted` | `.card-text` | `InfoCard` body |

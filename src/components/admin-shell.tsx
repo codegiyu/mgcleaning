@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AdminPasswordForm } from "@/components/admin-account-settings";
 import { callApi } from "@/lib/api/callApi";
 import type { AdminIdentity } from "@/lib/api/endpoints";
@@ -18,7 +18,7 @@ const navigation = [
   { href: "/admin/users", label: "Users", icon: "users", ownerOnly: true },
 ] as const;
 
-export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "reviews" | "activity" | "settings" | "users" | "logout" | "search" | "chevron" }) {
+export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | "reviews" | "activity" | "settings" | "users" | "logout" | "search" | "chevron" | "menu" | "close" | "website" }) {
   const common = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
   if (name === "overview") return <svg {...common}><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" /></svg>;
   if (name === "inquiries") return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="m4 7 8 6 8-6" /></svg>;
@@ -28,11 +28,23 @@ export function AdminIcon({ name }: { name: "overview" | "inquiries" | "blog" | 
   if (name === "settings") return <svg {...common}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>;
   if (name === "users") return <svg {...common}><circle cx="9" cy="8" r="3.2" /><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.2a3 3 0 0 1 0 5.6M18 19a5 5 0 0 0-2.6-4.4" /></svg>;
   if (name === "logout") return <svg {...common}><path d="M10 4H5v16h5m4-4 4-4-4-4m4 4H9" /></svg>;
+  if (name === "menu") return <svg {...common}><path d="M4 7h16M4 12h16M4 17h16" /></svg>;
+  if (name === "close") return <svg {...common}><path d="m6 6 12 12M18 6 6 18" /></svg>;
+  if (name === "website") return <svg {...common}><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>;
   if (name === "search") return <svg {...common}><circle cx="10.8" cy="10.8" r="6.5" /><path d="m16 16 4 4" /></svg>;
   return <svg {...common}><path d="m9 5 7 7-7 7" /></svg>;
 }
 
 const SIGNED_OUT_PAGES = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"];
+
+/** Matches the CSS breakpoint where the sidebar becomes a drawer. */
+const DRAWER_QUERY = "(max-width: 760px)";
+const subscribeToDrawerQuery = (onChange: () => void) => {
+  const query = window.matchMedia(DRAWER_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const readDrawerQuery = () => window.matchMedia(DRAWER_QUERY).matches;
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -43,6 +55,29 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AdminIdentity | null>(null);
   const [sessionVersion, setSessionVersion] = useState(0);
   const [signingOut, setSigningOut] = useState(false);
+  // On phones the sidebar is a drawer from the left, opened from the top bar's menu button.
+  const drawerLayout = useSyncExternalStore(subscribeToDrawerQuery, readDrawerQuery, () => false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const drawerVisible = drawerLayout && drawerOpen;
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // While the drawer is open: Escape closes it, the page behind does not scroll, and focus
+  // moves into it (and back to the menu button when it closes).
+  useEffect(() => {
+    if (!drawerVisible) return;
+    const menuButton = menuButtonRef.current;
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setDrawerOpen(false); };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKeyDown);
+    closeButtonRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      menuButton?.focus();
+    };
+  }, [drawerVisible]);
 
   useEffect(() => {
     if (loginPage) return;
@@ -74,23 +109,43 @@ export function AdminShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="admin-shell">
-      <aside className="admin-sidebar">
+    <div className={drawerVisible ? "admin-shell admin-drawer-open" : "admin-shell"}>
+      <header className="admin-mobile-bar">
         <Link className="admin-brand" href="/admin" aria-label="M&G Cleaning admin home">
-          <Image
-            className="admin-brand-logo"
-            src="/mg-cleaning-logo.svg"
-            alt=""
-            width={305}
-            height={136}
-            priority
-          />
+          <Image className="admin-brand-logo" src="/mg-cleaning-logo.svg" alt="" width={305} height={136} priority />
         </Link>
+        <button ref={menuButtonRef} className="admin-menu-button" type="button" aria-label="Open menu" aria-expanded={drawerVisible} aria-controls="admin-sidebar" onClick={() => setDrawerOpen(true)}>
+          <AdminIcon name="menu" />
+        </button>
+      </header>
+      {drawerVisible && <div className="admin-drawer-backdrop" aria-hidden="true" onClick={() => setDrawerOpen(false)} />}
+      <aside
+        id="admin-sidebar"
+        className="admin-sidebar"
+        // A closed drawer is off-screen: inert keeps its links out of the tab order.
+        inert={drawerLayout && !drawerOpen}
+        {...(drawerVisible ? { role: "dialog", "aria-modal": true, "aria-label": "Admin menu" } : {})}
+      >
+        <div className="admin-sidebar-top">
+          <Link className="admin-brand" href="/admin" aria-label="M&G Cleaning admin home" onClick={() => setDrawerOpen(false)}>
+            <Image
+              className="admin-brand-logo"
+              src="/mg-cleaning-logo.svg"
+              alt=""
+              width={305}
+              height={136}
+              priority
+            />
+          </Link>
+          <button ref={closeButtonRef} className="admin-drawer-close" type="button" aria-label="Close menu" onClick={() => setDrawerOpen(false)}>
+            <AdminIcon name="close" />
+          </button>
+        </div>
         <nav className="admin-nav" aria-label="Admin navigation">
           {navigation.filter((item) => !("ownerOnly" in item) || user?.role === "owner").map((item) => {
             const active = item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
             return (
-              <Link key={item.href} href={item.href} className={active ? "admin-nav-link admin-nav-active" : "admin-nav-link"} aria-current={active ? "page" : undefined}>
+              <Link key={item.href} href={item.href} className={active ? "admin-nav-link admin-nav-active" : "admin-nav-link"} aria-current={active ? "page" : undefined} onClick={() => setDrawerOpen(false)}>
                 <span aria-hidden="true"><AdminIcon name={item.icon} /></span>{item.label}
               </Link>
             );
@@ -98,6 +153,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
         <div className="admin-sidebar-bottom">
           <span className="admin-user-email" title={user?.email}>{user?.email}{user?.role === "owner" && <small> · Owner</small>}</span>
+          {/* A new tab, so unsaved work in the dashboard stays open. */}
+          <a className="admin-nav-link" href="/" target="_blank" rel="noopener" onClick={() => setDrawerOpen(false)}>
+            <span aria-hidden="true"><AdminIcon name="website" /></span>View website<span className="admin-visually-hidden"> (opens in a new tab)</span>
+          </a>
           <button className="admin-nav-link admin-logout" type="button" onClick={signOut} disabled={signingOut}>
             <span aria-hidden="true"><AdminIcon name="logout" /></span>{signingOut ? "Signing out…" : "Sign out"}
           </button>
