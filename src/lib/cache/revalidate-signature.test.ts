@@ -23,6 +23,11 @@ describe("revalidation signature", () => {
     assert.deepEqual(verifyRevalidationRequest(signed(body)), { ok: true, request: { tags: ["reviews"], mode: "remove" } });
   });
 
+  test("accepts a signed purge of the gallery", () => {
+    const body = JSON.stringify({ tags: ["gallery"], mode: "refresh" });
+    assert.deepEqual(verifyRevalidationRequest(signed(body)), { ok: true, request: { tags: ["gallery"], mode: "refresh" } });
+  });
+
   test("rejects a body changed after signing", () => {
     const body = JSON.stringify({ tags: ["blog"], mode: "refresh" });
     const input = signed(body);
@@ -48,11 +53,13 @@ describe("revalidation signature", () => {
     assert.equal(verifyRevalidationRequest(signed(body, String(nowSeconds - 299))).ok, true);
   });
 
-  test("only allows well-formed blog tags and the reviews tag, even when signed", () => {
+  test("only allows well-formed blog tags, the reviews tag, and the gallery tag, even when signed", () => {
     for (const payload of [
       { tags: ["products"], mode: "refresh" },
       { tags: ["reviews:amaka"], mode: "refresh" },
       { tags: ["reviewsx"], mode: "refresh" },
+      { tags: ["gallery:lobby"], mode: "refresh" },
+      { tags: ["gallerys"], mode: "refresh" },
       { tags: ["blog:../admin"], mode: "refresh" },
       { tags: [], mode: "refresh" },
       { tags: ["blog"], mode: "purge-everything" },
