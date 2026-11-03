@@ -34,6 +34,10 @@ test("describes review changes without naming the customer", () => {
   assert.equal(describeActivity({ action: "review.create", metadata: { status: "published" } }), "Added and published a review");
   assert.equal(describeActivity({ action: "review.unpublish", metadata: { statusFrom: "published", statusTo: "draft" } }), "Unpublished a review");
   assert.equal(describeActivity({ action: "review.delete", metadata: { statusFrom: "published" } }), "Deleted a published review");
+  assert.equal(describeActivity({ action: "gallery.create", metadata: { type: "video", status: "draft" } }), "Added a gallery video as a draft");
+  assert.equal(describeActivity({ action: "gallery.create", metadata: { type: "image" } }), "Added a gallery photo as a draft");
+  assert.equal(describeActivity({ action: "gallery.reorder", metadata: { count: 7 } }), "Reordered the gallery (7 items)");
+  assert.equal(describeActivity({ action: "gallery.delete", metadata: { statusFrom: "draft" } }), "Deleted a draft gallery item");
 });
 
 test("describes account management without naming the account", () => {
