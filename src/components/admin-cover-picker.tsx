@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { callApi } from "@/lib/api/callApi";
 import type { MediaAsset } from "@/lib/api/endpoints";
-import { ACCEPTED_IMAGE_TYPES, ImageUploadError, uploadImage } from "@/lib/media/upload-image";
+import { ACCEPTED_IMAGE_TYPES, ImageUploadError, uploadMedia } from "@/lib/media/upload-image";
 
 export type SelectedCover = { id: string; url: string; altText: string | null };
 
@@ -54,7 +54,7 @@ export function AdminCoverPicker({
     abortRef.current = controller;
     setUpload({ kind: "uploading", progress: 0, filename: file.name });
     try {
-      const asset = await uploadImage(file, {
+      const asset = await uploadMedia(file, {
         intent: "blog-cover",
         altText,
         signal: controller.signal,
