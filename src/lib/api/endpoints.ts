@@ -361,6 +361,7 @@ export interface AllEndpoints {
   PATCH_ADMIN_BLOG_POST: EndpointDefinition<BlogPostPatch, BlogPost>;
   POST_ADMIN_MEDIA_UPLOAD: EndpointDefinition<MediaUploadRequest, MediaUploadTicket>;
   POST_ADMIN_MEDIA_VERIFY: EndpointDefinition<undefined, MediaAsset>;
+  /** Newest first; pass `intent` to list one kind, e.g. article covers only. */
   GET_ADMIN_MEDIA: EndpointDefinition<undefined, Paginated<MediaAsset>>;
   PATCH_ADMIN_MEDIA: EndpointDefinition<{ altText: string | null }, MediaAsset>;
   DELETE_ADMIN_MEDIA: EndpointDefinition<undefined, { deleted: true }>;

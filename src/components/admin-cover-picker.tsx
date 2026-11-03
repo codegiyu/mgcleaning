@@ -83,7 +83,7 @@ export function AdminCoverPicker({
       return;
     }
     setLibrary({ kind: "loading" });
-    const result = await callApi("GET_ADMIN_MEDIA", { params: { page: 1, pageSize: 24 } });
+    const result = await callApi("GET_ADMIN_MEDIA", { params: { page: 1, pageSize: 24, intent: "blog-cover" } });
     setLibrary(result.type === "error" ? { kind: "error", message: result.message } : { kind: "ready", items: result.data.items });
   }
 
