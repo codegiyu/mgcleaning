@@ -3,7 +3,11 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, PageIntro, SiteFooter, SiteHeader } from "@/components/site-ui";
 import { RequestChannels } from "@/components/contact-channels";
 
-export const metadata: Metadata = { title: "Page not found" };
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "The link may be old or mistyped. Find services, request a cleaning, or go back to the M&G Cleaning Services home page.",
+  robots: { index: false, follow: false },
+};
 
 /** Unmatched URLs and notFound() calls. The root layout has no header, so this page adds it. */
 export default function NotFound() {
