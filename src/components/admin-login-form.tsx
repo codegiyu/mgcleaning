@@ -46,7 +46,7 @@ export function AdminLoginForm() {
       <div className="admin-login-panel">
         <AdminLoginBrand />
         <h1>Admin sign in</h1>
-        <p>Sign in to manage enquiries and journal articles.</p>
+        <p>Sign in to manage enquiries, reviews, the gallery, and journal articles.</p>
         <form className="admin-form" onSubmit={submit}>
           <label className="admin-field">
             <span>Email address</span>
