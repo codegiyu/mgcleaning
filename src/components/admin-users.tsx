@@ -89,7 +89,7 @@ export function AdminUsers() {
 
   return (
     <section className="admin-content">
-      <header className="admin-page-heading"><div><h1>Users</h1><p>Owners manage accounts and settings. Staff handle enquiries, reviews, and the journal.</p></div></header>
+      <header className="admin-page-heading"><div><h1>Users</h1><p>Owners manage accounts and settings. Staff handle enquiries, reviews, the gallery, and the journal.</p></div></header>
 
       <form className="admin-settings-card admin-user-create" onSubmit={(event) => void create(event)}>
         <h2>Add an account</h2>

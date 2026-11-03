@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "Gallery", path: "/gallery" }];
-export const metadata = buildPageMetadata({ title: "Gallery", description: "Explore the M&G Cleaning gallery and the visual work this site is prepared to present.", path: "/gallery" });
+export const metadata = buildPageMetadata({ title: "Gallery", description: "Photos and short videos of M&G Cleaning Services at work: the spaces, services, and details behind each professional clean.", path: "/gallery" });
 
 export default async function GalleryPage() {
   const galleryItems = await getGalleryItems();

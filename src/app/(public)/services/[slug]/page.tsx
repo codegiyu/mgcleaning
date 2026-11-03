@@ -17,7 +17,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const service = getServiceWithDetails((await params).slug);
   if (!service) return { title: "Service not found" };
-  return buildPageMetadata({ title: service.title, description: service.short, path: "/services/" + service.slug, image: service.image, imageAlt: service.title });
+  return buildPageMetadata({ title: service.title, description: `${service.title} from M&G Cleaning Services. ${service.short}`, path: "/services/" + service.slug, image: service.image, imageAlt: service.title });
 }
 
 export default async function ServiceDetailPage({ params }: Props) {

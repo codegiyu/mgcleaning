@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildPageMetadata, graphJsonLd } from "@/lib/seo/site-seo";
 
 const breadcrumbs = [{ name: "Home", path: "/" }, { name: "Privacy", path: "/privacy" }];
-export const metadata = buildPageMetadata({ title: "Privacy", description: "Privacy information for the M&G Cleaning Services website and request forms.", path: "/privacy" });
+export const metadata = buildPageMetadata({ title: "Privacy", description: "What M&G Cleaning Services collects through the website request forms, how it is used, how long it is kept, how to ask for deletion, and how the site handles cookies.", path: "/privacy" });
 
 export default function PrivacyPage() {
   return (

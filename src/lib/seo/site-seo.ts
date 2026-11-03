@@ -5,6 +5,13 @@ import { businessContactFacts, seoBusinessFacts } from "@/content/public-content
 export const DEFAULT_OG_IMAGE = "/images/og/mg-cleaning-services-professional-v3.jpg";
 export const DEFAULT_OG_IMAGE_ALT = "M&G Cleaning Services — professional cleaning, thoughtfully done.";
 export const DEPLOYED_SITE_URL_FALLBACK = "https://mgcleaning.vercel.app";
+export const SITE_NAME = "M&G Cleaning Services";
+
+/** The page title as the browser tab shows it, for share cards that do not apply the title template. */
+export function fullTitle(title?: string) {
+  if (!title) return `${SITE_NAME} | Professional cleaning solutions`;
+  return title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
+}
 
 function withHttpsProtocol(host: string | undefined) {
   const value = host?.trim();
@@ -55,6 +62,7 @@ export function buildPageMetadata({
   noIndex?: boolean;
 }): Metadata {
   const pageUrl = absoluteUrl(path);
+  const shareTitle = fullTitle(title);
   return {
     title,
     description,
@@ -62,15 +70,15 @@ export function buildPageMetadata({
     robots: noIndex || contentMode !== "production" ? { index: false, follow: false } : undefined,
     openGraph: {
       type,
-      siteName: "M&G Cleaning Services",
-      title,
+      siteName: SITE_NAME,
+      title: shareTitle,
       description,
       url: pageUrl,
       images: [{ url: image, width: 1200, height: 630, alt: imageAlt }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: shareTitle,
       description,
       images: [image],
     },
@@ -99,20 +107,47 @@ export function websiteJsonLd() {
     name: "M&G Cleaning Services",
     url: absoluteUrl("/"),
     description: "Personalized professional cleaning solutions shaped around your space, needs, and standards.",
-    publisher: { "@id": `${absoluteUrl("/")}#organization` },
+    publisher: { "@id": organizationId() },
+  };
+}
+
+/** Structured data wants the international form (+234…), which the `tel:` link already holds. */
+const internationalPhone = () => businessContactFacts.phone.href?.replace(/^tel:/, "") || businessContactFacts.phone.value;
+const organizationId = () => `${absoluteUrl("/")}#organization`;
+const localBusinessApproved = () =>
+  seoBusinessFacts.status === "approved" && Boolean(seoBusinessFacts.serviceArea) && Boolean(seoBusinessFacts.googleBusinessProfileUrl) && seoBusinessFacts.openingHours.length > 0;
+
+/**
+ * The business node every other node points at (`#organization`). Until MG approves the
+ * service area, Google profile, and hours it is a plain Organization built only from the
+ * approved contact facts, so pages never claim an address, area, or hours early.
+ */
+export function organizationJsonLd() {
+  if (contentMode !== "production") return null;
+  const local = localBusinessJsonLd();
+  if (local) return local;
+  return {
+    "@type": "Organization",
+    "@id": organizationId(),
+    name: SITE_NAME,
+    url: absoluteUrl("/"),
+    logo: absoluteUrl("/mg-cleaning-logo.svg"),
+    telephone: internationalPhone(),
+    email: businessContactFacts.email.value,
+    sameAs: [businessContactFacts.instagram.href].filter(Boolean),
   };
 }
 
 export function localBusinessJsonLd() {
-  if (contentMode !== "production" || seoBusinessFacts.status !== "approved" || !seoBusinessFacts.serviceArea || !seoBusinessFacts.googleBusinessProfileUrl || !seoBusinessFacts.openingHours.length) return null;
+  if (contentMode !== "production" || !localBusinessApproved()) return null;
 
   const data: Record<string, unknown> = {
     "@type": "LocalBusiness",
-    "@id": `${absoluteUrl("/")}#organization`,
-    name: "M&G Cleaning Services",
+    "@id": organizationId(),
+    name: SITE_NAME,
     url: absoluteUrl("/"),
     logo: absoluteUrl("/mg-cleaning-logo.svg"),
-    telephone: businessContactFacts.phone.value,
+    telephone: internationalPhone(),
     areaServed: seoBusinessFacts.serviceArea,
     openingHoursSpecification: seoBusinessFacts.openingHours.map((hours) => ({
       "@type": "OpeningHoursSpecification",
@@ -148,8 +183,6 @@ export function serviceJsonLd({
   serviceSlug: string;
 }) {
   if (contentMode !== "production") return null;
-  const organization = localBusinessJsonLd();
-  if (!organization) return null;
   return {
     "@type": "Service",
     "@id": `${absoluteUrl(path)}#service`,
@@ -157,8 +190,8 @@ export function serviceJsonLd({
     serviceType: name,
     description,
     url: absoluteUrl(path),
-    provider: { "@id": `${absoluteUrl("/")}#organization` },
-    areaServed: seoBusinessFacts.serviceArea,
+    provider: { "@id": organizationId() },
+    ...(localBusinessApproved() ? { areaServed: seoBusinessFacts.serviceArea } : {}),
     identifier: serviceSlug,
   };
 }
@@ -181,8 +214,6 @@ export function articleJsonLd({
   image: string;
 }) {
   if (contentMode !== "production") return null;
-  const organization = localBusinessJsonLd();
-  if (!organization) return null;
   const path = `/blog/${slug}`;
   return {
     "@type": "Article",
@@ -190,8 +221,9 @@ export function articleJsonLd({
     headline: title,
     description,
     mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
-    author: { "@type": "Person", name: author },
-    publisher: { "@id": `${absoluteUrl("/")}#organization` },
+    // Articles signed by the business itself credit the organization, not a person.
+    author: author === SITE_NAME ? { "@id": organizationId() } : { "@type": "Person", name: author },
+    publisher: { "@id": organizationId() },
     datePublished: publishedAt,
     dateModified: updatedAt,
     image: [absoluteUrl(image)],

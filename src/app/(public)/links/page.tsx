@@ -4,7 +4,7 @@ import { ArrowUpRight } from "@/components/site-ui";
 import { businessContactFacts } from "@/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/site-seo";
 
-export const metadata = buildPageMetadata({ title: "M&G Cleaning Services links", description: "Find M&G Cleaning Services, request a cleaning, or message the team.", path: "/links", noIndex: true });
+export const metadata = buildPageMetadata({ title: "Quick links", description: "Request a cleaning, message M&G Cleaning Services on WhatsApp, call the team, or explore services, the gallery, FAQs, and Instagram.", path: "/links", noIndex: true });
 
 export default function LinksPage() {
   return (
