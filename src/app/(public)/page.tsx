@@ -41,7 +41,7 @@ export default async function HomePage() {
         </div>
         <div className="hero-visual">
           <div className="hero-art-wrap"><Image src="/images/generated/hero-professional-cleaning-v2.webp" alt="M&G cleaning professional caring for a bright modern space" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
-          <div className="hero-side-label">YOUR SPACE. YOUR NEEDS. OUR EXPERTISE.</div>
+          {/* <div className="hero-side-label">YOUR SPACE. YOUR NEEDS. OUR EXPERTISE.</div> */}
           <div className="hero-note"><span className="hero-note-top"><i>✳</i> TAILORED CLEANING</span><strong>The right solution for your space.</strong><small>We assess your needs, agree the scope, and deliver with care.</small></div>
         </div>
       </section>
